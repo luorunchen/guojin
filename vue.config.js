@@ -1,5 +1,5 @@
 const path = require("path");
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, dir);
 }
 module.exports = {
@@ -55,30 +55,46 @@ module.exports = {
       historyApiFallback: true
     },
   },
-  css: {
-    loaderOptions: {
-      css: {},
-      postcss: {
-        postcssOptions: {
-          plugins: [
-            require('postcss-pxtorem')({//这里是配置项，详见官方文档
-              rootValue: 1920 / 10, // 换算的基数
-              // selectorBlackList: ['weui', 'mu'], // 忽略转换正则匹配项
-              propList: ['*'],
-            }),
+  // css: {
+  //   loaderOptions: {
+  //     css: {},
+  //     postcss: {
+  //       postcssOptions: {
+  //         plugins: [
+  //           require('postcss-pxtorem')({//这里是配置项，详见官方文档
+  //             rootValue: 192, // 换算的基数
+  //             // selectorBlackList: ['weui', 'mu'], // 忽略转换正则匹配项
+  //             propList: ['*'],
+  //           }),
 
-          ],
-        }
+  //         ],
+  //       }
 
 
-      },
+  //     },
 
-    }
-  },
+  //   }
+  // },
+  // css: {
+  //   loaderOptions: {
 
+  //     css: {},
+  //     postcss: {
+  //       postcssOptions: {
+  //         plugins: [
+  //           require('postcss-px2rem')({
+  //             remUnit: 192//列如设计稿尺寸为320
+  //           })
+  //         ],
+  //       }
+
+
+  //     }
+  //   }
+  // },
   lintOnSave: false,
   publicPath: './',
-  outputDir: 'dist',
+  outputDir: 'guojin',
   assetsDir: 'static',
   productionSourceMap: false
 

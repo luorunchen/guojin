@@ -5,6 +5,10 @@ const service = axios.create({
   baseURL: '/gjsafe', // api的base_url
   timeout: 50000 // 请求超时时间
 });
+const map = axios.create({
+  // baseURL: '/gjsafe', // api的base_url
+  timeout: 50000 // 请求超时时间
+});
 
 // 2.请求拦截器
 service.interceptors.request.use(config => {
@@ -54,17 +58,17 @@ service.interceptors.response.use(req => {
     return
 
   }
-  // if (req.data.code == 500) {
-  //   // alert('该账户在其他地方登录,请重新登录')
-  //   ElMessage({
-  //     message: "网络卡顿,请稍后重试",
-  //     type: 'error',
-  //     showClose: true
-  //   })
-  //   // window.location.href = "/#/login";
-  //   return
+  if (req.data.code == 500) {
+    // alert('该账户在其他地方登录,请重新登录')
+    ElMessage({
+      message: req.data.msg,
+      type: 'error',
+      showClose: true
+    })
+    // window.location.href = "/#/login";
+    return
 
-  // }
+  }
   return req
 }, err => {
   console.log(err);
@@ -134,4 +138,4 @@ service.interceptors.response.use(req => {
 //   return Promise.resolve(error.response)
 // })
 
-export { service }
+export { service, map }
