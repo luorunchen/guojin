@@ -25,7 +25,11 @@
             <el-input v-model="formInline.user" placeholder="请输入" />
           </el-form-item>
           <el-form-item orm-item label="所属行业:">
-            <el-select v-model="formInline.region" placeholder="请选择">
+            <el-select
+              v-model="formInline.region"
+              clearable
+              placeholder="请选择"
+            >
               <el-option
                 :label="item.name"
                 :value="item.id"

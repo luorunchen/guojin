@@ -6,7 +6,15 @@
       @tab-click="handleClick"
       ref="tab"
     >
-      <el-tab-pane label="应急要闻" name="first">
+      <div v-if="loginType == null || loginType == undefined">
+        <video
+          src="../../assets/sp.mp4"
+          ref="imgages"
+          class="videoBox"
+          controls
+        ></video>
+      </div>
+      <el-tab-pane v-else label="应急要闻" name="first">
         <el-row :gutter="20">
           <el-col :span="10">
             <div class="box">
@@ -79,7 +87,7 @@
 import { onMounted, ref } from "vue";
 import type { TabsPaneContext } from "element-plus";
 const activeName = ref("first");
-
+const loginType = sessionStorage.getItem("userName");
 const activeName2 = ref("fiveNew");
 const emit = defineEmits(["fiveNewChang"]);
 const tab: any = ref(null);
@@ -90,9 +98,12 @@ onMounted(() => {
   let box = tab.value.$el.clientHeight;
   let box3 = new2.value.clientHeight;
   let box2 = homepage.value.clientHeight;
-  let box4 = (imgages.value.$el.style.height = box2 - box3 - 50 + "px");
-  // console.log(987, box2, box3);
-  console.log(box4);
+  if (loginType != null || loginType != undefined) {
+    let box4 = (imgages.value.$el.style.height = box2 - box3 - 50 + "px");
+  } else {
+    let box4 = (imgages.value.style.height = box2 - box3 + "px");
+  }
+
   tab.value.$el.style.height = box2 - box3 + 20 + "px";
   // imgages.value.style.height = box2 - box3 - 50 + 'px'
 });
@@ -109,6 +120,9 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 
 #homePage {
   height: calc(100vh - 410px);
+}
+.videoBox {
+  width: 100%;
 }
 
 // @headerHeight: `$(

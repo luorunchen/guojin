@@ -1,5 +1,5 @@
 <template>
-  <div id="account">
+  <div id="account" ref="account">
     <el-row :gutter="20">
       <el-col :span="8">
         <el-input v-model="input2" placeholder="关键词">
@@ -25,7 +25,7 @@
       </el-col>
     </el-row>
     <br />
-    <el-table :data="tableData" stripe style="width: 100%" height="400px">
+    <el-table :data="tableData" stripe style="width: 100%" height="89%">
       <el-table-column type="index" width="50" />
       <el-table-column prop="title" label="标题" />
       <el-table-column prop="create_date" label="上传时间" />
@@ -42,6 +42,13 @@
             v-if="style == '1'"
             >下载模板
           </el-button>
+          <el-button
+            v-if="style == 1"
+            size="small"
+            type="success"
+            @click="onlineEditing(scope.row)"
+            >在线编辑</el-button
+          >
           <el-button
             size="small"
             type="danger"
@@ -61,7 +68,7 @@
 </template>
 
 <script script lang = "ts" setup >
-import { getStandInfo, delStandFileInfo } from "@/api/index";
+import { getStandInfo, delStandFileInfo, getViewUrlDbPath } from "@/api/index";
 import { onMounted, reactive, ref, defineProps, watch } from "vue";
 import SeeFlie from "../../seeFlie/index.vue";
 import Upload from "../../upload/index.vue";
@@ -75,6 +82,7 @@ const currentPage3 = ref(1);
 const pageSize3 = ref(10);
 const total = ref(0);
 const input2 = ref();
+const account = ref(null);
 const total2 = ref(0);
 const status = ref("Account");
 const table = ref(false);
@@ -110,12 +118,22 @@ const tableData = ref([
 
 const props = defineProps({
   tid: Number,
+  boxHeight: Number,
 });
 watch(
   () => props.tid,
   (val) => {
     console.log(val, "props");
     fileInfoFun();
+  }
+);
+watch(
+  () => props.boxHeight,
+  (val) => {
+    console.log(val, "123");
+    account.value.style.height = val + "px";
+    // console.log(law.value.clientHeight);
+    // fileInfoFun();
   }
 );
 watch(
@@ -133,6 +151,16 @@ onMounted(() => {
 const downloadFileFun = (url: string) => {
   window.open(url);
 };
+//在线编辑
+const onlineEditing = (row: any) => {
+  console.log(row);
+
+  getViewUrlDbPath("e" + row.id, sessionStorage.getItem("userId")).then(
+    (res) => {
+      window.open(res.data.data.wpsUrl);
+    }
+  );
+};
 //获取待审核文件列表
 const getAuditFilesFun = () => {
   auditFile.value.show();
@@ -142,8 +170,8 @@ const getAuditFilesFun = () => {
 //删除资料文件
 const delFileInfoFun = (row: any) => {
   ElMessageBox.confirm(
-    `<span style='color:red'> ${row.title} < /span>文件?`,
-    "审核文件",
+    `是否删除<span style='color:red'> ${row.title} </span>文件?`,
+    "删除文件",
     {
       confirmButtonText: "OK",
       cancelButtonText: "Cancel",

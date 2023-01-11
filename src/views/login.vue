@@ -140,9 +140,8 @@ const submitForm = (formEl: FormInstance | undefined) => {
       ).then((res) => {
         if (res.data.code == 200) {
           if (
-            res.data.data.evaluation_standard != null &&
             res.data.data.companyId != null &&
-            res.data.data.industry != null
+            res.data.data.companyId != ""
           ) {
             router.push("/");
             ElMessage({
@@ -156,10 +155,18 @@ const submitForm = (formEl: FormInstance | undefined) => {
               message: "请填写相应表格",
               type: "success",
             });
-            router.push("/registerFormOne");
+            if (activeName.value == "1") {
+              router.push("/registerFormOne");
+            } else if (activeName.value == "2") {
+              router.push("/registerFormTwo");
+            } else {
+              router.push("/");
+            }
           }
 
           sessionStorage.setItem("userName", numberValidateForm.userName);
+          sessionStorage.setItem("userId", res.data.data.id);
+          sessionStorage.setItem("loginType", activeName.value);
           sessionStorage.setItem(
             "evaluation",
             res.data.data.evaluation_standard

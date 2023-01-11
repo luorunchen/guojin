@@ -99,6 +99,16 @@ export function auditContent(status, ids, reason) {
     }
   })
 }
+//五新商店获取列表
+export function getWxStoreList(type, content, pageNum, pageSize) {
+  return service({
+    url: `/wx/getWxStoreList`,
+    method: 'GET',
+    params: {
+      type, content, pageNum, pageSize
+    }
+  })
+}
 //左侧列表
 export function getStandList() {
   return service({
@@ -199,12 +209,108 @@ export function addPerson(name, phone, type, companyId) {
   })
 }
 //机构表单提交
-export function addInstFormInfo(companyId, zs_name, zs_date, zs_pz, service_region, number, last_value, up_down, fixed_value, lx_name, lx_phone, fax, operation_space, safe_height, safe_middle, safe_low, safe_one, safe_two, safe_three, fire_one, engineer_height, engineer_middle, engineer_low, type, style) {
-  return service({
-    url: `/form/addInstFormInfo`,
+export function addInstFormInfo(obj) {
+  return map({
+    url: `/gjsafe/form/addInstFormInfo`,
     method: 'POST',
-    data: {
-      companyId, zs_name, zs_date, zs_pz, service_region, number, last_value, up_down, fixed_value, lx_name, lx_phone, fax, operation_space, safe_height, safe_middle, safe_low, safe_one, safe_two, safe_three, fire_one, engineer_height, engineer_middle, engineer_low, type, style
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data: obj
+
+  })
+}
+export function upWxProduct(obj) {
+  return map({
+    url: `/gjsafe/wx/upWxProduct`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data: obj
+
+  })
+}
+//机构列表获取
+export function getInstBankInfo(tid, title, inst_comp, pageNum, pageSize) {
+  return service({
+    url: `/inst/getInstBankInfo`,
+    method: 'GET',
+    params: {
+      tid, title, inst_comp, pageNum, pageSize
+    }
+
+
+  })
+}
+//机构企业列表
+export function getRegionComp() {
+  return service({
+    url: `/inst/getRegionComp`,
+    method: 'GET',
+    params: {
+
+    }
+
+
+  })
+}
+//企业备案信息
+export function getCompanyInfoByIds() {
+  return service({
+    url: `/company/getCompanyInfoById`,
+    method: 'GET',
+    params: {
+    }
+  })
+}
+//企业备案信息
+export function getViewUrlDbPath(fileId, userId) {
+  return service({
+    url: `/wps/api/getViewUrlDbPath`,
+    method: 'GET',
+    params: {
+      fileId, userId
+    }
+  })
+}
+//缴费记录
+export function getPayHistorys(pageNum, pageSize) {
+  return service({
+    url: `/company/getPayHistory`,
+    method: 'GET',
+    params: {
+      pageNum, pageSize
+    }
+  })
+}
+//企业备案信息
+export function getCompDeviceList(type, device_name, pageNum, pageSize) {
+  return service({
+    url: `/device/getCompDeviceList`,
+    method: 'GET',
+    params: {
+      type, device_name, pageNum, pageSize
+    }
+  })
+}
+//获取设备类型
+export function getDeviceType() {
+  return service({
+    url: `/device/getDeviceType`,
+    method: 'GET',
+    params: {
+
+    }
+  })
+}
+//获取设备类型
+export function addDevice(device_name, type, supplier, productNumber, installLocation, long_lat) {
+  return service({
+    url: `/device/addDevice`,
+    method: 'GET',
+    params: {
+      device_name, type, supplier, productNumber, installLocation, long_lat
     }
   })
 }
@@ -409,6 +515,26 @@ export function getRegionCode(code) {
     method: 'GET',
     params: {
       code
+    }
+  })
+}
+//五新商店审核
+export function auditWxStore(id, status, reason) {
+  return service({
+    url: `/manage/auditWxStore`,
+    method: 'GET',
+    params: {
+      id, status, reason
+    }
+  })
+}
+//获取行政区域
+export function getWxAudit(title, create_name, type, pageNum, pageSize, status) {
+  return service({
+    url: `/manage/getWxAudit`,
+    method: 'GET',
+    params: {
+      title, create_name, type, pageNum, pageSize, status
     }
   })
 }

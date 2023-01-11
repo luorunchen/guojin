@@ -91,7 +91,7 @@
           <!-- 企业列表 -->
           <EnterpriseList v-if="itemID == '1-1'" />
           <!-- 待审核文件 -->
-          <AuditList v-if="itemID == '9-1'" />
+          <!-- <AuditList v-if="itemID == '9-1'" /> -->
           <!-- 平台资料库 -->
           <Databases v-if="itemID == '3-1'" />
           <!-- 台账列表 -->
@@ -109,12 +109,13 @@
           <!-- 台账分类管理 -->
           <AccountClassification v-if="itemID == '4-2'" />
           <!--五新商店待审核 -->
-          <Shopdai v-if="itemID == '5-1'" />
-          <Shopdai v-if="itemID == '5-2'" />
+          <Shopdai v-if="itemID == '5-1'" :status="false" />
+          <Shopdai v-if="itemID == '5-2'" :status="true" />
           <Guanggao v-if="itemID == '7-1'" />
           <NianfeiSet v-if="itemID == '6-1'" />
           <Weidaoqi v-if="itemID == '6-3'" />
           <Yidaoqi v-if="itemID == '6-2'" />
+          <UserInfo v-if="itemID == '9-1'" />
         </div>
       </el-col>
     </el-row>
@@ -137,10 +138,11 @@ import Guanggao from "../guanggao/index.vue";
 import NianfeiSet from "../nianfei/set.vue";
 import Weidaoqi from "../nianfei/weidaoqi.vue";
 import Yidaoqi from "../nianfei/yidaoqi.vue";
+import UserInfo from "../userInfo/index.vue";
 import { ArrowDown } from "@element-plus/icons-vue";
 import router from "@/router";
 const itemName = ref("企业列表");
-const itemID = ref();
+const itemID = ref("1-1");
 const userName = sessionStorage.getItem("userName");
 const rightMenus = ref([
   {
@@ -148,14 +150,14 @@ const rightMenus = ref([
     name: "企业列表",
     children: [{ id: "1-1", name: "企业列表", children: [] }],
   },
-  {
-    id: "9",
-    name: "待审核文件",
-    children: [
-      { id: "9-1", name: "待审核文件", children: [] },
-      // { id: '9-1', name: "待审核文件", children: [] },
-    ],
-  },
+  // {
+  //   id: "9",
+  //   name: "待审核文件",
+  //   children: [
+  //     { id: "9-1", name: "待审核文件", children: [] },
+  //     // { id: '9-1', name: "待审核文件", children: [] },
+  //   ],
+  // },
   {
     id: "2",
     name: "机构列表",
@@ -200,6 +202,7 @@ const rightMenus = ref([
     name: "广告图",
     children: [{ id: "7-1", name: "广告图", children: [] }],
   },
+
   {
     id: "8",
     name: "账号管理",
@@ -228,6 +231,11 @@ const rightMenus = ref([
       //   id: '8-5', name: "角色权限", children: []
       // },
     ],
+  },
+  {
+    id: "9",
+    name: "用户统计",
+    children: [{ id: "9-1", name: "用户统计", children: [] }],
   },
 ]);
 

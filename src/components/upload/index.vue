@@ -37,18 +37,31 @@
           <el-option label="区" value="4" />
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="类型" v-if="props.status == 'AccountList'" prop="style" :rules="[
-        {
-          required: true,
-          message: '请选择类型',
-          trigger: 'change',
-        },
-      ]">
-        <el-select v-model="numberValidateForm.style" placeholder="请选择">
-          <el-option label="模板" value="1" />
-          <el-option label="台账" value="2" />
+      <el-form-item
+        label="对应企业"
+        v-if="props.status == 'mechanism'"
+        prop="inst_comp"
+        :rules="[
+          {
+            required: true,
+            message: '请选择对应企业',
+            trigger: 'change',
+          },
+        ]"
+      >
+        <el-select
+          v-model="numberValidateForm.inst_comp"
+          class="m-2"
+          placeholder="Select"
+        >
+          <el-option
+            v-for="item in getRegionCompList"
+            :key="item.value"
+            :label="item.company"
+            :value="item.companyId"
+          />
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item
         label="行业"
         v-if="props.status == 'AccountList'"
@@ -117,7 +130,7 @@ import {
   watch,
 } from "vue";
 // import type {  } from 'element-plus'
-import { getStandList, getList } from "@/api/index";
+import { getStandList, getRegionComp } from "@/api/index";
 import type { FormInstance, UploadProps, UploadInstance } from "element-plus";
 import { ElMessage } from "element-plus";
 import { tr } from "element-plus/es/locale";
@@ -125,19 +138,21 @@ import { tr } from "element-plus/es/locale";
 const formRef = ref<FormInstance>();
 const list = ref([]);
 const numberValidateForm = reactive({
-  title: "",
-  level: "",
-  tid: "",
-
-  style: "1",
-  evaluation: [],
-  ftp: "1",
+  // title: "",
+  // level: "",
+  // tid: "",
+  // inst_comp: "",
+  // style: "1",
+  // evaluation: [],
+  // ftp: "1",
+  // expire_date: "",
 });
 const emits = defineEmits(["uploadSuccess"]);
-const action = ref("");
+const action = ref("http://119.91.156.5/gjsafe/standBank/uploadStand");
 const dialogVisible = ref(false);
 const disabled = ref(true);
 const databasesList = ref([]);
+const getRegionCompList = ref([]);
 const uploadRef = ref<UploadInstance>();
 
 const props = defineProps({
@@ -184,8 +199,6 @@ const digui = (item: any, arr, flag) => {
 };
 
 const handleChange = (value) => {
-  // console.log(value)
-
   numberValidateForm.evaluation = value[value.length - 1];
 };
 const handleChangeMB = (value) => {
@@ -249,41 +262,62 @@ const show = (tid: string) => {
   let tids: any = sessionStorage.getItem("tid");
   numberValidateForm.tid = tids;
 
-  if (props.status == "Account" || props.status == "AccountList") {
+  // delete numberValidateForm["expire_date"];
+  if (props.ftp != undefined) {
     numberValidateForm.ftp = props.ftp;
-    action.value = `http://119.91.156.5/gjsafe/standBank/uploadStand`;
-
-    props.status == "AccountList"
-      ? (action.value = `http://119.91.156.5/gjsafe/manage/uploadStand`)
-      : (action.value = `http://119.91.156.5/gjsafe/standBank/uploadStand`);
-    // action.value = `/api/gjsafe/standBank/uploadStand`
-    Object.keys(numberValidateForm).map((key) => {
-      delete numberValidateForm["level"];
-
-      if (props.status == "Account") delete numberValidateForm["evaluation"];
-
-      // delete numberValidateForm['style']
-    });
-    //前台上传台账,后台上传模板
-    if (props.status == "Account") {
-      numberValidateForm.style = "2";
-    } else {
-      numberValidateForm.style = "1";
-    }
-  } else {
-    action.value = `http://119.91.156.5/gjsafe/database/addDataBaseBank`;
-    props.status == "databases"
-      ? (action.value = `http://119.91.156.5/gjsafe/manage/addDataBaseBank`)
-      : (action.value = `http://119.91.156.5/gjsafe/database/addDataBaseBank`);
-    // action.value = `/api/gjsafe/database/addDataBaseBank`
-    // numberValidateForm.delete['level']
-    Object.keys(numberValidateForm).map((key) => {
-      delete numberValidateForm["evaluation"];
-      delete numberValidateForm["style"];
-    });
   }
 
-  // console.log(numberValidateForm)
+  switch (props.status) {
+    //后台台账上传
+    case "AccountList":
+      action.value = `http://119.91.156.5/gjsafe/manage/uploadStand`;
+      numberValidateForm.style = "1";
+      break;
+    //前台台账上传
+    case "Account":
+      // action.value = `http://119.91.156.5/gjsafe/manage/uploadStand`;
+      numberValidateForm.style = "2";
+      break;
+    //后台资料库上传
+    case "databases":
+      action.value = `http://119.91.156.5/gjsafe/manage/addDataBaseBank`;
+      break;
+    //前台资料库上传
+    // case "Law":
+    //   action.value = `http://119.91.156.5/gjsafe/database/addDataBaseBank`;
+    //   numberValidateForm.ftp = props.ftp;
+    //   break;
+
+    //前台机构上传
+    case "mechanism":
+      getRegionComp().then((res) => {
+        getRegionCompList.value = res.data.data;
+      });
+
+      break;
+  }
+
+  // if (props.status == "Account" || props.status == "AccountList") {
+  //   numberValidateForm.ftp = props.ftp;
+  //   // action.value = `http://119.91.156.5/gjsafe/standBank/uploadStand`;
+
+  //   delete numberValidateForm["level"];
+  //   delete numberValidateForm["inst_comp"];
+
+  //   if (props.status == "Account") delete numberValidateForm["evaluation"];
+
+  //   // delete numberValidateForm['style']
+
+  //   //前台上传台账,后台上传模板
+  //   if (props.status == "Account") {
+  //     numberValidateForm.style = "2";
+  //   } else {
+  //     numberValidateForm.style = "1";
+  //   }
+  // } else {
+  //    else {
+  //   }
+  // }
 };
 
 defineExpose({

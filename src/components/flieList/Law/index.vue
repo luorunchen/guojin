@@ -1,5 +1,5 @@
 <template>
-  <div id="law">
+  <div id="law" ref="law">
     <el-row :gutter="20">
       <el-col :span="8">
         <el-input v-model="input2" placeholder="关键词">
@@ -14,7 +14,7 @@
       </el-col> -->
     </el-row>
     <br />
-    <el-table :data="tableData" stripe height="400px">
+    <el-table :data="tableData" stripe height="90%">
       <el-table-column type="index" width="50" />
       <el-table-column prop="title" label="标题" />
       <el-table-column prop="create_date" label="上传时间" />
@@ -57,6 +57,7 @@ const pageSize4 = ref(10);
 const currentPage3 = ref(1);
 const pageSize3 = ref(10);
 const total = ref(0);
+const law = ref(null);
 const labelName = ref([]);
 const status = ref("Law");
 const total2 = ref(0);
@@ -72,19 +73,30 @@ const seeFile: any = ref(null);
 const auditFile: any = ref(null);
 const upload: any = ref(null);
 const tableData = ref([]);
-
+const tabHeight = ref();
 const props = defineProps({
   tid: Number,
+  boxHeight: Number,
 });
 
 watch(
   () => props.tid,
   (val) => {
-    console.log(val, "props");
+    // console.log(val, "props");
     fileInfoFun();
   }
 );
+watch(
+  () => props.boxHeight,
+  (val) => {
+    console.log(val, "123");
+    law.value.style.height = val + "px";
+    console.log(law.value.clientHeight);
+    // fileInfoFun();
+  }
+);
 onMounted(() => {
+  law.value.style.height = props.boxHeight + "px";
   fileInfoFun();
 });
 
@@ -152,6 +164,9 @@ const fileInfoFun = () => {
   )
     .then((res: any) => {
       // console.log(res, 99)
+      res.data.data.forEach((item) => {
+        item.id = "d" + item.id;
+      });
 
       tableData.value = res.data.data;
       total.value = res.data.dataCount;
@@ -163,7 +178,7 @@ const fileInfoFun = () => {
 </script>
 
 <style scoped lang="less">
-#law {
-  height: 500px;
-}
+// #law {
+//   height: 100%;
+// }
 </style>

@@ -9,6 +9,10 @@ const map = axios.create({
   // baseURL: '/gjsafe', // api的base_url
   timeout: 50000 // 请求超时时间
 });
+const service2 = axios.create({
+  // baseURL: '/api2/earlyWarn', // api的base_url
+  timeout: 50000 // 请求超时时间
+});
 
 // 2.请求拦截器
 service.interceptors.request.use(config => {
@@ -138,4 +142,4 @@ service.interceptors.response.use(req => {
 //   return Promise.resolve(error.response)
 // })
 
-export { service, map }
+export { service, map, service2 }
