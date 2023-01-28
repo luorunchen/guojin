@@ -88,6 +88,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
             })
             router.push('/backHome')
             sessionStorage.setItem('userName', numberValidateForm.userName)
+            sessionStorage.setItem('userId', res.data.data.id)
 
 
           } else {

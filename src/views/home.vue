@@ -8,10 +8,7 @@
         </el-col>
         <el-col :span="18">
           <ul v-for="(item, index) in menu" :key="index">
-            <li
-              @click="titleChange(item)"
-              :class="status == item.id ? 'clickTrue' : 's'"
-            >
+            <li @click="titleChange(item)" :class="status == item.id ? 'clickTrue' : 's'">
               {{ item.name }}
             </li>
           </ul>
@@ -32,17 +29,8 @@
           </el-button> -->
           <img src="../assets/jin.png" alt="" />
 
-          <el-menu
-            text-color="#fff"
-            :default-active="activeIndex"
-            class="el-menu-vertical-demo"
-            unique-opened
-          >
-            <el-sub-menu
-              :index="item.id"
-              v-for="(item, index) in rightMenus"
-              :key="index"
-            >
+          <el-menu text-color="#fff" :default-active="activeIndex" class="el-menu-vertical-demo" unique-opened>
+            <el-sub-menu :index="item.id" v-for="(item, index) in rightMenus" :key="index">
               <template #title>
                 <img src="../assets/tz.png" alt="" v-if="item.id == 2" />
                 <img src="../assets/tz.png" alt="" v-if="item.id == 10089" />
@@ -58,18 +46,10 @@
                 <img src="../assets/zb.png" alt="" v-if="item.id == 32" />
                 <img src="../assets/zxz.png" alt="" v-if="item.id == 35" />
                 <img src="../assets/pj.png" alt="" v-if="item.id == 440" />
-                <img
-                  src="../assets/ss.png"
-                  alt=""
-                  v-if="item.id == 20000 || item.id == 20001"
-                />
-                <img
-                  src="../assets/tz.png"
-                  alt=""
-                  v-if="
-                    item.id == 20003 || item.id == 20002 || item.id == 20004
-                  "
-                />
+                <img src="../assets/ss.png" alt="" v-if="item.id == 20000 || item.id == 20001" />
+                <img src="../assets/tz.png" alt="" v-if="
+                  item.id == 20003 || item.id == 20002 || item.id == 20004
+                " />
                 <img src="../assets/sj.png" alt="" v-if="item.id == 20005" />
                 <img src="../assets/hd.png" alt="" v-if="item.id == 20007" />
                 <img src="../assets/yj.png" alt="" v-if="item.id == 20006" />
@@ -78,9 +58,8 @@
                   item.name
                 }}</span> -->
 
-                <span @click="nameChange(item.name, item)"
-                  >{{ item.name }} <el-badge v-if="item.id == 26" :value="1"
-                /></span>
+                <span @click="nameChange(item.name, item)">{{ item.name }} <el-badge v-if="item.id == 26"
+                    :value="1" /></span>
               </template>
 
               <template v-for="(arr, index2) in item.children" :key="index2">
@@ -117,15 +96,9 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="commandChange('企业用户', '1')"
-                      >企业用户</el-dropdown-item
-                    >
-                    <el-dropdown-item @click="commandChange('机构用户', '2')"
-                      >机构用户</el-dropdown-item
-                    >
-                    <el-dropdown-item @click="commandChange('政府用户', '3')"
-                      >政府用户</el-dropdown-item
-                    >
+                    <el-dropdown-item @click="commandChange('企业用户', '1')">企业用户</el-dropdown-item>
+                    <el-dropdown-item @click="commandChange('机构用户', '2')">机构用户</el-dropdown-item>
+                    <el-dropdown-item @click="commandChange('政府用户', '3')">政府用户</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -138,28 +111,19 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="itemID = 10087"
-                      >备案信息</el-dropdown-item
-                    >
-                    <el-dropdown-item @click="itemID = 10087"
-                      >设置</el-dropdown-item
-                    >
-                    <el-dropdown-item @click="itemID = 10087"
-                      >我的缴费</el-dropdown-item
-                    >
+                    <el-dropdown-item @click="itemID = 10087">备案信息</el-dropdown-item>
+                    <el-dropdown-item @click="itemID = 10087">设置</el-dropdown-item>
+                    <el-dropdown-item @click="itemID = 10087">我的缴费</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
             </el-col>
           </el-row>
 
-          <el-tabs
-            ref="tabBox"
-            v-model="activeName"
-            class="demo-tabs"
-            v-if="titleChangeName == '首页' && itemID < 10086"
-          >
+          <el-tabs ref="tabBox" v-model="activeName" class="demo-tabs" v-if="titleChangeName == '首页' && itemID < 10086">
             <el-tab-pane :label="itemName" name="first">
+
+
               <!-- {{ earlyWarning }}12 -->
               <!-- 企业部分 -->
               <template v-if="loginType == '1'">
@@ -180,20 +144,26 @@
               <template v-if="loginType == '2'">
                 <Mechanism :tid="itemID" :boxHeight="boxHeight" />
               </template>
+              <!-- 政府部分 -->
+
+
+              <template v-if="loginType == '3'">
+
+                <GovernmentQuery :tid="itemID" :boxHeight="boxHeight" />
+
+              </template>
             </el-tab-pane>
           </el-tabs>
 
-          <el-tabs
-            ref="tabBox"
-            v-model="activeName"
-            class="demo-tabs"
-            v-else-if="titleChangeName != '首页' && itemID < 10086"
-          >
+          <el-tabs ref="tabBox" v-model="activeName" class="demo-tabs"
+            v-else-if="titleChangeName != '首页' && itemID < 10086">
             <el-tab-pane :label="itemName" name="first">
               <Law :tid="itemID" :boxHeight="boxHeight" />
             </el-tab-pane>
           </el-tabs>
 
+          <!-- 数据分析 -->
+          <DataAnalysis :tid="itemID" :boxHeight="boxHeight" v-if="itemID == 20001" />
           <!-- 安全生产管理体检 -->
           <Text v-if="itemID == 10089" @fiveNewChang="fiveNewChang" />
           <!-- 首页 -->
@@ -289,6 +259,8 @@ import Mechanism from "../components/mechanism/list.vue";
 import EarlyWarning from "../components/earlyWarning/earlyWarning.vue";
 import VideoOnline from "../components/videoOnline/index.vue";
 import ElectronicLicense from "../components/electronicLicense/index.vue";
+import GovernmentQuery from "../components/government/query/query.vue";
+import DataAnalysis from "../components/government/dataAnalysis/index.vue";
 import {
   onMounted,
   ref,
@@ -461,17 +433,17 @@ const typeSwitch = (type) => {
         "数据分析",
         "在线执法",
         "政府互动",
-        "在线咨询",
+        // "在线咨询",
       ];
       rightMenus.value = [
         {
-          id: 20000,
+          id: 801,
           parent_id: 233,
           is_parent: 0,
           name: "机构备案查询",
           children: [
             {
-              id: 20000,
+              id: 901,
               parent_id: 233,
               is_parent: 0,
               name: "机构备案查询",
@@ -480,13 +452,13 @@ const typeSwitch = (type) => {
           ],
         },
         {
-          id: 20001,
+          id: 802,
           parent_id: 233,
           is_parent: 0,
           name: "机构服务查询",
           children: [
             {
-              id: 20001,
+              id: 902,
               parent_id: 233,
               is_parent: 0,
               name: "机构服务查询",
@@ -495,13 +467,13 @@ const typeSwitch = (type) => {
           ],
         },
         {
-          id: 20002,
+          id: 803,
           parent_id: 233,
           is_parent: 0,
           name: "企业备案查询",
           children: [
             {
-              id: 20002,
+              id: 903,
               parent_id: 233,
               is_parent: 0,
               name: "企业备案查询",
@@ -510,13 +482,13 @@ const typeSwitch = (type) => {
           ],
         },
         {
-          id: 20003,
+          id: 804,
           parent_id: 233,
           is_parent: 0,
           name: "企业台账查询",
           children: [
             {
-              id: 20003,
+              id: 904,
               parent_id: 233,
               is_parent: 0,
               name: "企业台账查询",
@@ -525,13 +497,13 @@ const typeSwitch = (type) => {
           ],
         },
         {
-          id: 20004,
+          id: 805,
           parent_id: 233,
           is_parent: 0,
           name: "企业现场查询",
           children: [
             {
-              id: 20004,
+              id: 905,
               parent_id: 233,
               is_parent: 0,
               name: "企业现场查询",
@@ -540,13 +512,13 @@ const typeSwitch = (type) => {
           ],
         },
         {
-          id: 20005,
+          id: 806,
           parent_id: 233,
           is_parent: 0,
           name: "数据分析",
           children: [
             {
-              id: 20005,
+              id: 20001,
               parent_id: 233,
               is_parent: 0,
               name: "数据分析",
@@ -555,13 +527,13 @@ const typeSwitch = (type) => {
           ],
         },
         {
-          id: 20006,
+          id: 807,
           parent_id: 233,
           is_parent: 0,
           name: "在线执法",
           children: [
             {
-              id: 20006,
+              id: 907,
               parent_id: 233,
               is_parent: 0,
               name: "在线执法",
@@ -570,13 +542,13 @@ const typeSwitch = (type) => {
           ],
         },
         {
-          id: 20007,
+          id: 808,
           parent_id: 233,
           is_parent: 0,
           name: "政府互动",
           children: [
             {
-              id: 20007,
+              id: 908,
               parent_id: 233,
               is_parent: 0,
               name: "政府互动",
@@ -784,13 +756,17 @@ defineComponent({
         height: 35px;
         line-height: 35px;
       }
+
       .otd {
         padding-left: 80px;
       }
+
       /deep/.el-badge__content--danger {
         vertical-align: top;
       }
+
       .el-sub-menu {
+
         //
         img {
           width: 14px;
@@ -837,6 +813,7 @@ defineComponent({
         height: 35px;
         // padding: 0;
         background: #0165d0; // background: #0165D0;
+
         span {
           width: 75%;
           overflow: hidden; //超出的文本隐藏
@@ -949,6 +926,7 @@ defineComponent({
     color: #b1cde3;
     font-size: 14px;
     box-sizing: border-box;
+
     /deep/.el-form-item {
       width: 20%;
       margin-right: 0;
@@ -1000,10 +978,7 @@ defineComponent({
     color: #000;
   }
 
-  /deep/.el-table--striped
-    .el-table__body
-    tr.el-table__row--striped
-    td.el-table__cell {
+  /deep/.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
     background: #f3f9ff;
   }
 }

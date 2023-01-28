@@ -100,6 +100,9 @@ const getDataBaseInfoFun = (select) => {
       }
 
     }
+    res.data.data.forEach((item) => {
+      item.id = "d" + item.id;
+    });
     loading.value = false
     gridData.value = res.data.data
     total.value = res.data.dataCount
