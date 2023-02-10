@@ -3,7 +3,12 @@
     <el-col :span="6">
       <div class="box">
         <p>类目表</p>
-        <el-tree :data="databasesList" :props="defaultProps" @node-click="handleNodeClick" highlight-current />
+        <el-tree
+          :data="databasesList"
+          :props="defaultProps"
+          @node-click="handleNodeClick"
+          highlight-current
+        />
       </div>
     </el-col>
     <el-col :span="18">
@@ -18,7 +23,9 @@
               :props="{ value: 'id', label: 'name' }" />
           </el-form-item> -->
           <el-form-item>
-            <el-button type="primary" @click="getCompanyListFun('select')">查询</el-button>
+            <el-button type="primary" @click="getCompanyListFun('select')"
+              >查询</el-button
+            >
             <el-button type="primary" @click="uploadFun">上传</el-button>
           </el-form-item>
         </el-form>
@@ -32,14 +39,27 @@
           <el-table-column prop="name" label="版块" />
           <el-table-column prop="address" label="操作">
             <template #default="scope">
-              <el-button size="small" type="primary" @click="see(scope.row)">查看</el-button>
-              <el-button size="small" type="danger" @click="delFileInfoFun(scope.row)">删除</el-button>
+              <el-button size="small" type="primary" @click="see(scope.row)"
+                >查看</el-button
+              >
+              <el-button
+                size="small"
+                type="danger"
+                @click="delFileInfoFun(scope.row)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
         <Pagination :total="total" @changeList="changeList" />
         <SeeFlie ref="seeFile"></SeeFlie>
-        <Upload ref="upload" :status="status" @uploadSuccess="uploadSuccess" :labelName="labelName" :ftp="1" />
+        <Upload
+          ref="upload"
+          :status="status"
+          @uploadSuccess="uploadSuccess"
+          :labelName="labelName"
+          :ftp="1"
+        />
       </div>
     </el-col>
   </el-row>
@@ -192,7 +212,7 @@ const delFileInfoFun = (row: any) => {
 };
 //查看文件
 const see = (row: any) => {
-  seeFile.value.show(row);
+  seeFile.value.show(row, "law");
 };
 //分页器组件传回来的数据
 const changeList = (pageSize, currentPage, type) => {
@@ -251,12 +271,16 @@ const changeList = (pageSize, currentPage, type) => {
     // }
   }
 
-  /deep/.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+  /deep/.el-tree--highlight-current
+    .el-tree-node.is-current
+    > .el-tree-node__content {
     // 设置颜色
-    background-color: rgba(135,
-        206,
-        235,
-        0.2); // 透明度为0.2的skyblue，作者比较喜欢的颜色
+    background-color: rgba(
+      135,
+      206,
+      235,
+      0.2
+    ); // 透明度为0.2的skyblue，作者比较喜欢的颜色
     color: #0165d0ff; // 节点的字体颜色
     font-weight: bold; // 字体加粗
   }

@@ -1,7 +1,11 @@
 <template>
   <el-sub-menu v-if="menus.children.length" :index="menus.name">
     <template #title>
-      <span style="margin-left: 20px">{{ menus.name }}</span>
+      <span
+        style="margin-left: 20px"
+        @click="titleClick(menus.name, menus.id)"
+        >{{ menus.name }}</span
+      >
     </template>
     <label v-if="menus.children.length >= 1">
       <!-- /* 递归调用自己 */ -->
@@ -31,10 +35,12 @@ export default defineComponent({
       default: () => {},
     },
   },
+
   setup(props, ctx) {
     const store = useStore();
     const menuClick = (menu, name, parent_id) => {
       // console.log(menu, name, "zhel", parent_id);
+
       // ctx.emit('sss', menu, name);
       // sessionStorage.setItem('menuName', menu)
       // sessionStorage.setItem('tid', name)
@@ -43,8 +49,10 @@ export default defineComponent({
       store.commit("setmenuParentId", parent_id);
       store.commit("setmenuID", name);
     };
-
-    return { menuClick };
+    const titleClick = (name, id) => {
+      console.log(name, id);
+    };
+    return { menuClick, titleClick };
   },
 });
 </script>

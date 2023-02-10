@@ -13,7 +13,12 @@
         <!-- <el-button type="primary" @click="getAuditFilesFun">待审核文件</el-button> -->
       </el-col>
       <el-col :span="7">
-        <el-select
+        <el-radio-group v-model="style" size="default">
+          <el-radio-button label="1">公共模板</el-radio-button>
+          <el-radio-button label="2">我的台账</el-radio-button>
+        </el-radio-group>
+
+        <!-- <el-select
           v-model="style"
           class="m-2"
           placeholder="Select"
@@ -21,7 +26,7 @@
         >
           <el-option label="模板" value="1" />
           <el-option label="台账" value="2" />
-        </el-select>
+        </el-select> -->
       </el-col>
     </el-row>
     <br />
@@ -43,7 +48,7 @@
             >下载模板
           </el-button>
           <el-button
-            v-if="style == 1"
+            v-if="style == '1'"
             size="small"
             type="success"
             @click="onlineEditing(scope.row)"
@@ -53,6 +58,7 @@
             size="small"
             type="danger"
             @click="delFileInfoFun(scope.row)"
+            v-if="style == '2'"
             >删除</el-button
           >
         </template>
@@ -86,6 +92,7 @@ const account = ref(null);
 const total2 = ref(0);
 const status = ref("Account");
 const table = ref(false);
+//公共台账和我的模板切换
 const style = ref("1");
 const gridData = ref([]);
 const labelName = ref([
@@ -101,20 +108,7 @@ const formInline = reactive({
 const seeFile: any = ref(null);
 const upload: any = ref(null);
 const auditFile: any = ref(null);
-const tableData = ref([
-  {
-    id: 44,
-    tid: 12,
-    title: "生产安全事故应急条例",
-    url: "http://119.91.156.5/download/b390071e-f679-4e00-a8a1-75ade57e79fe生产安全事故应急条例.docx",
-    level: 1,
-    status: null,
-    create_date: "2022-11-22 07:51:46",
-    create_name: "admin",
-    update_date: null,
-    update_name: null,
-  },
-]);
+const tableData = ref([]);
 
 const props = defineProps({
   tid: Number,
@@ -154,12 +148,12 @@ const downloadFileFun = (url: string) => {
 //在线编辑
 const onlineEditing = (row: any) => {
   console.log(row);
-
-  getViewUrlDbPath("e" + row.id, sessionStorage.getItem("userId")).then(
-    (res) => {
-      window.open(res.data.data.wpsUrl);
-    }
-  );
+  seeFile.value.show(row, "account");
+  // getViewUrlDbPath("e" + row.id, sessionStorage.getItem("userId")).then(
+  //   (res) => {
+  //     window.open(res.data.data.wpsUrl);
+  //   }
+  // );
 };
 //获取待审核文件列表
 const getAuditFilesFun = () => {
@@ -197,9 +191,9 @@ const delFileInfoFun = (row: any) => {
     });
   });
 };
-//查看文件
+//查看文件+
 const see = (row: any) => {
-  seeFile.value.show(row);
+  seeFile.value.show(row, style.value == "1" ? "law" : "see");
 };
 //分页器组件传回来的数据
 const changeList = (pageSize, currentPage) => {
@@ -245,4 +239,10 @@ const fileInfoFun = () => {
 #account {
   height: 500px;
 }
+/deep/.el-radio-button__original-radio:checked + .el-radio-button__inner {
+  background: #1f459c;
+}
+// /deep/.is-active {
+//   background: #bfa;
+// }
 </style>

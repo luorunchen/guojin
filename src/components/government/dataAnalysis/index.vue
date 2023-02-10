@@ -4,67 +4,48 @@
       <div class="text">
         <el-tabs ref="tabBox" v-model="activeName" class="demo-tabs">
           <el-tab-pane label="平台数据分析" name="first">
-
-
             <el-row>
               <el-col :span="8">
-
-                <img src="@/assets/people.png" alt="">
+                <img src="@/assets/people.png" alt="" />
                 <p>机构备案数量</p>
-                <p>2 <span>家</span></p>
+                <p>{{ dataAnalysisList.instCount }} <span>家</span></p>
               </el-col>
-              <el-col :span="8"><img src="@/assets/ssss.png" alt="">
+              <el-col :span="8"
+                ><img src="@/assets/ssss.png" alt="" />
                 <p>企业备案数量</p>
-                <p>2 <span>家</span></p>
+                <p>{{ dataAnalysisList.companyCount }} <span>家</span></p>
               </el-col>
-              <el-col :span="8"><img src="@/assets/danger.png" alt="">
+              <el-col :span="8"
+                ><img src="@/assets/danger.png" alt="" />
                 <p>危险性场所数量</p>
-                <p>2 <span>家</span></p>
+                <p>{{ dataAnalysisList.instCount }}<span>家</span></p>
               </el-col>
             </el-row>
-
           </el-tab-pane>
-
-
         </el-tabs>
       </div>
       <div class="textBottom">
         <el-tabs ref="tabBox" v-model="activeName" class="demo-tabs">
           <el-tab-pane label="近7日在线执法近处理情况" name="first">
-
-            <div id="echarts"></div>
-          </el-tab-pane></el-tabs>
+            <div id="echarts"></div> </el-tab-pane
+        ></el-tabs>
       </div>
-
     </el-col>
     <el-col :span="4">
       <div class="right">
         <el-tabs ref="tabBox" v-model="activeName" class="demo-tabs">
           <el-tab-pane label="台账完成度排名" name="first">
             <ul>
-              <li>
+              <li v-for="(item, index) in tzRankList" :key="index">
                 <el-row>
-                  <el-col :span="2">1</el-col>
-                  <el-col :span="18">XX有限公司</el-col>
-                  <el-col :span="4">100分</el-col>
-                </el-row>
-              </li>
-              <li>
-                <el-row>
-                  <el-col :span="2">2</el-col>
-                  <el-col :span="18">XX有限公司</el-col>
-                  <el-col :span="4">100分</el-col>
-                </el-row>
-              </li>
-              <li>
-                <el-row>
-                  <el-col :span="2">3</el-col>
-                  <el-col :span="18">XX有限公司</el-col>
-                  <el-col :span="4">100分</el-col>
+                  <el-col :span="2">{{ index + 1 }}</el-col>
+                  <el-col :span="18">{{ item.company }}</el-col>
+                  <el-col :span="4">{{ item.score }}分</el-col>
                 </el-row>
               </li>
             </ul>
-          </el-tab-pane></el-tabs>
+          </el-tab-pane></el-tabs
+        >
       </div>
     </el-col>
   </el-row>
@@ -72,35 +53,46 @@
 
 <script setup lang="ts">
 import * as echarts from "echarts";
-import { onMounted, ref } from 'vue'
-const activeName = ref('first')
-
-
+import { onMounted, ref } from "vue";
+import { tzRank, dataAnalysis } from "@/api/index.js";
+const activeName = ref("first");
+const tzRankList = ref([]);
+const dataAnalysisList = ref({});
 
 onMounted(() => {
-  echartsFun()
-})
+  echartsFun();
+  tzRankFun();
+});
 const echartsFun = () => {
   var chartDom = document.getElementById("echarts")!;
   var myChart = echarts.init(chartDom);
   var option: EChartsOption;
   option = {
     xAxis: {
-      type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      type: "category",
+      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     },
     yAxis: {
-      type: 'value'
+      type: "value",
     },
     series: [
       {
         data: [150, 230, 224, 218, 135, 147, 260],
-        type: 'line'
-      }
-    ]
+        type: "line",
+      },
+    ],
   };
   myChart.setOption(option);
-}
+};
+
+const tzRankFun = () => {
+  tzRank(1, 10).then((res) => {
+    tzRankList.value = res.data.data;
+  });
+  dataAnalysis().then((res) => {
+    dataAnalysisList.value = res.data.data;
+  });
+};
 </script>
 
 <style lang="less" scoped>
@@ -109,17 +101,14 @@ const echartsFun = () => {
 
   .text {
     padding: 0 10px;
-    height: 150px;
-    background: #FFFFFF;
-    box-shadow: 0px 0px 13px 0px #EBEBEB;
+    // height: 150px;
+    background: #ffffff;
+    box-shadow: 0px 0px 13px 0px #ebebeb;
     border-radius: 4px;
     text-align: center;
 
     p {
-
-
       &:nth-child(2) {
-
         font-size: 16px;
         font-family: Source Han Sans CN;
         font-weight: 500;
@@ -127,11 +116,10 @@ const echartsFun = () => {
       }
 
       &:nth-child(3) {
-
         font-size: 18px;
         font-family: Source Han Sans CN;
         font-weight: 500;
-        color: #058FFEFF;
+        color: #058ffeff;
       }
     }
 
@@ -144,8 +132,8 @@ const echartsFun = () => {
     padding: 0 10px;
     margin-top: 10px;
     height: 340px;
-    background: #FFFFFF;
-    box-shadow: 0px 0px 13px 0px #EBEBEB;
+    background: #ffffff;
+    box-shadow: 0px 0px 13px 0px #ebebeb;
     border-radius: 4px;
 
     #echarts {
@@ -157,10 +145,10 @@ const echartsFun = () => {
   .right {
     padding: 0 10px;
     height: 500px;
-    background: #FFFFFF;
-    box-shadow: 0px 0px 13px 0px #EBEBEB;
+    background: #ffffff;
+    box-shadow: 0px 0px 13px 0px #ebebeb;
     border-radius: 4px;
-
+    font-size: 14px;
   }
 }
 </style>

@@ -84,6 +84,10 @@
                 >《平台使用须知》</el-link
               >
             </div>
+            <div class="chrome">
+              推荐使用 <img src="../assets/chrome.png" alt="" /> 谷歌浏览器
+              <el-link type="primary" @click="chromeDowload">点击下载</el-link>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -186,7 +190,9 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
   });
 };
-
+const chromeDowload = () => {
+  window.open("http://119.91.156.5/download/chrome/Chrome.exe");
+};
 const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.resetFields();
@@ -278,6 +284,19 @@ const goToRegister = () => {
         // position: relative;
         // bottom: 20px;
         // left: 50%;
+      }
+      .chrome {
+        text-align: center;
+        font-size: 15px;
+        margin-top: 20px;
+        img {
+          width: 20px;
+          height: 20px;
+        }
+        /deep/.el-link {
+          vertical-align: initial;
+          font-size: 15px;
+        }
       }
     }
 

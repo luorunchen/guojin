@@ -137,7 +137,10 @@ const delFileInfoFun = (row: any) => {
 };
 //查看文件
 const see = (row: any) => {
-  seeFile.value.show(row);
+  // console.log(row, 98);
+
+  // row.id = "d" + row.id;
+  seeFile.value.show(row, "law");
 };
 //分页器组件传回来的数据
 const changeList = (pageSize, currentPage, type) => {
@@ -164,9 +167,9 @@ const fileInfoFun = () => {
   )
     .then((res: any) => {
       // console.log(res, 99)
-      res.data.data.forEach((item) => {
-        item.id = "d" + item.id;
-      });
+      // res.data.data.forEach((item) => {
+      //   item.id = "d" + item.id;
+      // });
 
       tableData.value = res.data.data;
       total.value = res.data.dataCount;

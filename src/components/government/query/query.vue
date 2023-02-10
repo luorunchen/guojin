@@ -40,72 +40,82 @@
     <!-- <br /> -->
     <el-table :data="tableData" stripe style="width: 100%" height="89%">
       <el-table-column type="index" width="50" />
-      <el-table-column prop="productNumber" label="设备编号" />
-      <el-table-column prop="device_name" label="设备名称" />
-      <el-table-column prop="installLocation" label="所属公司" />
+      <el-table-column prop="company" label="公司名称" />
+      <el-table-column prop="name" label="所属行业" />
+      <el-table-column prop="address" label="公司地址" />
 
       <!-- <el-table-column prop="create_name" label="上传人员" / -->
       <el-table-column prop="address" label="操作">
         <template #default="scope">
-          <el-button size="small" type="primary" @click="see(scope.row)">查看</el-button>
-
+          <el-button size="small" type="primary" @click="see(scope.row)"
+            >查看</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
+    <el-dialog v-model="dialogVisible" title="备案表" width="70%">
+      <FilingInformationOne
+        :status="'government'"
+        :seeRowId="seeRowId"
+        v-if="store.state.menuName == '企业备案查询'"
+      />
+      <FilingInformationTwo
+        :status="'government'"
+        :seeRowId="seeRowId"
+        v-if="store.state.menuName == '机构备案查询'"
+      />
+    </el-dialog>
+
     <Pagination :total="total" :type="1" @changeList="changeList" />
-    <Upload ref="upload" :status="status" :labelName="labelName" :ftp="'2'" />
-    <SeeFlie ref="seeFile" />
   </div>
 </template>
 
 <script script lang = "ts" setup >
-import { getVideosById } from "@/api/index";
+import { getCompList, getInstList } from "@/api/index";
 import { onMounted, reactive, ref, defineProps, watch } from "vue";
-import SeeFlie from "../../seeFlie/index.vue";
-import Upload from "../../upload/index.vue";
-import Pagination from "../../pagination/index.vue";
 
-import { Search } from "@element-plus/icons-vue";
+import Pagination from "../../pagination/index.vue";
+import FilingInformationOne from "@/components/filingInformation/one.vue";
+import FilingInformationTwo from "@/components/filingInformation/two.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
+
+import { useStore } from "vuex";
+const store = useStore();
 const currentPage4 = ref(1);
 const pageSize4 = ref(10);
 
 const total = ref(0);
-const input2 = ref("");
+
+const dialogVisible = ref(false);
 const account = ref(null);
 
-const status = ref("mechanism");
-const table = ref(false);
-const regionCompChange = ref("");
-const getRegionCompList = ref([]);
-const labelName = ref([
-  {
-    parent_id: "",
-  },
-]);
+const seeRowId = ref("");
+
 const formInline = reactive({
   user: "",
   region: "",
 });
-const seeFile: any = ref(null);
-const upload: any = ref(null);
 
-const tableData = ref([
+const tableData = ref([]);
 
-]);
+const see = (row) => {
+  dialogVisible.value = true;
+  seeRowId.value = row.companyId;
 
+  // switch (val) {
+  //   case "企业备案查询":
+  //     getCompListFun();
+  //     break;
+  //   case "机构备案查询":
+  //     getInstListFun();
+  //     break;
+  // }
+};
 const props = defineProps({
-  tid: Number,
   boxHeight: Number,
 });
-watch(
-  () => props.tid,
-  (val) => {
-    console.log(val, "props");
-    fileInfoFun();
-  }
-);
+
 watch(
   () => props.boxHeight,
   (val) => {
@@ -116,48 +126,43 @@ watch(
   }
 );
 
+watch(
+  () => store.state.menuName,
+  (val) => {
+    toggleMenu(val);
+  }
+);
 onMounted(() => {
-  fileInfoFun();
-  // getRegionCompFun();
+  toggleMenu(store.state.menuName);
 });
-//下载模板
-const downloadFileFun = (url: string) => {
-  window.open(url);
-};
 
-//删除资料文件
-const delFileInfoFun = (row: any) => {
-  ElMessageBox.confirm(
-    `是否删除<span style='color:red'> ${row.title} </span>文件?`,
-    "删除文件",
-    {
-      confirmButtonText: "OK",
-      cancelButtonText: "Cancel",
-      type: "warning",
-      dangerouslyUseHTMLString: true,
-    }
-  ).then(() => {
-    getVideosById(row.id).then((res) => {
-      if (res.data.code == 200) {
-        ElMessage({
-          showClose: true,
-          message: "删除成功",
-          type: "success",
-        });
-        fileInfoFun();
-      } else {
-        ElMessage({
-          showClose: true,
-          message: res.data.msg,
-          type: "error",
-        });
-      }
-    });
+const toggleMenu = (val) => {
+  switch (val) {
+    case "企业备案查询":
+      getCompListFun();
+      break;
+    case "企业台账查询":
+      getCompListFun();
+      break;
+    case "企业现场查询":
+      getCompListFun();
+      break;
+    case "机构备案查询":
+      getInstListFun();
+      break;
+  }
+};
+const getCompListFun = () => {
+  getCompList("", "", 1, 10).then((res) => {
+    tableData.value = res.data.data;
+    total.value = res.data.dataCount;
   });
 };
-//查看文件
-const see = (row: any) => {
-  seeFile.value.show(row);
+const getInstListFun = () => {
+  getInstList("", "", 1, 10).then((res) => {
+    tableData.value = res.data.data;
+    total.value = res.data.dataCount;
+  });
 };
 //分页器组件传回来的数据
 const changeList = (pageSize, currentPage) => {
@@ -165,37 +170,8 @@ const changeList = (pageSize, currentPage) => {
 
   pageSize4.value = pageSize;
   currentPage4.value = currentPage;
-  fileInfoFun();
+  // fileInfoFun();
 };
-const uploadFun = () => {
-  console.log(321);
-
-  upload.value.show();
-};
-const onSubmit = () => {
-  console.log("submit!");
-};
-//企业现场查询
-const fileInfoFun = () => {
-  getVideosById(
-    "10013",
-    currentPage4.value,
-    pageSize4.value
-  )
-    .then((res: any) => {
-      // console.log(res, 99)
-      tableData.value = res.data.data;
-      total.value = res.data.dataCount;
-    })
-    .catch((err) => {
-      console.log(err, 555);
-    });
-};
-// const getRegionCompFun = () => {
-//   getRegionComp().then((res) => {
-//     getRegionCompList.value = res.data.data;
-//   });
-// };
 </script>
 
 <style scoped lang="less">

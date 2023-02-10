@@ -7,7 +7,12 @@
             <el-col :span="14">
               <div class="box">
                 <h1>智慧安全，全方位守护</h1>
-                <el-button type="success" color="#058FFE">全面体检</el-button>
+                <el-button
+                  type="success"
+                  color="#058FFE"
+                  @click="(visible = true), medicalFun()"
+                  >全面体检</el-button
+                >
               </div>
             </el-col>
             <el-col :span="6">
@@ -17,7 +22,7 @@
             </el-col>
           </el-row>
         </div>
-        <div class="conter">
+        <!-- <div class="conter">
           <p>目标职责</p>
           <p>制度化管理</p>
           <p>教育培训</p>
@@ -25,7 +30,7 @@
           <p>应急管理</p>
           <p>事故管理</p>
           <p>持续改进</p>
-        </div>
+        </div> -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -56,15 +61,205 @@
       </div>
     </el-tab-pane>
   </el-tabs>
+
+  <el-dialog v-model="visible" :show-close="false" :before-close="handleClose">
+    <template #header="{ close, titleId, titleClass }">
+      <el-row class="my-header">
+        <el-col :span="3">
+          <div class="imgbox">{{ sum }}</div>
+          <!-- <img src="../../assets/安全.png" alt="" /> -->
+        </el-col>
+        <el-col :span="5">
+          <h1 :id="titleId">
+            {{ percentage == 100 ? "全面体检完成" : "正在全面体检..." }}
+          </h1>
+          <h4>{{ percentage == 100 ? `本次得分${sum}分` : "" }}</h4>
+        </el-col>
+        <el-col :span="2" :offset="14">
+          <el-button type="danger" @click="close">
+            <el-icon class="el-icon--left"><CircleCloseFilled /></el-icon>
+            取消
+          </el-button></el-col
+        >
+      </el-row>
+      <!-- <div >
+        <div>
+         
+         
+        </div>
+
+       
+      </div> -->
+    </template>
+    <el-progress :percentage="percentage" :indeterminate="indeterminate" />
+    <!-- <div
+      v-for="(item, index) in arrList"
+      :key="index"
+      class="boxs"
+      v-show="percentage == 100"
+    >
+      <el-row>
+        <el-col :span="6">
+          <h4>{{ item.name }}</h4></el-col
+        >
+        <el-col :span="4">
+          <span>共{{ item.num }}项未完成</span></el-col
+        >
+      </el-row>
+      
+    </div> -->
+    <el-collapse
+      accordion
+      v-for="(item, index) in arrList"
+      :key="index"
+      v-show="percentage == 100"
+    >
+      <el-collapse-item name="1">
+        <template #title>
+          <h4>{{ item.name }}</h4>
+          <span style="color: red"> (共{{ item.num }}项未完成)</span>
+        </template>
+
+        <el-table :data="item.children" stripe style="width: 100%">
+          <el-table-column type="index" width="50" />
+          <el-table-column prop="title" label="标题" />
+
+          <el-table-column prop="address" label="操作">
+            <template #default="scope">
+              <el-button size="small" type="primary" @click="see(scope.row)"
+                >查看</el-button
+              >
+              <el-button
+                size="small"
+                type="primary"
+                @click="downloadFileFun(scope.row.url)"
+                >下载模板
+              </el-button>
+              <el-button
+                size="small"
+                type="success"
+                @click="onlineEditing(scope.row)"
+                >在线编辑</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- <ul v-for="(item2, index2) in item.children" :key="index2">
+          <li>{{ item2.title }}</li>
+        </ul> -->
+      </el-collapse-item>
+    </el-collapse>
+  </el-dialog>
+  <SeeFlie ref="seeFile" />
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import type { TabsPaneContext } from "element-plus";
+import { ref, onMounted, watch } from "vue";
+import { medical } from "@/api/index.js";
+import type { TabsPaneContext, ElButton, ElDialog } from "element-plus";
+import { CircleCloseFilled } from "@element-plus/icons-vue";
+import SeeFlie from "../seeFlie/index.vue";
 const activeName = ref("first");
-
+const visible = ref(false);
+const indeterminate = ref(true);
 const activeName2 = ref("fiveNew");
+const arrList = ref([]);
+const percentage = ref(0);
+const sum = ref(100);
+const score = ref(100);
+const sI: any = ref();
+const sumSI: any = ref();
+const seeFile: any = ref();
+onMounted(() => {
+  // medicalFun();
+});
+watch(
+  () => percentage.value,
+  (val) => {
+    // console.log(val, 999);
 
+    if (val >= 100) {
+      // console.log("jinlaile");
+      // console.log(sI.value);
+      indeterminate.value = false;
+
+      window.clearInterval(sI.value);
+      // percentage.value = 0;
+    }
+  }
+);
+watch(
+  () => sum.value,
+  (val) => {
+    // console.log(val, 999, score.value);
+
+    if (val <= score.value) {
+      window.clearInterval(sumSI.value);
+      // percentage.value = 0;
+    }
+  }
+);
+const handleClose = (done: () => void) => {
+  done();
+
+  window.clearInterval(sI.value);
+  window.clearInterval(sumSI.value);
+  percentage.value = 0;
+  sum.value = 100;
+};
+const see = (row: any) => {
+  seeFile.value.show(row, "law");
+};
+//下载模板
+const downloadFileFun = (url: string) => {
+  window.open(url);
+};
+//在线编辑
+const onlineEditing = (row: any) => {
+  console.log(row);
+  seeFile.value.show(row, "account");
+  // getViewUrlDbPath("e" + row.id, sessionStorage.getItem("userId")).then(
+  //   (res) => {
+  //     window.open(res.data.data.wpsUrl);
+  //   }
+  // );
+};
+const medicalFun = () => {
+  medical(sessionStorage.getItem("evaluation")).then((res) => {
+    // console.log(res, 999);
+    sI.value = setInterval(() => {
+      percentage.value += 5;
+
+      // console.log("结束了吗");
+    }, 1000);
+    sumSI.value = setInterval(() => {
+      sum.value -= 5;
+      // console.log("结束了吗");
+    }, 1000);
+    score.value = res.data.data.score;
+    // clearInterval(sI.value);
+    let arr = res.data.data.mbInfo;
+    var newArr = [...new Set(arr.map((i) => i.name))]; // 去重的时候需要注意和普通数组不同
+    console.log(newArr, "newarr");
+
+    var list = [];
+    newArr.forEach((i) => {
+      list.push(arr.filter((t) => t.name === i));
+    });
+    console.log(list, "list");
+
+    var mlist = [];
+    list.forEach((i, index) => {
+      mlist.push({
+        name: newArr[index],
+        num: i.length,
+        children: i,
+      });
+    });
+    arrList.value = mlist;
+    console.log(mlist);
+  });
+};
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event);
 };
@@ -102,7 +297,43 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 
   // line-height: 330px;
 }
+.my-header {
+  // display: flex;
+  // flex-direction: row;
+  // justify-content: space-between;
+  .imgbox {
+    text-align: center;
+    line-height: 100px;
+    font-size: 50px;
+    color: #2c7aff;
+    width: 100px;
+    height: 100px;
+    background-image: url("../../assets/安全.png");
+    background-size: 100% 100%;
+  }
 
+  h1 {
+    line-height: 100px;
+  }
+}
+.boxs {
+  margin-bottom: 20px;
+  img {
+    width: 100px;
+    height: 100px;
+  }
+  h4 {
+    margin-left: 20px;
+  }
+
+  span {
+    color: rgb(127, 200, 245);
+  }
+  p {
+    background: #f7f7f7;
+    padding: 5px;
+  }
+}
 .conter {
   // height: 80px;
   // background: #bfa;

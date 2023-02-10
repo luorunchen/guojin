@@ -4,7 +4,7 @@
       <el-form-item label="用户名称:">
         <el-input v-model="formInline.user" placeholder="请输入" />
       </el-form-item>
-      <el-form-item orm-item label="年费类型:">
+      <el-form-item orm-item label="会员类型:">
         <el-select v-model="formInline.region" placeholder="请选择">
           <el-option label="平台年费" value="1" />
           <el-option label="五新商店年费" value="2" />
@@ -31,9 +31,9 @@
     <el-table :data="gridData" height="550px">
       <el-table-column type="index" width="50" />
       <el-table-column prop="username" label="用户名称" />
-      <el-table-column prop="name" label="年费类型">
+      <el-table-column prop="name" label="会员类型">
         <template #default="scope">
-          {{ scope.row.type == 1 ? "平台年费" : "五新商店年费" }}
+          {{ scope.row.type == 1 ? "平台会员" : "五新商店会员" }}
         </template>
       </el-table-column>
       <el-table-column prop="pay_date" label="起始时间" />

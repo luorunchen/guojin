@@ -19,6 +19,7 @@
     "postcss-px-to-viewport-opt": "0.0.4",
     "postcss-px2rem": "^0.3.0",
     "postcss-pxtorem": "^6.0.0",
+    "qrcodejs2": "^0.0.2",
     "qs": "^6.11.0",
     "style-vw-loader": "^1.0.2",
     "vite": "^3.2.4",

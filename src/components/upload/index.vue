@@ -281,6 +281,10 @@ const show = (tid: string) => {
     //后台资料库上传
     case "databases":
       action.value = `http://119.91.156.5/gjsafe/manage/addDataBaseBank`;
+      if (props.labelName.parent_id != "2") {
+        numberValidateForm.level = "0";
+      }
+
       break;
     //前台资料库上传
     // case "Law":
