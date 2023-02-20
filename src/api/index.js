@@ -40,6 +40,36 @@ export function fileInfo(tid, pageNum, pageSize, title) {
     }
   })
 }
+//生产台账
+export function editMb(id) {
+  return service({
+    url: `/company/editMb`,
+    method: 'GET',
+    params: {
+      id
+    }
+  })
+}
+//生产台账
+export function getDataBaseBank(sid, pageNum, pageSize) {
+  return service({
+    url: `/company/getDataBaseBank`,
+    method: 'GET',
+    params: {
+      sid, pageNum, pageSize
+    }
+  })
+}
+//生产台账
+export function syncDataBaseBank(tid, evaluation, ids) {
+  return service({
+    url: `/company/syncDataBaseBank`,
+    method: 'GET',
+    params: {
+      tid, evaluation, ids
+    }
+  })
+}
 //获取待审核文件列表
 export function getAuditFiles(pageNum, pageSize) {
   return service({
@@ -583,6 +613,16 @@ export function tzRank(pageNum, pageSize) {
     method: 'GET',
     params: {
       pageNum, pageSize
+    }
+  })
+}
+//政府台账完成度排名
+export function getInstUpInfoByComp(title, pageNum, pageSize, tid) {
+  return service({
+    url: `/standBank/getInstUpInfoByComp`,
+    method: 'GET',
+    params: {
+      title, pageNum, pageSize, tid
     }
   })
 }

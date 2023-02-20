@@ -47,7 +47,7 @@
               </el-form-item>
 
               <el-checkbox-group v-model="numberValidateForm.type">
-                <el-checkbox label="使用协议" name="type">
+                <el-checkbox label="记住密码" name="type">
                   <el-link>记住密码</el-link>
                 </el-checkbox>
               </el-checkbox-group>
@@ -117,20 +117,53 @@
 
 <script lang="ts" setup>
 import { login } from "@/api/index";
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
 import type { FormInstance } from "element-plus";
 import { ElMessage } from "element-plus";
 import router from "@/router/index";
+import jsCookie from "js-cookie";
 import { Avatar, Lock } from "@element-plus/icons-vue";
 const formRef = ref<FormInstance>();
 const activeName = ref("1");
+const remember = ref();
 const dialogVisible = ref(false);
 const numberValidateForm = reactive({
   userName: "",
   password: "",
-  type: [],
+  type: ["记住密码"],
 });
+onMounted(() => {
+  // queryLocalForm();
+  // console.log(window.document.cookie, "cookie");
+  let arr = document.cookie.split("; ");
+  // console.log(arr);
+  for (let i = 0; i < arr.length; i++) {
+    // 再次切割，arr2[0]为key值，arr2[1]为对应的value
+    let arr2 = arr[i].split("=");
+    if (arr2[0] === "userName") {
+      numberValidateForm.userName = arr2[1];
+    } else if (arr2[0] === "password") {
+      numberValidateForm.password = arr2[1];
+    }
+  }
+});
+// const queryLocalForm = () => {
+//   const localForm = jsCookie.get(LOCAL_KEY);
+//   console.log(localForm);
 
+//   if (localForm) {
+//     remember.value = true;
+//     try {
+//       // const { username, password } = JSON.parse(localForm);
+//       // form.username = decode(username);
+//       // form.password = decode(password);
+//     } catch (error) {
+//       console.error("本地数据解析失败~", error);
+//     }
+//   } else {
+//     remember.value = false;
+//   }
+// };
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid) => {
@@ -153,6 +186,16 @@ const submitForm = (formEl: FormInstance | undefined) => {
               message: "登录成功",
               type: "success",
             });
+
+            // if(numberValidateForm)
+            console.log(numberValidateForm.type, "type");
+            if (numberValidateForm.type.length > 0) {
+              window.document.cookie =
+                "userName" + "=" + numberValidateForm.userName;
+
+              window.document.cookie =
+                "password" + "=" + numberValidateForm.password;
+            }
           } else {
             ElMessage({
               showClose: true,

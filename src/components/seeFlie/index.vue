@@ -123,6 +123,8 @@ const show = (row: any, state) => {
     pSrc.value = `https://view.xdocin.com/view?src=${a}&copyable=false&printable=false&saveable=false`;
     console.log(pSrc.value, "11");
   } else {
+    console.log(state, "state");
+
     getViewUrlDbPath(
       state == "law"
         ? "d" + row.id
@@ -131,11 +133,9 @@ const show = (row: any, state) => {
         : row.id,
       sessionStorage.getItem("userId")
     ).then((res) => {
-      // window.open(res.data.data.wpsUrl);
-      // dialogVisible.value = true;
-      // // console.log(pSrc.value);
-      //
-      // pSrc.value = res.data.data.wpsUrl;
+      if (res.data.data.wpsUrl == undefined || res.data.data.wpsUrl == null) {
+        return show(row, "see");
+      }
       nextTick(() => {
         jssdk.value = WebOfficeSDK.config({
           url: res.data.data.wpsUrl, // 该地址需要对接方服务端提供，形如 https://wwo.wps.cn/office/p/xxx

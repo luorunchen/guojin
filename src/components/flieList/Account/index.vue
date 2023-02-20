@@ -10,6 +10,12 @@
       </el-col>
       <el-col :span="9">
         <el-button type="primary" @click="uploadFun">上传文件</el-button>
+        <el-button type="primary" @click="syncLaw"
+          >同步资料库文件到台账</el-button
+        >
+        <!-- <el-button type="primary" @click="uploadFun"
+          >同步资料库文件到台账</el-button
+        > -->
         <!-- <el-button type="primary" @click="getAuditFilesFun">待审核文件</el-button> -->
       </el-col>
       <el-col :span="7">
@@ -55,6 +61,13 @@
             >在线编辑</el-button
           >
           <el-button
+            v-if="style == '1'"
+            size="small"
+            type="success"
+            @click="generate(scope.row)"
+            >生成台账</el-button
+          >
+          <el-button
             size="small"
             type="danger"
             @click="delFileInfoFun(scope.row)"
@@ -64,7 +77,17 @@
         </template>
       </el-table-column>
     </el-table>
-
+    <el-dialog v-model="dialogTableVisible" title="同步资料库文件">
+      <el-button type="primary" @click="syncDataBaseBankFun"
+        >确定同步</el-button
+      >
+      <el-divider />
+      <el-table :data="gridData" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" />
+        <el-table-column property="title" label="标题" />
+        <el-table-column property="name" label="板块" />
+      </el-table>
+    </el-dialog>
     <AuditFile ref="auditFile" />
 
     <Pagination :total="total" :type="1" @changeList="changeList" />
@@ -74,7 +97,13 @@
 </template>
 
 <script script lang = "ts" setup >
-import { getStandInfo, delStandFileInfo, getViewUrlDbPath } from "@/api/index";
+import {
+  getStandInfo,
+  delStandFileInfo,
+  editMb,
+  getDataBaseBank,
+  syncDataBaseBank,
+} from "@/api/index";
 import { onMounted, reactive, ref, defineProps, watch } from "vue";
 import SeeFlie from "../../seeFlie/index.vue";
 import Upload from "../../upload/index.vue";
@@ -92,9 +121,11 @@ const account = ref(null);
 const total2 = ref(0);
 const status = ref("Account");
 const table = ref(false);
+const dialogTableVisible = ref(false);
 //公共台账和我的模板切换
 const style = ref("1");
 const gridData = ref([]);
+const multipleSelection = ref([]);
 const labelName = ref([
   {
     parent_id: "",
@@ -145,15 +176,48 @@ onMounted(() => {
 const downloadFileFun = (url: string) => {
   window.open(url);
 };
+const syncLaw = () => {
+  dialogTableVisible.value = true;
+  getDataBaseBank(props.tid, 1, 1000).then((res) => {
+    gridData.value = res.data.data;
+  });
+};
+const handleSelectionChange = (val: User[]) => {
+  multipleSelection.value = val;
+};
+const syncDataBaseBankFun = () => {
+  let arr = [];
+  multipleSelection.value.forEach((element) => {
+    arr.push(element.id);
+  });
+  syncDataBaseBank(
+    props.tid,
+    sessionStorage.getItem("evaluation"),
+    arr.toString()
+  ).then((res) => {
+    if (res.data.code == 200) {
+      ElMessage({
+        showClose: true,
+        message: "台账生成成功",
+        type: "success",
+      });
+      dialogTableVisible.value = false;
+      getDataBaseBank(props.tid, 1, 1000).then((res) => {
+        gridData.value = res.data.data;
+      });
+    } else {
+      ElMessage({
+        showClose: true,
+        message: res.data.msg,
+        type: "error",
+      });
+    }
+  });
+};
 //在线编辑
 const onlineEditing = (row: any) => {
   console.log(row);
   seeFile.value.show(row, "account");
-  // getViewUrlDbPath("e" + row.id, sessionStorage.getItem("userId")).then(
-  //   (res) => {
-  //     window.open(res.data.data.wpsUrl);
-  //   }
-  // );
 };
 //获取待审核文件列表
 const getAuditFilesFun = () => {
@@ -167,8 +231,8 @@ const delFileInfoFun = (row: any) => {
     `是否删除<span style='color:red'> ${row.title} </span>文件?`,
     "删除文件",
     {
-      confirmButtonText: "OK",
-      cancelButtonText: "Cancel",
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
       type: "warning",
       dangerouslyUseHTMLString: true,
     }
@@ -227,6 +291,36 @@ const fileInfoFun = () => {
     .catch((err) => {
       console.log(err, 555);
     });
+};
+//生产台账
+const generate = (row) => {
+  ElMessageBox.confirm(
+    `是否直接生成<span style='color:red'> ${row.title} </span>台账?`,
+    "生产台账",
+    {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+      dangerouslyUseHTMLString: true,
+    }
+  ).then(() => {
+    editMb(row.id).then((res) => {
+      if (res.data.code == 200) {
+        ElMessage({
+          showClose: true,
+          message: "台账生成成功",
+          type: "success",
+        });
+        fileInfoFun();
+      } else {
+        ElMessage({
+          showClose: true,
+          message: res.data.msg,
+          type: "error",
+        });
+      }
+    });
+  });
 };
 </script>
 

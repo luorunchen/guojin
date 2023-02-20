@@ -8,6 +8,7 @@
           :props="defaultProps"
           @node-click="handleNodeClick"
           highlight-current
+          accordion
         />
       </div>
     </el-col>
@@ -58,7 +59,8 @@
           :status="status"
           @uploadSuccess="uploadSuccess"
           :labelName="labelName"
-          :ftp="1"
+          :ftp="'1'"
+          :switchStatus="switchStatus"
         />
       </div>
     </el-col>
@@ -92,6 +94,7 @@ const labelName: any = ref([]);
 const databasesList: Tree[] = ref([]);
 const total = ref(0);
 const upload = ref(null);
+const switchStatus = ref(null);
 const seeFile = ref(null);
 const status = "AccountList";
 const defaultProps = {
@@ -113,11 +116,21 @@ onMounted(() => {
 });
 const handleNodeClick = (data: Tree) => {
   sessionStorage.setItem("tid", data.id);
+  console.log(data.name, "data");
+  if (data.name == "安全生产管理台账") {
+    switchStatus.value = true;
+  }
+  if (data.name == "专项台账") {
+    switchStatus.value = false;
+  }
+
+  // switchStatus.value = data.name=='安全生产管理台账'?
   formInline.tid = data.id;
   labelName.value = {
     name: data.name,
     tid: data.id,
     parent_id: data.parent_id,
+    // contian:data.
   };
   // digui([data])
   // console.log(formInline.tid)

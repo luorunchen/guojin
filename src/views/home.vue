@@ -36,6 +36,8 @@
             text-color="#fff"
             :default-active="activeIndex"
             class="el-menu-vertical-demo"
+            :default-openeds="openeds"
+            :key="key"
           >
             <el-sub-menu
               :index="item.id"
@@ -171,22 +173,27 @@
                 <ElectronicLicense v-else-if="earlyWarning == '电子证照'" />
                 <VideoOnline v-else-if="earlyWarning == '在线巡视'" />
                 <Online v-else-if="earlyWarning == '在线咨询'" />
+                <HiddenDanger v-else-if="earlyWarning == '隐患排查治理'" />
 
                 <!-- 台账部分 -->
                 <Account :tid="itemID" :boxHeight="boxHeight" v-else />
               </template>
               <!-- 机构部分 -->
-              <template v-if="loginType == '2'">
-                <Mechanism :tid="itemID" :boxHeight="boxHeight" />
-              </template>
+              <Mechanism
+                :tid="itemID"
+                :boxHeight="boxHeight"
+                v-if="loginType == '2'"
+              />
               <!-- 政府部分 -->
-
-              <template v-if="loginType == '3'">
-                <GovernmentQuery :tid="itemID" :boxHeight="boxHeight" />
-              </template>
+              <GovernmentQuery
+                :tid="itemID"
+                :boxHeight="boxHeight"
+                v-if="loginType == '3'"
+              />
             </el-tab-pane>
           </el-tabs>
 
+          <!-- 法律法规显示部分 -->
           <el-tabs
             ref="tabBox"
             v-model="activeName"
@@ -301,6 +308,7 @@ import VideoOnline from "../components/videoOnline/index.vue";
 import ElectronicLicense from "../components/electronicLicense/index.vue";
 import GovernmentQuery from "../components/government/query/query.vue";
 import DataAnalysis from "../components/government/dataAnalysis/index.vue";
+import HiddenDanger from "../components/hiddenDanger/index.vue";
 import {
   onMounted,
   ref,
@@ -327,7 +335,7 @@ const earlyWarning = ref();
 const loginState = ref("登录");
 const activeIndex = ref();
 const disabled = ref(false);
-
+const openeds = ref([]);
 const itemID = ref(10086);
 const activeName = ref("first");
 const itemName = ref();
@@ -339,6 +347,7 @@ const rightMenus: any = ref([]);
 const StandList: any = ref([]);
 const loginType = ref();
 const titleChangeName = ref("首页");
+const key = ref(1);
 const store = useStore();
 let tabIndex = 2;
 
@@ -394,11 +403,13 @@ watch(
 const fiveNewChang = (value) => {
   itemID.value = 10088;
 };
-//标题的点击事件
+//头部标题的点击事件
 const titleChange = (item: any) => {
   console.log("点击", item.name, "这里");
   // earlyWarning.value = "标题栏";
 
+  //刷新左侧展示状态
+  key.value++;
   titleChangeName.value = item.name;
 
   if (sessionStorage.getItem("userName") == null) {
@@ -413,20 +424,25 @@ const titleChange = (item: any) => {
 
   if (item.id == 10086) {
     itemID.value = item.id;
-
+    getStandListFun();
     store.commit("setmenuName", "首页");
     store.commit("setmenuID", item.id);
-  }
-
-  if (item.name == "首页") {
-    getStandListFun();
+    openeds.value = [];
   } else {
     rightMenus.value = [item];
+    openeds.value = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   }
 
-  activeIndex.value = item.id;
+  // if (item.name == "首页") {
+
+  // } else {
+
+  // }
+
+  // console.log(openeds.value, "activeIndex.value");
 };
 
+//第一层标题点击事件
 const nameChange = (name, item) => {
   // console.log(name, 888, item);
 
@@ -665,7 +681,7 @@ const getStandListFun = () => {
 
   getStandList().then((res) => {
     StandList.value = res.data.data[0].children;
-    console.log(sessionStorage.getItem("loginType"), 87);
+    // console.log(sessionStorage.getItem("loginType"), 87);
     typeSwitch(
       sessionStorage.getItem("loginType") == null
         ? "1"
@@ -865,7 +881,7 @@ defineComponent({
         // }
       }
 
-      // /deep/.el-submenu__title {
+      // /deep/ .el-submenu__title {
       //   display: flex;
       //   align-items: center;
       // }

@@ -64,7 +64,7 @@
       </el-form-item>
       <el-form-item
         label="行业"
-        v-if="props.status == 'AccountList'"
+        v-if="props.status == 'AccountList' && props.switchStatus"
         prop="evaluation"
         :rules="[
           {
@@ -148,7 +148,7 @@ const numberValidateForm = reactive({
   // expire_date: "",
 });
 const emits = defineEmits(["uploadSuccess"]);
-const action = ref("http://119.91.156.5/gjsafe/standBank/uploadStand");
+const action = ref("http://119.91.156.5:8080/gjsafe/standBank/uploadStand");
 const dialogVisible = ref(false);
 const disabled = ref(true);
 const databasesList = ref([]);
@@ -159,6 +159,7 @@ const props = defineProps({
   status: String,
   labelName: Array,
   ftp: String,
+  switchStatus: Boolean,
 });
 
 onMounted(() => {
@@ -270,7 +271,7 @@ const show = (tid: string) => {
   switch (props.status) {
     //后台台账上传
     case "AccountList":
-      action.value = `http://119.91.156.5/gjsafe/manage/uploadStand`;
+      action.value = `http://119.91.156.5:8080/gjsafe/manage/uploadStand`;
       numberValidateForm.style = "1";
       break;
     //前台台账上传
@@ -280,7 +281,7 @@ const show = (tid: string) => {
       break;
     //后台资料库上传
     case "databases":
-      action.value = `http://119.91.156.5/gjsafe/manage/addDataBaseBank`;
+      action.value = `http://119.91.156.5:8080/gjsafe/manage/addDataBaseBank`;
       if (props.labelName.parent_id != "2") {
         numberValidateForm.level = "0";
       }

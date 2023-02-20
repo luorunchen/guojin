@@ -26,7 +26,7 @@ module.exports = {
   },
 
   devServer: {
-    proxy: 'http://119.91.156.5',
+    proxy: 'http://119.91.156.5:8080',
     // proxy: 'http://10.165.165.70:8080',
 
     // port: 8080, // 端口号配置

@@ -1,7 +1,21 @@
 <template>
-  <el-sub-menu v-if="menus.children.length" :index="menus.name">
+  <el-sub-menu v-if="menus.children.length" :index="menus.id">
     <template #title>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="menus.name"
+        placement="right-start"
+        v-if="menus.name.length > 5"
+      >
+        <span
+          style="margin-left: 20px"
+          @click="titleClick(menus.name, menus.id)"
+          >{{ menus.name }}</span
+        >
+      </el-tooltip>
       <span
+        v-else
         style="margin-left: 20px"
         @click="titleClick(menus.name, menus.id)"
         >{{ menus.name }}</span
@@ -14,11 +28,20 @@
   </el-sub-menu>
   <el-menu-item
     v-else
-    :index="menus.name"
+    :index="menus.id"
     @click="menuClick(menus.name, menus.id, menus.parent_id)"
     v-on="$attrs"
   >
-    <span style="margin-left: 20px"> {{ menus.name }}</span>
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      :content="menus.name"
+      placement="right-start"
+      v-if="menus.name.length > 5"
+    >
+      <span style="margin-left: 20px"> {{ menus.name }}</span></el-tooltip
+    >
+    <span v-else style="margin-left: 20px"> {{ menus.name }}</span>
   </el-menu-item>
 </template>
 
