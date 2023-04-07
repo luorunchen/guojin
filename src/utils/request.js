@@ -25,7 +25,8 @@ service.interceptors.request.use(config => {
   // config.data = JSON.stringify(config.data); //数据转化,也可以使用qs转换
   // console.log(config)
   config.headers = {
-    'Content-Type': 'application/x-www-form-urlencoded' //配置请求头
+    'Content-Type': 'application/x-www-form-urlencoded', //配置请求头
+    // 'token-user': sessionStorage.getItem('satoken')
   }
   //注意使用token的时候需要引入cookie方法或者用本地localStorage等方法，推荐js-cookie
   // const token = getCookie('名称');//这里取token之前，你肯定需要先拿到token,存一下
@@ -39,11 +40,23 @@ service.interceptors.request.use(config => {
 })
 
 service.interceptors.response.use(req => {
+  let type = sessionStorage.getItem('loginType')
   // console.log(req.data.code, 22223333);
   if (req.data.code == 401) {
     // alert('该账户在其他地方登录,请重新登录')
     ElMessage({
-      message: "该账户在其他电脑登录,请重新登录",
+      message: req.data.msg,
+      type: 'error',
+      showClose: true
+    })
+    window.location.href = type != 4 ? "/#/login" : "/#/backstage";
+    return
+
+  }
+  if (req.data.code == 403) {
+    // alert('该账户在其他地方登录,请重新登录')
+    ElMessage({
+      message: req.data.msg,
       type: 'error',
       showClose: true
     })
@@ -51,10 +64,10 @@ service.interceptors.response.use(req => {
     return
 
   }
-  if (req.data.code == 403) {
+  if (req.data.code == 404) {
     // alert('该账户在其他地方登录,请重新登录')
     ElMessage({
-      message: "您暂无权限访问",
+      message: "请稍后重试或联系管理员",
       type: 'error',
       showClose: true
     })

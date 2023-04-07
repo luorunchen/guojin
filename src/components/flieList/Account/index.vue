@@ -4,15 +4,14 @@
       <el-col :span="8">
         <el-input v-model="input2" placeholder="关键词">
           <template #append>
-            <el-button type="primary" @click="fileInfoFun">搜索</el-button>
+            <el-button type="primary" @click="search">搜索</el-button>
           </template>
         </el-input>
       </el-col>
       <el-col :span="9">
         <el-button type="primary" @click="uploadFun">上传文件</el-button>
         <el-button type="primary" @click="syncLaw"
-          >同步资料库文件到台账</el-button
-        >
+          v-if="props.status != '风控体系建设' && props.status != '应急预案(备案)' && props.title.indexOf('教育') != -1">同步资料库文件到台账</el-button>
         <!-- <el-button type="primary" @click="uploadFun"
           >同步资料库文件到台账</el-button
         > -->
@@ -21,7 +20,8 @@
       <el-col :span="7">
         <el-radio-group v-model="style" size="default">
           <el-radio-button label="1">公共模板</el-radio-button>
-          <el-radio-button label="2">我的台账</el-radio-button>
+          <el-radio-button label="3" v-if="props.status == '风控体系建设' || props.status == '应急预案(备案)'">我的台账</el-radio-button>
+          <el-radio-button label="2" v-else>我的台账</el-radio-button>
         </el-radio-group>
 
         <!-- <el-select
@@ -36,51 +36,46 @@
       </el-col>
     </el-row>
     <br />
-    <el-table :data="tableData" stripe style="width: 100%" height="89%">
+
+    <el-table v-if="props.status == '风控体系建设' || props.status == '应急预案(备案)'" :data="tableData" stripe
+      style="width: 100%;margin-bottom: 50px;" height="400px" v-loading="loading" element-loading-text="正在加载中..."
+      :element-loading-spinner="svg" element-loading-svg-view-box="-10, -10, 50, 50"
+      element-loading-background="rgba(255, 255, 255)" @selection-change="handleSelectionChange">
+
+      <el-table-column type="index" />
+      <el-table-column property="title" label="标题" />
+      <el-table-column property="name" label="板块" />
+      <el-table-column prop="address" label="操作">
+        <template #default="scope">
+          <el-button size="small" type="primary" @click="see(scope.row)">查看</el-button>
+
+          <el-button v-if="style == '1'" size="small" type="success"
+            @click="syncDataBaseBankFun(scope.row)">生成台账</el-button>
+
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-table v-else :data="tableData" stripe style="width: 100%;margin-bottom: 50px;" height="400px" v-loading="loading"
+      element-loading-text="正在加载中..." :element-loading-spinner="svg" element-loading-svg-view-box="-10, -10, 50, 50"
+      element-loading-background="rgba(255, 255, 255)">
       <el-table-column type="index" width="50" />
       <el-table-column prop="title" label="标题" />
       <el-table-column prop="create_date" label="上传时间" />
       <el-table-column prop="create_name" label="上传人员" />
-      <el-table-column prop="address" label="操作">
+      <el-table-column prop="address" label="操作" width="350">
         <template #default="scope">
-          <el-button size="small" type="primary" @click="see(scope.row)"
-            >查看</el-button
-          >
-          <el-button
-            size="small"
-            type="primary"
-            @click="downloadFileFun(scope.row.url)"
-            v-if="style == '1'"
-            >下载模板
+          <el-button size="small" type="primary" @click="see(scope.row)">查看</el-button>
+          <el-button size="small" type="primary" @click="downloadFileFun(scope.row.url)" v-if="style == '1'">下载模板
           </el-button>
-          <el-button
-            v-if="style == '1'"
-            size="small"
-            type="success"
-            @click="onlineEditing(scope.row)"
-            >在线编辑</el-button
-          >
-          <el-button
-            v-if="style == '1'"
-            size="small"
-            type="success"
-            @click="generate(scope.row)"
-            >生成台账</el-button
-          >
-          <el-button
-            size="small"
-            type="danger"
-            @click="delFileInfoFun(scope.row)"
-            v-if="style == '2'"
-            >删除</el-button
-          >
+          <el-button v-if="style == '1'" size="small" type="success" @click="onlineEditing(scope.row)">在线编辑</el-button>
+          <el-button v-if="style == '1'" size="small" type="success" @click="generate(scope.row)">生成台账</el-button>
+          <el-button size="small" type="danger" @click="delFileInfoFun(scope.row)" v-if="style == '2'">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <Pagination :total="total" :type="1" @changeList="changeList" />
     <el-dialog v-model="dialogTableVisible" title="同步资料库文件">
-      <el-button type="primary" @click="syncDataBaseBankFun"
-        >确定同步</el-button
-      >
+      <el-button type="primary" @click="syncDataBaseBankFun">确定同步</el-button>
       <el-divider />
       <el-table :data="gridData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" />
@@ -90,8 +85,8 @@
     </el-dialog>
     <AuditFile ref="auditFile" />
 
-    <Pagination :total="total" :type="1" @changeList="changeList" />
-    <Upload ref="upload" :status="status" :labelName="labelName" :ftp="1" />
+
+    <Upload ref="upload" :status="status" :labelName="labelName" :ftp="'1'" :tid="props.tid" />
     <SeeFlie ref="seeFile" />
   </div>
 </template>
@@ -121,6 +116,17 @@ const account = ref(null);
 const total2 = ref(0);
 const status = ref("Account");
 const table = ref(false);
+const loading = ref(false);
+const svg = `
+        <path class="path" d="
+          M 30 15
+          L 28 17
+          M 25.61 25.61
+          A 15 15, 0, 0, 1, 15 30
+          A 15 15, 0, 1, 1, 27.99 7.5
+          L 15 15
+        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
+      `;
 const dialogTableVisible = ref(false);
 //公共台账和我的模板切换
 const style = ref("1");
@@ -144,6 +150,8 @@ const tableData = ref([]);
 const props = defineProps({
   tid: Number,
   boxHeight: Number,
+  status: String,
+  title: String
 });
 watch(
   () => props.tid,
@@ -152,26 +160,46 @@ watch(
     fileInfoFun();
   }
 );
-watch(
-  () => props.boxHeight,
-  (val) => {
-    console.log(val, "123");
-    account.value.style.height = val + "px";
-    // console.log(law.value.clientHeight);
-    // fileInfoFun();
-  }
-);
+
 watch(
   () => style.value,
   (value) => {
     console.log(value);
+    if (value == '1') {
+      if (props.status == '风控体系建设' || props.status == '应急预案(备案)') {
+        getDataBaseBankFun()
+      } else {
+        fileInfoFun()
+      }
+    }
+
 
     fileInfoFun();
   }
 );
 onMounted(() => {
-  fileInfoFun();
+  if (props.status == '风控体系建设' || props.status == '应急预案(备案)') {
+    getDataBaseBankFun()
+  } else {
+    fileInfoFun();
+  }
+
 });
+const getDataBaseBankFun = () => {
+  getDataBaseBank(props.tid, currentPage4.value, pageSize4.value).then((res) => {
+    tableData.value = res.data.data;
+    total.value = res.data.dataCount
+  });
+
+}
+const search = () => {
+  if (props.status == '风控体系建设' || props.status == '应急预案(备案)') {
+    getDataBaseBankFun()
+  } else {
+    fileInfoFun()
+  }
+}
+
 //下载模板
 const downloadFileFun = (url: string) => {
   window.open(url);
@@ -185,7 +213,7 @@ const syncLaw = () => {
 const handleSelectionChange = (val: User[]) => {
   multipleSelection.value = val;
 };
-const syncDataBaseBankFun = () => {
+const syncDataBaseBankFun = (row) => {
   let arr = [];
   multipleSelection.value.forEach((element) => {
     arr.push(element.id);
@@ -193,7 +221,7 @@ const syncDataBaseBankFun = () => {
   syncDataBaseBank(
     props.tid,
     sessionStorage.getItem("evaluation"),
-    arr.toString()
+    props.status == '风控体系建设' || props.status == '应急预案(备案)' ? row.id : arr.toString()
   ).then((res) => {
     if (res.data.code == 200) {
       ElMessage({
@@ -205,6 +233,7 @@ const syncDataBaseBankFun = () => {
       getDataBaseBank(props.tid, 1, 1000).then((res) => {
         gridData.value = res.data.data;
       });
+      getDataBaseBankFun()
     } else {
       ElMessage({
         showClose: true,
@@ -265,7 +294,11 @@ const changeList = (pageSize, currentPage) => {
 
   pageSize4.value = pageSize;
   currentPage4.value = currentPage;
-  fileInfoFun();
+  if (props.status == '风控体系建设' || props.status == '应急预案(备案)') {
+    getDataBaseBankFun()
+  } else {
+    fileInfoFun();
+  }
 };
 const uploadFun = () => {
   upload.value.show();
@@ -275,8 +308,11 @@ const onSubmit = () => {
 };
 //获取列表
 const fileInfoFun = () => {
+  loading.value = true
+  console.log(props.tid, 'tid');
+
   getStandInfo(
-    sessionStorage.getItem("tid"),
+    props.tid,
     currentPage4.value,
     pageSize4.value,
     style.value,
@@ -287,6 +323,7 @@ const fileInfoFun = () => {
       // console.log(res, 99)
       tableData.value = res.data.data;
       total.value = res.data.dataCount;
+      loading.value = false
     })
     .catch((err) => {
       console.log(err, 555);
@@ -331,11 +368,13 @@ const generate = (row) => {
 //   right: 50px;
 // }
 #account {
-  height: 500px;
+  // height: 500px;
 }
-/deep/.el-radio-button__original-radio:checked + .el-radio-button__inner {
+
+/deep/.el-radio-button__original-radio:checked+.el-radio-button__inner {
   background: #1f459c;
 }
+
 // /deep/.is-active {
 //   background: #bfa;
 // }

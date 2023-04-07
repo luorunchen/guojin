@@ -65,6 +65,20 @@ const routes: Array<RouteRecordRaw> = [
       import(
         /* webpackChunkName: "about" */ '../components/backStage/home/index.vue'
       )
+  },
+  {
+    path: '/statistics',
+    name: 'statistics',
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ '../components/government/dataAnalysis/yizhangtu.vue'
+      )
+  },
+  {
+    path: '/jindie',
+    name: 'jindie',
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/jindie.vue')
   }
 ]
 

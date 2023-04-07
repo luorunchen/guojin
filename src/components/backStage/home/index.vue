@@ -31,16 +31,8 @@
     </div>
     <el-row>
       <el-col :span="4">
-        <el-menu
-          default-active="2"
-          class="el-menu-vertical-demo"
-          background-color="transparent"
-        >
-          <el-sub-menu
-            :index="item.id"
-            v-for="(item, index) in rightMenus"
-            :key="index"
-          >
+        <el-menu default-active="2" class="el-menu-vertical-demo" background-color="transparent">
+          <el-sub-menu :index="item.id" v-for="(item, index) in rightMenus" :key="index">
             <template #title>
               <template v-if="item.id == '1'">
                 <img src="../../../assets/企业@2x.png" />
@@ -69,15 +61,17 @@
               <template v-if="item.id == '9'">
                 <img src="../../../assets/ss.png" />
               </template>
+              <template v-if="item.id == '10'">
+                <img src="../../../assets/ss.png" />
+              </template>
+              <!-- <template v-if="item.id == '11'">
+                <img src="../../../assets/tz.png" />
+              </template> -->
 
               <span>{{ item.name }}</span>
             </template>
-            <el-menu-item
-              :index="item2.id"
-              v-for="(item2, index2) in item.children"
-              :key="index2"
-              @click="menuItem(item2.name, item2.id)"
-            >
+            <el-menu-item :index="item2.id" v-for="(item2, index2) in item.children" :key="index2"
+              @click="menuItem(item2.name, item2.id)">
               {{ item2.name }}
             </el-menu-item>
           </el-sub-menu>
@@ -116,9 +110,30 @@
           <Weidaoqi v-if="itemID == '6-3'" />
           <Yidaoqi v-if="itemID == '6-2'" />
           <UserInfo v-if="itemID == '9-1'" />
+          <TreeForm v-if="itemID == '10-1'" />
+          <Online v-if="itemID == '11-1'" />
         </div>
       </el-col>
     </el-row>
+
+
+    <div class="cs" @click="visible = true">
+      <span>在线咨询</span>
+    </div>
+    <el-dialog v-model="visible" :show-close="false" width="80%">
+      <template #header="{ close, titleId, titleClass }">
+        <div class="my-header">
+          <h4 :id="titleId" :class="titleClass">在线咨询</h4>
+          <el-button type="danger" @click="close">
+            <!-- <el-icon class="el-icon--left">
+              <CircleCloseFilled />
+            </el-icon> -->
+            关闭
+          </el-button>
+        </div>
+      </template>
+      <Online />
+    </el-dialog>
   </div>
 </template>
 
@@ -130,6 +145,7 @@ import Mechanism from "../mechanism/list.vue";
 import AuditList from "../audit/list.vue";
 import Databases from "../databases/index.vue";
 import AccountList from "../accountList/index.vue";
+import Online from "../online/index.vue";
 import UserMange from "../userMange/index.vue";
 import Classification from "../databases/classification.vue";
 import AccountClassification from "../accountList/classification.vue";
@@ -139,10 +155,15 @@ import NianfeiSet from "../nianfei/set.vue";
 import Weidaoqi from "../nianfei/weidaoqi.vue";
 import Yidaoqi from "../nianfei/yidaoqi.vue";
 import UserInfo from "../userInfo/index.vue";
+import TreeForm from "../treeFrom/treeFrom.vue";
 import { ArrowDown } from "@element-plus/icons-vue";
 import router from "@/router";
+import { useStore } from "vuex";
+import { ElMessage, ElNotification } from "element-plus";
+const store = useStore();
 const itemName = ref("企业列表");
 const itemID = ref("1-1");
+const visible = ref(false);
 const userName = sessionStorage.getItem("userName");
 const rightMenus = ref([
   {
@@ -237,10 +258,34 @@ const rightMenus = ref([
     name: "用户统计",
     children: [{ id: "9-1", name: "用户统计", children: [] }],
   },
+  {
+    id: "10",
+    name: "单位涉及场所",
+    children: [{ id: "10-1", name: "单位涉及场所", children: [] }],
+  },
+  // {
+  //   id: "11",
+  //   name: "在线咨询",
+  //   children: [{ id: "11-1", name: "在线咨询", children: [] }],
+  // },
 ]);
 
-onMounted(() => {});
+onMounted(() => {
+  store.state.goEasy.im.on(GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, onConversationsUpdated);
+})
+const onConversationsUpdated = (conversations) => {
+  console.log(conversations, '首页列表监听');
+  if (conversations.unreadTotal > 0
+  ) {
+    ElNotification({
+      title: 'Success',
+      message: '您有新的咨询消息',
+      type: 'success',
+      // position: 'bottom-right',
+    })
+  }
 
+}
 const menuItem = (name: string, id: string) => {
   itemName.value = name;
   itemID.value = id;
@@ -256,6 +301,37 @@ const out = () => {
   width: calc(100vw);
   height: 99px;
   background: #0165d0;
+
+  .cs {
+    width: 64px;
+    height: 64px;
+    position: fixed;
+    bottom: 50px;
+    right: 51px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    cursor: pointer;
+    border-radius: 100%;
+    transition: all 0.2s;
+    background: url('https://cs.goeasy.io/consult/consult.svg') no-repeat center center #D02129;
+
+    span {
+      margin-top: 74px;
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 22px;
+      text-align: center;
+      color: #000;
+    }
+  }
+
+  .my-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
   .title {
     width: 100%;
@@ -397,10 +473,7 @@ const out = () => {
     color: #000;
   }
 
-  /deep/.el-table--striped
-    .el-table__body
-    tr.el-table__row--striped
-    td.el-table__cell {
+  /deep/.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
     background: #f3f9ff;
   }
 

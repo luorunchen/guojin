@@ -6,25 +6,15 @@
       </el-form-item>
       <el-form-item label="设备类型">
         <el-select v-model="formInline.region" placeholder="请选择">
-          <el-option
-            v-for="(item, index) in typeList"
-            :key="index"
-            :label="item.type_name"
-            :value="item.id"
-          />
+          <el-option v-for="(item, index) in typeList" :key="index" :label="item.type_name" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="时间选择">
-        <el-date-picker
-          v-model="value1"
-          type="datetimerange"
-          range-separator="至"
-          start-placeholder="开始时间"
-          end-placeholder="结束时间"
-        />
-      </el-form-item>
+      <!-- <el-form-item label="时间选择">
+        <el-date-picker v-model="value1" type="datetimerange" range-separator="至" start-placeholder="开始时间"
+          end-placeholder="结束时间" />
+      </el-form-item> -->
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="primary" @click="getCompDeviceListFun">查询</el-button>
         <el-button type="primary" @click="addDevicesFun">新增设备</el-button>
       </el-form-item>
     </el-form>
@@ -34,143 +24,67 @@
       <el-table-column prop="productNumber" label="设备号" />
       <el-table-column prop="type_name" label="设备类型" />
       <el-table-column prop="installLocation" label="设备地址" />
-      <el-table-column prop="regdate" label="报警时间" />
+      <el-table-column prop="regdate" label="注册时间" />
       <!-- <el-table-column prop="alarm" label="报警原因" /> -->
-      <!-- <el-table-column prop="status" label="状态" /> -->
+      <el-table-column prop="status" label="状态">
+        <template #default="scope">
+          <el-tag class="ml-2" :type="scope.row.online == 0 ? 'info' : 'success'">{{ scope.row.online == 0 ? '离线' : '在线'
+          }}</el-tag>
+        </template>
+
+      </el-table-column>
       <el-table-column prop="status" label="操作">
         <template #default="scope">
-          <el-button size="small" type="primary" @click="see(scope.row)"
-            >详情</el-button
-          >
-          <!-- <el-button size="small" type="danger" @click="delFileInfoFun(scope.row)">删除</el-button> -->
+          <el-button size="small" type="primary" @click="see(scope.row)">详情</el-button>
+          <el-button size="small" type="danger" @click="delDevicesFun(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-dialog v-model="centerDialogVisible" title="详情" width="70%" center>
-      <el-tabs v-model="activeName" class="demo-tabs">
-        <el-tab-pane label="设备详情" name="first">
-          <h5>设备信息</h5>
-          <el-row :gutter="10">
-            <el-col :span="8">
-              <p>IMEI:8888888888888</p>
-              <p>安装位置:XXXXXXXXXXXXXXXXX</p>
-            </el-col>
-            <el-col :span="8">
-              <p>设备类型:XXXX</p>
-              <p>接警人员:XXXXXX</p>
-            </el-col>
-            <el-col :span="8">设备型号:xxxx</el-col>
-          </el-row>
-          <h5>报警信息</h5>
-          <el-row :gutter="10">
-            <el-col :span="8">
-              <p>状态:未处理</p>
-            </el-col>
-            <el-col :span="8">
-              <p>报警时间:XXXX</p>
-            </el-col>
-            <el-col :span="8">
-              <p>报警原因:xxxx</p>
-            </el-col>
-          </el-row>
-          <h5>处理信息</h5>
-          <el-row :gutter="10">
-            <el-col :span="8">
-              <p>处理时间:-----</p>
-            </el-col>
-            <el-col :span="8">
-              <p>处理人:-------</p>
-            </el-col>
-            <el-col :span="8">
-              <p>报警确认类型:-------</p>
-            </el-col>
-          </el-row>
 
-          <div class="alarm">
-            <h5>报警处理(请填写后提交处理)</h5>
-            <el-form
-              ref="formRef"
-              :model="numberValidateForm"
-              label-width="100px"
-              class="demo-ruleForm"
-            >
-              <el-form-item
-                label="备注"
-                prop="age"
-                :rules="[{ required: true, message: '请填写备注信息' }]"
-              >
-                <el-input
-                  v-model.number="numberValidateForm.age"
-                  autocomplete="off"
-                  :autosize="{ minRows: 4, maxRows: 4 }"
-                  type="textarea"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="submitForm(formRef)"
-                  >Submit</el-button
-                >
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
-      <!-- <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="centerDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="centerDialogVisible = false">
-            Confirm
-          </el-button>
-        </span>
-      </template> -->
-    </el-dialog>
-    <el-dialog
-      v-model="addDevicesDialogVisible"
-      title="新增设备"
-      width="40%"
-      center
-    >
-      <el-form
-        :inline="true"
-        :model="formInline"
-        class="demo-form"
-        label-width="70px"
-      >
-        <el-form-item label="设备编号">
-          <el-input v-model="formInline.imei" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="设备类型">
-          <el-select v-model="formInline.type" placeholder="请选择">
-            <el-option
-              v-for="(item, index) in typeList"
-              :key="index"
-              :label="item.type_name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
+    <el-dialog v-model="addDevicesDialogVisible" title="新增设备" width="40%" center>
+      <el-form :inline="true" :model="formInline" class="demo-form">
 
-        <el-form-item label="设备厂商">
-          <el-input v-model="formInline.chang" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="设备名称">
-          <el-input v-model="formInline.name" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="设备地址">
-          <el-input
-            v-model="formInline.address"
-            id="tipinput"
-            placeholder="请输入"
-          />
-        </el-form-item>
-        <el-form-item label="经纬度">
-          <el-input
-            v-model="formInline.lanlat"
-            placeholder="自动生成"
-            disabled
-          />
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="12"> <el-form-item label="设备编号">
+              <el-input v-model="formInline.imei" placeholder="请输入" />
+            </el-form-item></el-col>
+          <el-col :span="12"> <el-form-item label="设备类型">
+              <el-select v-model="formInline.type" placeholder="请选择">
+                <el-option v-for="(item, index) in typeList" :key="index" :label="item.type_name" :value="item.id" />
+              </el-select>
+            </el-form-item></el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <!-- <el-form-item label="设备厂商">
+              <el-input v-model="formInline.chang" placeholder="请输入" />
+            </el-form-item> -->
+            <el-form-item label="经纬度 &nbsp;&nbsp; ">
+              <el-input v-model="formInline.lanlat" placeholder="自动生成" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="设备名称">
+              <el-input v-model="formInline.name" placeholder="请输入" />
+            </el-form-item></el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="设备地址">
+              <el-input v-model="formInline.address" id="tipinput" placeholder="请输入" />
+            </el-form-item></el-col>
+          <!-- <el-col :span="12">
+            <el-form-item label="经纬度">
+              <el-input v-model="formInline.lanlat" placeholder="自动生成" disabled />
+            </el-form-item></el-col> -->
+        </el-row>
+
+
+
+
+
+
       </el-form>
       <div id="map"></div>
       <template #footer>
@@ -181,29 +95,33 @@
       </template>
     </el-dialog>
     <Pagination :total="total" @changeList="changeList" />
-    <Yangan ref="yangan" />
+    <!-- <Yangan ref="yangan" />
     <Dianli ref="dianli" />
     <Ranqi ref="ranqi" />
-    <Shuiwei ref="shuiwei" />
+    <Shuiwei ref="shuiwei" /> -->
+    <Shipin ref="shipin" />
 
-    <Jiance ref="jiance" />
-    <Jxs ref="jxs" />
+    <!-- <Jiance ref="jiance" />
+    <Jxs ref="jxs" /> -->
+    <IntegratedMachine ref="integratedMachine" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ElMessage, TabsPaneContext } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from "../pagination/index.vue";
 import { ref, reactive, onMounted, nextTick, watch } from "vue";
-import { getCompDeviceList, getDeviceType, addDevice } from "@/api/index.js";
+import { getCompDeviceList, getDeviceType, addDevice, getDevInfoByDevId, delDevice } from "@/api/index.js";
 import { useStore } from "vuex";
 import type { FormInstance } from "element-plus";
-import Dianli from "./popup/info/dianli.vue";
-import Yangan from "./popup/info/yangan.vue";
-import Ranqi from "./popup/info/ranqi.vue";
-import Shuiwei from "./popup/info/shuiwei.vue";
-import Jiance from "./popup/info/jiance.vue";
-import Jxs from "./popup/info/jxs.vue";
+// import Dianli from "./popup/info/dianli.vue";
+// import Yangan from "./popup/info/yangan.vue";
+// import Ranqi from "./popup/info/ranqi.vue";
+// import Shuiwei from "./popup/info/shuiwei.vue";
+// import Jiance from "./popup/info/jiance.vue";
+// import Jxs from "./popup/info/jxs.vue";
+import Shipin from "./popup/info/shipin.vue";
+import IntegratedMachine from "./popup/IntegratedMachine.vue";
 const formRef = ref<FormInstance>();
 
 const numberValidateForm = reactive({
@@ -226,9 +144,11 @@ const yangan: any = ref(null);
 
 const dianli: any = ref(null);
 const jiance: any = ref(null);
+const shipin: any = ref(null);
 const ranqi: any = ref(null);
 const jxs: any = ref(null);
 const shuiwei: any = ref(null);
+const integratedMachine: any = ref(null);
 const placeSearch = ref();
 const total = ref(0);
 const pageSize4 = ref(10);
@@ -243,120 +163,44 @@ const formInline = reactive({
   imei: "",
   type: "",
   name: "",
-  chang: "",
+  chang: "2",
   lanlat: "",
 });
 const activeName = ref("first");
 // const
 onMounted(() => {
   getCompDeviceListFun();
+  getDeviceType().then((res) => {
+    typeList.value = res.data.data;
+  });
 });
-
-watch(
-  () => store.state.menuName,
-  (val) => {
-    console.log(val, "woshibaojVAL");
-
-    switch (val) {
-      case "火灾":
-        tableData.value = [
-          {
-            devId: 2,
-            device_name: "电气火灾",
-            type: null,
-            type_name: "电气火灾",
-            supplier: null,
-            supplier_name: "深圳万宏智联科技实业有限公司",
-            productNumber: "0861967066418201",
-            installLocation: "浙江温州",
-            regdate: "2022-12-16 16:57:42",
-            long_lat: null,
-            alarmType: 0,
-            state: 0,
-            companyId: "10013",
-            num: "2",
-          },
-        ];
-        break;
-      case "压力监测":
-        tableData.value = [
-          {
-            devId: 2,
-            device_name: "电气火灾",
-            type: null,
-            type_name: "水压",
-            supplier: null,
-            supplier_name: "深圳万宏智联科技实业有限公司",
-            productNumber: "0861967066418201",
-            installLocation: "浙江温州",
-            regdate: "2022-12-16 16:57:42",
-            long_lat: null,
-            alarmType: 0,
-            state: 0,
-            companyId: "10013",
-            num: "5",
-          },
-        ];
-        break;
-      case "浓度监测":
-        tableData.value = [
-          {
-            devId: 2,
-            device_name: "电气火灾",
-            type: null,
-            type_name: "燃气",
-            supplier: null,
-            supplier_name: "深圳万宏智联科技实业有限公司",
-            productNumber: "0861967066418201",
-            installLocation: "浙江温州",
-            regdate: "2022-12-16 16:57:42",
-            long_lat: null,
-            alarmType: 0,
-            state: 0,
-            companyId: "10013",
-            num: "3",
-          },
-        ];
-        break;
-      case "其他监测":
-        tableData.value = [
-          {
-            devId: 2,
-            device_name: "烟感1",
-            type: null,
-            type_name: "无线烟感",
-            supplier: null,
-            supplier_name: "深圳万宏智联科技实业有限公司",
-            productNumber: "0861967066418201",
-            installLocation: "浙江温州",
-            regdate: "2022-12-16 16:57:42",
-            long_lat: null,
-            alarmType: 0,
-            state: 0,
-            companyId: "10013",
-            num: "1",
-          },
-          {
-            devId: 2,
-            device_name: "电气火灾",
-            type: null,
-            type_name: "水位",
-            supplier: null,
-            supplier_name: "深圳万宏智联科技实业有限公司",
-            productNumber: "0861967066418201",
-            installLocation: "浙江温州",
-            regdate: "2022-12-16 16:57:42",
-            long_lat: null,
-            alarmType: 0,
-            state: 0,
-            companyId: "10013",
-            num: "4",
-          },
-        ];
-        break;
+const delDevicesFun = (row) => {
+  ElMessageBox.confirm(
+    `确定要删除 <span style='color:red'>${row.productNumber}</span> 该设备嘛?`,
+    '删除设备',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+      dangerouslyUseHTMLString: true
     }
-  }
-);
+  )
+    .then(() => {
+      delDevice(row.devId).then(res => {
+        if (res.data.code == 200) {
+          ElMessage({
+            type: 'success',
+            message: '删除成功',
+            showClose: true
+          })
+          getCompDeviceListFun();
+        }
+      })
+
+    })
+
+}
+
 const addDevicesFun = () => {
   addDevicesDialogVisible.value = true;
   nextTick(() => {
@@ -436,34 +280,33 @@ const addDecivesFun = () => {
   });
 };
 const see = (row) => {
+
   // centerDialogVisible.value = true;
 
-  switch (row.num) {
-    case "1":
-      yangan.value.show(40535, 99);
+  switch (row.type) {
+    case 38:
+      integratedMachine.value.show(row.devId);
       break;
-    case "2":
-      dianli.value.show("323852", 2);
+    case 44:
+      shipin.value.show(row);
       break;
-    case "3":
-      ranqi.value.show("389024", 7);
-      break;
-    case "4":
-      shuiwei.value.show("359834", 3, 8);
-      break;
-    case "5":
-      shuiwei.value.show("361403", 3, 4);
-      break;
+    // case "3":
+    //   ranqi.value.show("389024", 7);
+    //   break;
+    // case "4":
+    //   shuiwei.value.show("359834", 3, 8);
+    //   break;
+    // case "5":
+    //   shuiwei.value.show("361403", 3, 4);
+    //   break;
   }
 };
 const getCompDeviceListFun = () => {
-  getCompDeviceList("", "", currentPage4.value, pageSize4.value).then((res) => {
-    // tableData.value = res.data.data;
+  getCompDeviceList(formInline.region, formInline.user, currentPage4.value, pageSize4.value).then((res) => {
+    tableData.value = res.data.data;
     total.value = res.data.dataCount;
   });
-  getDeviceType().then((res) => {
-    typeList.value = res.data.data;
-  });
+
 };
 //分页器组件传回来的数据
 const changeList = (pageSize, currentPage, type) => {
@@ -478,33 +321,15 @@ const changeList = (pageSize, currentPage, type) => {
 <style lang='less' scoped>
 #earlyWarning {
   height: 55vh;
-  .demo-tabs {
-    background: #ffffff;
-    box-shadow: 0px 0px 13px 0px #ebebeb;
-    border-radius: 4px;
-    padding: 10px;
-    h5 {
-      border-bottom: 1px solid #eff1f4;
-      border-left: 4px solid #0165d0;
-      padding-left: 20px;
-    }
-    .alarm {
-      background: rgb(241, 248, 162);
-      padding-right: 100px;
-    }
-    .el-row {
-      text-align: center;
-      margin-bottom: 10px;
-      p {
-        margin: 20px 0;
-      }
-    }
-  }
+
+
+
   .demo-form {
     /deep/.el-form-item {
-      width: 45%;
+      width: 100%;
     }
   }
+
   #map {
     height: 400px;
     background: #bfa;

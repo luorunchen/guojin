@@ -6,26 +6,14 @@
       </div>
 
       <h3>注册</h3>
-      <el-steps
-        :active="active"
-        finish-status="success"
-        simple
-        style="margin-top: 20px; margin-bottom: 20px"
-      >
+      <el-steps :active="active" finish-status="success" simple style="margin-top: 20px; margin-bottom: 20px">
         <el-step title="提交资料" />
         <el-step title="缴费" />
         <el-step title="注册成功" />
       </el-steps>
       <div v-if="active == 1">
-        <el-form
-          ref="ruleFormRef"
-          :model="ruleForm"
-          :rules="rules"
-          label-width="120px"
-          class="demo-ruleForm"
-          status-icon
-          label-position="right"
-        >
+        <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm" status-icon
+          label-position="right">
           <el-form-item label="选择账号类型" prop="resource">
             <el-radio-group v-model="ruleForm.resource">
               <el-radio label="1">我是企业用户</el-radio>
@@ -57,11 +45,7 @@
           <el-form-item label="短信验证码" prop="code">
             <el-input v-model="ruleForm.code">
               <template #append>
-                <el-button
-                  type="primary"
-                  @click="getCodeFun()"
-                  :disabled="disabled"
-                >
+                <el-button type="primary" @click="getCodeFun()" :disabled="disabled">
                   {{ text }}
                 </el-button>
               </template>
@@ -85,9 +69,7 @@
           </el-form-item> -->
 
           <el-form-item>
-            <el-button type="primary" @click="submitForm(ruleFormRef)"
-              >下一步</el-button
-            >
+            <el-button type="primary" @click="submitForm(ruleFormRef)">下一步</el-button>
             <!-- <el-button @click="resetForm(ruleFormRef)">Reset</el-button> -->
           </el-form-item>
         </el-form>
@@ -97,10 +79,7 @@
         <el-row :gutter="20">
           <el-col :span="7" v-for="(item, index) in payList" :key="index">
             <!-- {{ item }} -->
-            <div
-              :class="priceSelectionValue == item.id ? 'priceCheck' : 'price'"
-              @click="priceSelection(item.id)"
-            >
+            <div :class="priceSelectionValue == item.id ? 'priceCheck' : 'price'" @click="priceSelection(item.id)">
               <p>{{ item.name }}</p>
               <p>
                 ¥ <span>{{ item.price }}</span>
@@ -137,7 +116,7 @@
             </el-col>
           </el-row>
         </div>
-        <el-button type="primary" @click="seeOrder()">我已完成支付</el-button>
+        <!-- <el-button type="primary" @click="seeOrder()">我已完成支付</el-button> -->
       </div>
       <div v-if="active == 3">
         <el-result icon="success" title="支付成功!" sub-title="注册成功!">
@@ -160,7 +139,7 @@ import {
   getPayList,
   aliPay,
   aliPayStatus,
-  register,
+  register, checkSmsCode
 } from "@/api/index";
 
 import QRCode from "qrcodejs2";
@@ -168,6 +147,7 @@ const active = ref(1);
 const text: any = ref("获取验证码");
 const priceSelectionValue = ref(1);
 const orderInfo = ref();
+
 const disabled = ref(false);
 const payList = ref([]);
 const ruleFormRef = ref<FormInstance>();
@@ -208,7 +188,7 @@ const rules = reactive<FormRules>({
   ],
 });
 let interval: any = "";
-
+let setInt: any = ''
 watch(
   () => text.value,
   (old) => {
@@ -220,6 +200,14 @@ watch(
     }
   }
 );
+watch(() => active.value, (val) => {
+  if (val == 2) {
+    seeOrder()
+  }
+  if (val == 3) {
+    clearInterval(setInt)
+  }
+})
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
@@ -227,9 +215,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       if (active.value == 1) {
         recheck(ruleForm.name).then((res) => {
           if (res.data.code == 200) {
-            active.value++;
+            checkSmsCode(ruleForm.phone, ruleForm.code).then(res => {
+              if (res.data.code == 200) {
+
+                active.value++;
+              }
+            })
           }
         });
+
       } else {
         active.value++;
       }
@@ -253,25 +247,28 @@ watch(
   }
 );
 const seeOrder = () => {
-  aliPayStatus(orderInfo.value).then((res) => {
-    if (res.data.code == 200) {
-      console.log(ruleForm);
-      // orderInfo.value
-      register(
-        ruleForm.name,
-        ruleForm.password,
-        ruleForm.resource,
-        ruleForm.phone,
-        ruleForm.code,
-        orderInfo.value,
-        ruleForm.count
-      ).then((res) => {
-        if (res.data.code == 200) {
-          active.value++;
-        }
-      });
-    }
-  });
+  setInt = setInterval(() => {
+    aliPayStatus(orderInfo.value).then((res) => {
+      if (res.data.code == 200 && res.data.data.trade_state == 'TRADE_SUCCESS') {
+        console.log(ruleForm);
+        // orderInfo.value
+        register(
+          ruleForm.name,
+          ruleForm.password,
+          ruleForm.resource,
+          ruleForm.phone,
+          ruleForm.code,
+          orderInfo.value,
+          ruleForm.count
+        ).then((res) => {
+          if (res.data.code == 200) {
+            active.value++;
+          }
+        });
+      }
+    });
+  }, 3000)
+
 };
 const priceSelection = (status: number) => {
   priceSelectionValue.value = status;

@@ -14,36 +14,15 @@
               <el-tab-pane label="机构登录" name="2"></el-tab-pane>
               <el-tab-pane label="政府登录" name="3"></el-tab-pane>
             </el-tabs>
-            <el-form
-              ref="formRef"
-              :model="numberValidateForm"
-              label-width="100px"
-              class="demo-ruleForm"
-              label-position="top"
-            >
-              <el-form-item
-                prop="userName"
-                :rules="[{ required: true, message: '请输入账号' }]"
-              >
-                <el-input
-                  placeholder="请输入账号"
-                  v-model="numberValidateForm.userName"
-                  type="text"
-                  autocomplete="off"
-                  :prefix-icon="Avatar"
-                />
+            <el-form ref="formRef" :model="numberValidateForm" label-width="100px" class="demo-ruleForm"
+              label-position="top">
+              <el-form-item prop="userName" :rules="[{ required: true, message: '请输入账号' }]">
+                <el-input placeholder="请输入账号" v-model="numberValidateForm.userName" type="text" autocomplete="off"
+                  :prefix-icon="Avatar" />
               </el-form-item>
-              <el-form-item
-                prop="password"
-                :rules="[{ required: true, message: '请输入密码' }]"
-              >
-                <el-input
-                  placeholder="请输入密码"
-                  v-model="numberValidateForm.password"
-                  type="password"
-                  autocomplete="off"
-                  :prefix-icon="Lock"
-                />
+              <el-form-item prop="password" :rules="[{ required: true, message: '请输入密码' }]">
+                <el-input placeholder="请输入密码" v-model="numberValidateForm.password" type="password" autocomplete="off"
+                  :prefix-icon="Lock" />
               </el-form-item>
 
               <el-checkbox-group v-model="numberValidateForm.type">
@@ -52,12 +31,7 @@
                 </el-checkbox>
               </el-checkbox-group>
               <el-form-item>
-                <el-button
-                  color="#0165D0"
-                  type="primary"
-                  @click="submitForm(formRef)"
-                  >登陆</el-button
-                >
+                <el-button color="#0165D0" type="primary" @click="submitForm(formRef)">登陆</el-button>
               </el-form-item>
               <!-- <el-form-item prop="type" :rules="[
                 {
@@ -80,9 +54,7 @@
             </el-row>
             <div class="tips">
               点击登录即同意
-              <el-link type="primary" @click="dialogVisible = true"
-                >《平台使用须知》</el-link
-              >
+              <el-link type="primary" @click="dialogVisible = true">《平台使用须知》</el-link>
             </div>
             <div class="chrome">
               推荐使用 <img src="../assets/chrome.png" alt="" /> 谷歌浏览器
@@ -92,6 +64,7 @@
         </el-col>
       </el-row>
     </div>
+    <p class="text">浙ICP备2023004010号</p>
     <el-dialog v-model="dialogVisible" title="平台协议" width="40%" center>
       <div class="agreement">
         <p>平台使用须知：</p>
@@ -108,6 +81,9 @@
         <p>
           4.用户法人及使用该平台的本单位其他人员误动作引起的资料消失、内容错误等，
           平台概不负责。
+        </p>
+        <p>
+          5.非法人手机号或未经法人授权注册的账号在平台开展任何活动,平台一律概不负责
         </p>
       </div>
     </el-dialog>
@@ -173,7 +149,8 @@ const submitForm = (formEl: FormInstance | undefined) => {
       login(
         numberValidateForm.userName,
         numberValidateForm.password,
-        activeName.value
+        activeName.value,
+        'pc'
       ).then((res) => {
         if (res.data.code == 200) {
           if (
@@ -213,6 +190,8 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
           sessionStorage.setItem("userName", numberValidateForm.userName);
           sessionStorage.setItem("userId", res.data.data.id);
+          sessionStorage.setItem("companyId", res.data.data.companyId);
+          sessionStorage.setItem('satoken', res.data.data.token.tokenValue)
           sessionStorage.setItem("loginType", activeName.value);
           sessionStorage.setItem(
             "evaluation",
@@ -252,11 +231,12 @@ const goToRegister = () => {
   // background: #bfa;
   background-image: url("../assets/login.png");
   background-size: 100% 100%;
+  box-sizing: border-box;
 
   .wraper {
     position: absolute;
     width: 65%;
-    height: 700px;
+    height: calc(80vh);
     // background: rgb(80, 19, 212);
     margin: auto;
     left: 0;
@@ -328,14 +308,17 @@ const goToRegister = () => {
         // bottom: 20px;
         // left: 50%;
       }
+
       .chrome {
         text-align: center;
         font-size: 15px;
         margin-top: 20px;
+
         img {
           width: 20px;
           height: 20px;
         }
+
         /deep/.el-link {
           vertical-align: initial;
           font-size: 15px;
@@ -350,6 +333,18 @@ const goToRegister = () => {
     /deep/ .el-checkbox__label {
       color: #fff;
     }
+  }
+
+  .text {
+    // text-align: center;
+    // margin: 0 auto;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    position: absolute;
+    bottom: 30px;
+    color: #fff;
+
   }
 
   .agreement {

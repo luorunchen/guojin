@@ -24,74 +24,46 @@
       <el-button type="primary" @click="uploadFun">我要上传</el-button>
     </el-form-item>
   </el-form>
-  <div
-    class="rowBox"
-    v-loading="loading"
-    element-loading-text="正在加载中..."
-    :element-loading-spinner="svg"
-    element-loading-svg-view-box="-10, -10, 50, 50"
-    element-loading-background="rgba(255, 255, 255)"
-  >
+  <div class="rowBox" v-loading="loading" element-loading-text="正在加载中..." :element-loading-spinner="svg"
+    element-loading-svg-view-box="-10, -10, 50, 50" element-loading-background="rgba(255, 255, 255)">
     <el-row :gutter="20">
-      <el-col
-        :span="4"
-        v-for="(item, index) in getWxStoreListArray"
-        :key="index"
-        class="colBox"
-      >
+      <el-col :span="4" v-for="(item, index) in getWxStoreListArray" :key="index" class="colBox">
         <div class="zhezhao" v-if="item.status == 0">
           <div class="font">审核中</div>
         </div>
         <div class="zhezhao" v-if="item.status == 2">
           <div class="danger">已驳回</div>
         </div>
-        <img
-          :src="props.activeName != '6' ? item.content.cover : item.cover_image"
-          alt=""
-        />
+        <img :src="props.activeName != '6' ? item.content.cover : item.cover_image" alt="" />
         <div class="text">
           <p>{{ props.activeName != "6" ? item.content.title : item.title }}</p>
-          <el-link
-            type="danger"
-            v-if="props.activeName == '6'"
-            @click="deleteFun(item)"
-            >删除</el-link
-          >
+          <el-link type="danger" v-if="props.activeName == '6'" @click="deleteFun(item)">删除</el-link>
         </div>
 
         <div class="text">
-          <el-tag
-            effect="dark"
-            :type="
-              item.type == 1
-                ? ''
-                : item.type == 2
+          <el-tag effect="dark" :type="
+            item.type == 1
+              ? ''
+              : item.type == 2
                 ? 'success'
                 : item.type == 3
-                ? 'info'
-                : item.type == 4
-                ? 'danger'
-                : 'warning'
-            "
-            >{{
-              item.type == 1
-                ? "新技术"
-                : item.type == 2
-                ? "新工艺"
-                : item.type == 3
-                ? "新设备"
-                : item.type == 4
-                ? "新材料"
-                : "新产品"
-            }}</el-tag
-          >
+                  ? 'info'
+                  : item.type == 4
+                    ? 'danger'
+                    : 'warning'
+          ">{{
+  item.type == 1
+  ? "新技术"
+  : item.type == 2
+    ? "新工艺"
+    : item.type == 3
+      ? "新设备"
+      : item.type == 4
+        ? "新材料"
+        : "新产品"
+}}</el-tag>
 
-          <el-link
-            type="danger"
-            v-if="item.status == 2"
-            @click="open(item.reason)"
-            >驳回原因</el-link
-          >
+          <el-link type="danger" v-if="item.status == 2" @click="open(item.reason)">驳回原因</el-link>
           <el-link type="primary" @click="detailsFun(item)">详情</el-link>
         </div>
       </el-col>
@@ -99,33 +71,12 @@
   </div>
 
   <el-dialog v-model="dialogVisible" title="我要上传" width="40%" center>
-    <el-form
-      label-width="100px"
-      ref="formRef"
-      :model="numberValidateForm"
-      class="demo-ruleForm"
-    >
-      <el-form-item
-        label="标题"
-        prop="title"
-        :rules="[{ required: true, message: '请输入标题' }]"
-      >
-        <el-input
-          v-model="numberValidateForm.title"
-          type="text"
-          autocomplete="off"
-        />
+    <el-form label-width="100px" ref="formRef" :model="numberValidateForm" class="demo-ruleForm">
+      <el-form-item label="标题" prop="title" :rules="[{ required: true, message: '请输入标题' }]">
+        <el-input v-model="numberValidateForm.title" type="text" autocomplete="off" />
       </el-form-item>
-      <el-form-item
-        label="所属分类"
-        prop="type"
-        :rules="[{ required: true, message: '请选择分类' }]"
-      >
-        <el-select
-          v-model="numberValidateForm.type"
-          class="m-2"
-          placeholder="Select"
-        >
+      <el-form-item label="所属分类" prop="type" :rules="[{ required: true, message: '请选择分类' }]">
+        <el-select v-model="numberValidateForm.type" class="m-2" placeholder="Select">
           <el-option label="新技术" value="1" />
           <el-option label="新工艺" value="2" />
           <el-option label="新设备" value="3" />
@@ -133,68 +84,28 @@
           <el-option label="新产品" value="5" />
         </el-select>
       </el-form-item>
-      <el-form-item
-        label="产品封面图"
-        prop="file1"
-        :rules="[{ required: true, message: '请上传产品封面图' }]"
-      >
-        <el-upload
-          ref="uploadRef"
-          class="upload-demo"
-          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-          :auto-upload="false"
-          list-type="picture"
-          :on-change="handleChange"
-          :on-remove="handleChange"
-          :http-request="handleHttpRequest"
-        >
+      <el-form-item label="产品封面图" prop="file1" :rules="[{ required: true, message: '请上传产品封面图' }]">
+        <el-upload ref="uploadRef" class="upload-demo"
+          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :auto-upload="false" list-type="picture"
+          :on-change="handleChange" :on-remove="handleChange" :http-request="handleHttpRequest">
           <template #trigger>
             <el-button type="primary">我要上传</el-button>
           </template>
         </el-upload>
       </el-form-item>
-      <el-form-item
-        label="产品详情图"
-        prop="file2"
-        :rules="[{ required: true, message: '请上传产品详情图' }]"
-      >
-        <el-upload
-          ref="uploadRef1"
-          class="upload-demo"
-          action="#"
-          :auto-upload="false"
-          list-type="picture"
-          :on-change="handleChange2"
-          :on-remove="handleChange2"
-        >
+      <el-form-item label="产品详情图" prop="file2" :rules="[{ required: true, message: '请上传产品详情图' }]">
+        <el-upload ref="uploadRef1" class="upload-demo" action="#" :auto-upload="false" list-type="picture"
+          :on-change="handleChange2" :on-remove="handleChange2">
           <template #trigger>
             <el-button type="primary">我要上传</el-button>
           </template>
         </el-upload>
       </el-form-item>
-      <el-form-item
-        label="产品介绍"
-        prop="product_introduce"
-        :rules="[{ required: true, message: '请输入产品介绍' }]"
-      >
-        <el-input
-          v-model="numberValidateForm.product_introduce"
-          autosize
-          type="textarea"
-          autocomplete="off"
-        />
+      <el-form-item label="产品介绍" prop="product_introduce" :rules="[{ required: true, message: '请输入产品介绍' }]">
+        <el-input v-model="numberValidateForm.product_introduce" autosize type="textarea" autocomplete="off" />
       </el-form-item>
-      <el-form-item
-        label="产品优势"
-        prop="product_super"
-        :rules="[{ required: true, message: '请输入产品优势' }]"
-      >
-        <el-input
-          v-model="numberValidateForm.product_super"
-          autosize
-          type="textarea"
-          autocomplete="off"
-        />
+      <el-form-item label="产品优势" prop="product_super" :rules="[{ required: true, message: '请输入产品优势' }]">
+        <el-input v-model="numberValidateForm.product_super" autosize type="textarea" autocomplete="off" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -210,21 +121,13 @@
     <div>
       <h3>产品图片</h3>
       <div class="demo-image__preview">
-        <el-image
-          v-for="(info, index2) in props.activeName == '6'
-            ? drawerRow.product_image.split(',')
-            : drawerRow.content.productImage.split(',')"
-          :key="index2"
-          class="elImage"
-          :src="info"
-          :preview-src-list="
-            props.activeName == '6'
-              ? drawerRow.product_image.split(',')
-              : drawerRow.content.productImage.split(',')
-          "
-          :zoom-rate="1.2"
-          :initial-index="4"
-        />
+        <el-image v-for="(info, index2) in props.activeName == '6'
+          ? drawerRow.product_image.split(',')
+          : drawerRow.content.productImage.split(',')" :key="index2" class="elImage" :src="info" :preview-src-list="
+    props.activeName == '6'
+      ? drawerRow.product_image.split(',')
+      : drawerRow.content.productImage.split(',')
+  " :zoom-rate="1.2" :initial-index="4" />
       </div>
       <h3>产品优势</h3>
       <p class="info">
@@ -232,8 +135,8 @@
       </p>
       <h3>产品介绍</h3>
       <p class="info">{{ drawerRow.product_introduce }}</p>
-    </div></el-dialog
-  >
+    </div>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -434,7 +337,7 @@ const handleHttpRequest = () => {
     if (res.data.code == 200) {
       ElMessage({
         showClose: true,
-        message: "上次成功,请等待审核",
+        message: "上传成功,请等待审核",
         type: "success",
       });
       dialogVisible.value = false;
@@ -480,7 +383,7 @@ const onSubmit = () => {
 const uploadFun = () => {
   dialogVisible.value = true;
 };
-const changeList = () => {};
+const changeList = () => { };
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event);
 };
@@ -496,6 +399,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
   .upload-demo {
     width: 100%;
   }
+
   .rowBox {
     height: 400px;
     overflow-y: auto;
@@ -507,15 +411,18 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
       width: 100%;
       height: 180px;
     }
+
     .colBox {
       margin-bottom: 10px;
       position: relative;
+
       .zhezhao {
         width: 92%;
         height: 180px;
         background: rgba(0, 0, 0, 0.5);
         position: absolute;
         display: flex;
+
         .font {
           margin: 0 auto;
           width: 95px;
@@ -530,6 +437,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
           // line-height: 180px;
           align-self: center;
         }
+
         .danger {
           margin: 0 auto;
           width: 95px;
@@ -546,17 +454,20 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
         }
       }
     }
+
     .text {
       display: flex;
       justify-content: space-between;
     }
   }
+
   h3 {
     border-bottom: 1px solid #eff1f4;
     border-left: 4px solid #0165d0;
     padding-left: 20px;
     margin-top: 50px;
   }
+
   .info {
     padding: 30px;
   }
@@ -567,6 +478,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
   .info {
     text-indent: 2em;
   }
+
   .elImage {
     width: 200px;
     height: 200px;

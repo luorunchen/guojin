@@ -4,7 +4,9 @@ export default createStore({
   state: {
     menuID: '',
     menuName: '',
-    parentId:""
+    parentId: '',
+    menus: '',
+    goEasy: Function
   },
   getters: {},
   mutations: {
@@ -16,8 +18,16 @@ export default createStore({
     },
     setmenuParentId(state, val) {
       state.parentId = val //state为vuex中的state,val为更改属性的值
+    },
+    setMenus(state, val) {
+      state.menus = val //state为vuex中的state,val为更改属性的值
+    },
+    setgoEasy(state, val) {
+      state.goEasy = val //state为vuex中的state,val为更改属性的值
     }
   },
-  actions: {},
+  actions: {
+    goEays() {}
+  },
   modules: {}
 })

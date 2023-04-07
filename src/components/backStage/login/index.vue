@@ -11,56 +11,27 @@
         <el-col :span="12">
           <div class="leftBox">
             <h1>欢迎登陆</h1>
-            <el-form
-              ref="formRef"
-              :model="numberValidateForm"
-              label-width="100px"
-              class="demo-ruleForm"
-              label-position="top"
-            >
-              <el-form-item
-                prop="userName"
-                :rules="[{ required: true, message: '请输入账号' }]"
-              >
-                <el-input
-                  placeholder="请输入账号"
-                  v-model="numberValidateForm.userName"
-                  type="text"
-                  autocomplete="off"
-                  :prefix-icon="Avatar"
-                />
+            <el-form ref="formRef" :model="numberValidateForm" label-width="100px" class="demo-ruleForm"
+              label-position="top">
+              <el-form-item prop="userName" :rules="[{ required: true, message: '请输入账号' }]">
+                <el-input placeholder="请输入账号" v-model="numberValidateForm.userName" type="text" autocomplete="off"
+                  :prefix-icon="Avatar" />
               </el-form-item>
-              <el-form-item
-                prop="password"
-                :rules="[{ required: true, message: '请输入密码' }]"
-              >
-                <el-input
-                  placeholder="请输入密码"
-                  v-model="numberValidateForm.password"
-                  type="password"
-                  autocomplete="off"
-                  :prefix-icon="Lock"
-                />
+              <el-form-item prop="password" :rules="[{ required: true, message: '请输入密码' }]">
+                <el-input placeholder="请输入密码" v-model="numberValidateForm.password" type="password" autocomplete="off"
+                  :prefix-icon="Lock" />
               </el-form-item>
               <el-form-item>
-                <el-button
-                  color="#0165D0"
-                  type="primary"
-                  @click="submitForm(formRef)"
-                  >登陆</el-button
-                >
+                <el-button color="#0165D0" type="primary" @click="submitForm(formRef)">登陆</el-button>
               </el-form-item>
-              <el-form-item
-                prop="type"
-                :rules="[
-                  {
-                    type: 'array',
-                    required: true,
-                    message: '请阅读并勾选',
-                    trigger: 'change',
-                  },
-                ]"
-              >
+              <el-form-item prop="type" :rules="[
+                {
+                  type: 'array',
+                  required: true,
+                  message: '请阅读并勾选',
+                  trigger: 'change',
+                },
+              ]">
                 <!-- <el-checkbox-group v-model="numberValidateForm.type">
                   <el-checkbox label="使用协议" name="type">
                     <el-link>记住密码</el-link>
@@ -91,6 +62,9 @@ import type { FormInstance } from "element-plus";
 import { ElMessage } from "element-plus";
 import router from "@/router/index";
 import { Avatar, Lock } from "@element-plus/icons-vue";
+import { useStore } from "vuex";
+
+const store = useStore();
 const formRef = ref<FormInstance>();
 
 const numberValidateForm = reactive({
@@ -99,6 +73,30 @@ const numberValidateForm = reactive({
   type: ["记住密码"],
 });
 onMounted(() => {
+  console.log(store.state.goEasy.getConnectionStatus());
+
+  if (store.state.goEasy.getConnectionStatus() != 'disconnected') {
+    store.state.goEasy.disconnect({
+      onSuccess: function () {
+        console.log("GoEasy disconnect successfully.")
+      },
+      onFailed: function (error) {
+        console.log("Failed to disconnect GoEasy, code:" + error.code + ",error:" + error.content);
+      }
+    })
+  }
+  // store.state.goEasy.getConnectionStatus({
+  //   onSuccess: function (res) {
+  //     console.log("GoEasy disconnect successfully.", res)
+  //   },
+  //   onFailed: function (error) {
+  //     console.log("Failed to disconnect GoEasy, code:" + error.code + ",error:" + error.content);
+  //   }
+  // })
+  // let a = store.state.goEasy.getConnectionStatus()
+  // console.log(a);
+
+
   let arr = document.cookie.split("; ");
   // console.log(arr);
   for (let i = 0; i < arr.length; i++) {
@@ -115,7 +113,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      login(numberValidateForm.userName, numberValidateForm.password, 4).then(
+      login(numberValidateForm.userName, numberValidateForm.password, 4, 'pc').then(
         (res) => {
           if (res.data.code == 200) {
             ElMessage({
@@ -126,6 +124,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
             router.push("/backHome");
             sessionStorage.setItem("userName", numberValidateForm.userName);
             sessionStorage.setItem("userId", res.data.data.id);
+            sessionStorage.setItem('satoken', res.data.data.token.tokenValue)
             if (numberValidateForm.type.length > 0) {
               window.document.cookie =
                 "userNameBack" + "=" + numberValidateForm.userName;

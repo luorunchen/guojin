@@ -3,13 +3,7 @@
     <el-col :span="5">
       <div class="box">
         <p>行政区域</p>
-        <el-tree
-          :props="props"
-          :load="loadNode"
-          lazy
-          highlight-current
-          @node-click="treeChange"
-        />
+        <el-tree :props="props" :load="loadNode" lazy highlight-current @node-click="treeChange" />
         <!-- <el-tree
           :data="databasesList"
           :props="defaultProps"
@@ -25,24 +19,13 @@
             <el-input v-model="formInline.user" placeholder="请输入" />
           </el-form-item>
           <el-form-item orm-item label="所属行业:">
-            <el-select
-              v-model="formInline.region"
-              clearable
-              placeholder="请选择"
-            >
-              <el-option
-                :label="item.name"
-                :value="item.id"
-                v-for="(item, index) in industryList"
-                :key="index"
-              />
+            <el-select v-model="formInline.region" clearable placeholder="请选择">
+              <el-option :label="item.name" :value="item.id" v-for="(item, index) in industryList" :key="index" />
             </el-select>
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="getCompanyListFun('select')"
-              >查询</el-button
-            >
+            <el-button type="primary" @click="getCompanyListFun('select')">查询</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -60,12 +43,7 @@
 
           <el-table-column prop="address" label="操作">
             <template #default="scope">
-              <el-button
-                size="small"
-                type="primary"
-                @click="drawerOpen(scope.row)"
-                >详情</el-button
-              >
+              <el-button size="small" type="primary" @click="drawerOpen(scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -73,300 +51,9 @@
         <SeeFlie ref="seeFile"></SeeFlie>
 
         <el-drawer v-model="drawer" size="80%" :title="drawerTitle">
-          <el-tabs
-            v-model="activeName"
-            class="demo-tabs"
-            @tab-click="handleClick"
-          >
+          <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
             <el-tab-pane label="备案信息" name="first">
-              <div class="info">
-                <!-- --------------------- -->
-                <el-tabs
-                  v-model="activeName"
-                  class="demo-tabs"
-                  @tab-click="handleClick"
-                >
-                  <el-tab-pane label="市场监督管理注册信息" name="first">
-                    <el-form
-                      :inline="true"
-                      class="demo-form-inline"
-                      ref="ruleFormRef"
-                      :model="ruleForm"
-                      label-width="100px"
-                    >
-                      <el-form-item label="企业名称" prop="name">
-                        <el-input
-                          v-model="ruleForm.company"
-                          placeholder="企业名称"
-                          disabled
-                        >
-                        </el-input>
-                      </el-form-item>
-                      <el-form-item label="法定代表人">
-                        <el-input
-                          v-model="ruleForm.legal_person"
-                          placeholder="自动生成"
-                          disabled
-                        />
-                      </el-form-item>
-                      <el-form-item label="注册资本">
-                        <el-input
-                          v-model="ruleForm.register_capital"
-                          placeholder="自动生成"
-                          disabled
-                        >
-                          <template #append> 万元 </template>
-                        </el-input>
-                      </el-form-item>
-                      <el-form-item label="类型">
-                        <el-input
-                          v-model="ruleForm.style"
-                          placeholder="自动生成"
-                          disabled
-                        />
-                      </el-form-item>
-                      <el-form-item label="成立日期">
-                        <el-input
-                          v-model="ruleForm.register_date"
-                          placeholder="自动生成"
-                          disabled
-                        />
-                      </el-form-item>
-                      <el-form-item label="营业期限">
-                        <el-input
-                          v-model="ruleForm.expire_date"
-                          placeholder="自动生成"
-                          disabled
-                        />
-                      </el-form-item>
-                      <el-form-item label="社会信用代码">
-                        <el-input
-                          v-model="ruleForm.code"
-                          placeholder="自动生成"
-                          disabled
-                        />
-                      </el-form-item>
-                      <el-form-item label="注册地址">
-                        <el-input
-                          v-model="ruleForm.address"
-                          placeholder="自动生成"
-                          disabled
-                        />
-                      </el-form-item>
-                      <el-form-item label="经营范围">
-                        <el-input
-                          v-model="ruleForm.scope"
-                          placeholder="自动生成"
-                          disabled
-                          type="textarea"
-                          autosize
-                        />
-                      </el-form-item>
-                    </el-form>
-                  </el-tab-pane>
-                </el-tabs>
-                <!-- 其他信息 -->
-                <el-tabs
-                  v-model="activeName"
-                  class="demo-tabs"
-                  @tab-click="handleClick"
-                >
-                  <el-tab-pane label="其他信息" name="first">
-                    <el-form
-                      :inline="true"
-                      class="demo-form-inline"
-                      ref="ruleFormRef"
-                      :model="ruleForm"
-                      label-width="100px"
-                    >
-                      <el-form-item label="上年产值" prop="name">
-                        <el-input
-                          v-model="ruleForm.last_value"
-                          placeholder="上年产值"
-                          disabled
-                        >
-                          <template #append> 万元 </template>
-                        </el-input>
-                      </el-form-item>
-                      <el-form-item label="员工人数">
-                        <el-input
-                          v-model="ruleForm.number"
-                          placeholder="请输入"
-                          disabled
-                        >
-                          <template #append> 人 </template>
-                        </el-input>
-                      </el-form-item>
-
-                      <el-form-item label="占地面积">
-                        <el-input
-                          v-model="ruleForm.floor_space"
-                          placeholder="请输入"
-                          disabled
-                        >
-                          <template #append> 平方 </template>
-                        </el-input>
-                      </el-form-item>
-                      <el-form-item label="经营面积">
-                        <el-input
-                          v-model="ruleForm.operation_space"
-                          placeholder="请输入"
-                          disabled
-                        >
-                          <template #append> 平方 </template>
-                        </el-input>
-                      </el-form-item>
-                      <el-form-item label="所属行业" prop="industry">
-                        <!-- <el-cascader :props="props" v-model="ruleForm.industry" /> -->
-                        <el-input
-                          v-model="ruleForm.industry"
-                          placeholder="请输入"
-                          disabled
-                        />
-                      </el-form-item>
-                      <el-form-item label="安全投入">
-                        <el-input
-                          v-model="ruleForm.safe_input"
-                          placeholder="请输入"
-                          disabled
-                        >
-                          <template #append> 万元 </template>
-                        </el-input>
-                      </el-form-item>
-                      <el-form-item label="评定标准">
-                        <el-input
-                          v-model="ruleForm.evaluation_standard"
-                          placeholder="请输入"
-                          disabled
-                        />
-                      </el-form-item>
-                      <el-form-item label="企业规模">
-                        <el-input
-                          v-model="ruleForm.up_down"
-                          placeholder="请输入"
-                          disabled
-                        />
-                      </el-form-item>
-                      <el-form-item label="主要产品">
-                        <el-input
-                          v-model="ruleForm.products"
-                          placeholder="请输入"
-                          disabled
-                        />
-                      </el-form-item>
-                    </el-form>
-                  </el-tab-pane>
-                </el-tabs>
-                <!-- 相关人员联系方式 -->
-                <el-tabs
-                  v-model="activeName"
-                  class="demo-tabs"
-                  @tab-click="handleClick"
-                >
-                  <el-tab-pane label="相关人员联系方式" name="first">
-                    <el-form
-                      :inline="true"
-                      class="demo-form-inline"
-                      ref="ruleFormRef"
-                      :model="ruleForm"
-                      label-width="150px"
-                      label-position="left"
-                    >
-                      <el-form-item label="主要负责人" prop="name">
-                        <template v-for="(i, j) in ruleForm.people" :key="j">
-                          <el-input
-                            v-model="ruleForm.people[j]"
-                            placeholder="请输入"
-                            style="margin-bottom: 10px"
-                            disabled
-                          >
-                          </el-input>
-                        </template>
-                      </el-form-item>
-                      <el-form-item label="安全生产管理人员" prop="name">
-                        <template v-for="(i, j) in ruleForm.anquan" :key="j">
-                          <el-input
-                            v-model="ruleForm.anquan[j]"
-                            placeholder="请输入"
-                            style="margin-bottom: 10px"
-                            disabled
-                          >
-                          </el-input>
-                        </template>
-                      </el-form-item>
-                      <el-form-item label="消防生产管理人员" prop="name">
-                        <template v-for="(i, j) in ruleForm.xiaofang" :key="j">
-                          <el-input
-                            v-model="ruleForm.xiaofang[j]"
-                            placeholder="请输入"
-                            disabled
-                            style="margin-bottom: 10px"
-                          >
-                          </el-input>
-                        </template>
-                      </el-form-item>
-                      <el-form-item label="电工" prop="name">
-                        <el-input
-                          v-model="ruleForm.diangong[j]"
-                          placeholder="请输入"
-                          disabled
-                          style="margin-bottom: 10px"
-                        >
-                        </el-input>
-                      </el-form-item>
-                      <el-form-item label="设备管理人员" prop="name">
-                        <el-input
-                          v-model="ruleForm.shebei[j]"
-                          placeholder="请输入"
-                          disabled
-                          style="margin-bottom: 10px"
-                        >
-                        </el-input>
-                      </el-form-item>
-                    </el-form>
-                  </el-tab-pane>
-                </el-tabs>
-                <!-- 本单位涉及的场所(可多选) -->
-                <el-tabs
-                  v-model="activeName"
-                  class="demo-tabs1"
-                  @tab-click="handleClick"
-                >
-                  <el-tab-pane label="本单位涉及的场所(可多选)" name="first">
-                    <el-form
-                      class="demo-form-inline"
-                      ref="ruleFormRef"
-                      :model="ruleForm"
-                      label-width="100px"
-                    >
-                      <el-form-item
-                        :label="item.name"
-                        prop="resource"
-                        v-for="(item, index) in formTreeList"
-                        :key="index"
-                      >
-                        <el-checkbox-group
-                          v-model="ruleForm.resource"
-                          v-for="(item2, index2) in item.children"
-                          :key="index2"
-                        >
-                          <el-checkbox :label="item2.id">{{
-                            item2.name
-                          }}</el-checkbox>
-                        </el-checkbox-group>
-                      </el-form-item>
-                      <el-form-item
-                        label="自行建立专用设备设施"
-                        prop="resource"
-                        label-width="130px"
-                      >
-                        <el-input disabled></el-input>
-                      </el-form-item>
-                    </el-form>
-                  </el-tab-pane>
-                </el-tabs>
-                <!-- --------------------- -->
-              </div>
+              <FilingInformationOne :status="'government'" :seeRowId="companyId" />
             </el-tab-pane>
             <el-tab-pane label="台账" name="second">
               <el-table :data="tables" height="450px">
@@ -376,12 +63,7 @@
                 <el-table-column prop="create_name" label="上传人员" />
                 <el-table-column prop="address" label="操作">
                   <template #default="scope">
-                    <el-button
-                      size="small"
-                      type="primary"
-                      @click="see(scope.row)"
-                      >查看</el-button
-                    >
+                    <el-button size="small" type="primary" @click="see(scope.row)">查看</el-button>
                     <!-- <el-button size="small" type="danger" @click="delFileInfoFun(scope.row)">删除</el-button> -->
                   </template>
                 </el-table-column>
@@ -401,6 +83,7 @@
 import { onMounted, reactive, ref } from "vue";
 import Pagination from "../../pagination/index.vue";
 import SeeFlie from "../../seeFlie/index.vue";
+import FilingInformationOne from "@/components/filingInformation/one.vue";
 import {
   getCompanyList,
   getHY,
@@ -463,7 +146,7 @@ const industryList = ref([]);
 const total = ref(0);
 const tables = ref([]);
 const codeList = ref([]);
-const companyId = ref();
+const companyId = ref('');
 const drawer = ref(false);
 const activeName = ref("first");
 const drawerTitle = ref("");
@@ -549,7 +232,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
       "",
       "",
       "",
-      2,
+      3,
       currentPage3.value,
       pageSize3.value
     ).then((res) => {
@@ -598,6 +281,9 @@ const drawerOpen = (row) => {
   drawer.value = true;
   drawerTitle.value = row.company;
   companyId.value = row.companyId;
+
+  // console.log(companyId.value, 'sssss');
+
   getCompanyInfoByIdFun();
 };
 //分页器组件传回来的数据
@@ -623,6 +309,7 @@ const changeList = (pageSize, currentPage, type) => {
   padding-left: 20px;
   box-sizing: border-box;
 }
+
 .box {
   margin-top: 10px;
   width: 100%;
@@ -656,20 +343,17 @@ const changeList = (pageSize, currentPage, type) => {
     // }
   }
 
-  /deep/.el-tree--highlight-current
-    .el-tree-node.is-current
-    > .el-tree-node__content {
+  /deep/.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
     // 设置颜色
-    background-color: rgba(
-      135,
-      206,
-      235,
-      0.2
-    ); // 透明度为0.2的skyblue，作者比较喜欢的颜色
+    background-color: rgba(135,
+        206,
+        235,
+        0.2); // 透明度为0.2的skyblue，作者比较喜欢的颜色
     color: #0165d0ff; // 节点的字体颜色
     font-weight: bold; // 字体加粗
   }
 }
+
 .table {
   margin-top: 10px;
   padding: 20px;
@@ -680,6 +364,10 @@ const changeList = (pageSize, currentPage, type) => {
   border-radius: 4px;
   box-sizing: border-box;
   position: relative;
+}
+
+.demo-tabs {
+  padding: 30px;
 }
 
 /deep/.el-drawer.rtl {

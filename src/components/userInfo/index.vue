@@ -8,12 +8,7 @@
         <FilingInformationTwo v-if="loginType == '2'" :status="'reception'" />
       </el-tab-pane>
       <el-tab-pane label="我的缴费" name="second">
-        <el-table
-          :data="getPayHistorysList"
-          stripe
-          style="width: 100%"
-          height="300px"
-        >
+        <el-table :data="getPayHistorysList" stripe style="width: 100%" height="300px">
           <el-table-column type="index" width="50" />
           <el-table-column prop="orderId" label="订单编号" />
           <el-table-column prop="pay_date" label="起始时间" />
@@ -28,8 +23,8 @@
             <template #default="scope">
               {{
                 scope.row.invoice == 0
-                  ? "开票中"
-                  : scope.row.invoice == 1
+                ? "开票中"
+                : scope.row.invoice == 1
                   ? "已开票"
                   : "未开票"
               }}
@@ -37,30 +32,16 @@
           </el-table-column>
           <el-table-column prop="name" label="操作">
             <template #default="scope">
-              <el-button
-                :disabled="scope.row.invoice == 2 ? false : true"
-                type="success"
-                @click="openInvoice(scope.row)"
-                >开发票</el-button
-              >
+              <el-button :disabled="scope.row.invoice == 2 ? false : true" type="success"
+                @click="openInvoice(scope.row)">开发票</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="我的开票信息" name="third">
-        <el-button
-          type="primary"
-          style="margin-bottom: 10px"
-          @click="(dialogVisible = true), (newData = true)"
-          v-if="getInVoiceInfoLists.length < 0"
-          >新增</el-button
-        >
-        <el-table
-          :data="getInVoiceInfoLists"
-          stripe
-          style="width: 100%"
-          height="300px"
-        >
+        <el-button type="primary" style="margin-bottom: 10px" @click="(dialogVisible = true), (newData = true)"
+          v-if="getInVoiceInfoLists.length < 0">新增</el-button>
+        <el-table :data="getInVoiceInfoLists" stripe style="width: 100%" height="300px">
           <el-table-column type="index" width="50" />
           <el-table-column prop="company" label="公司名称" />
           <el-table-column prop="code" label="社会信用统一代码" />
@@ -71,8 +52,8 @@
             <template #default="scope">
               {{
                 scope.row.type == 1
-                  ? "个人"
-                  : scope.row.type == 2
+                ? "个人"
+                : scope.row.type == 2
                   ? "企业"
                   : "事业单位"
               }}
@@ -85,26 +66,14 @@
           </el-table-column>
           <el-table-column prop="name" label="操作">
             <template #default="scope">
-              <el-button type="primary" @click="inVoiceEdit(scope.row)"
-                >编辑</el-button
-              >
+              <el-button type="primary" @click="inVoiceEdit(scope.row)">编辑</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="我的地址信息" name="four">
-        <el-button
-          type="primary"
-          style="margin-bottom: 10px"
-          @click="addFun('address')"
-          >新增</el-button
-        >
-        <el-table
-          :data="getMailAddressLists"
-          stripe
-          style="width: 100%"
-          height="300px"
-        >
+        <el-button type="primary" style="margin-bottom: 10px" @click="addFun('address')">新增</el-button>
+        <el-table :data="getMailAddressLists" stripe style="width: 100%" height="300px">
           <el-table-column type="index" width="50" />
           <el-table-column prop="name" label="姓名" />
           <el-table-column prop="phone" label="电话" />
@@ -121,29 +90,14 @@
           </el-table-column> -->
           <el-table-column prop="name" label="操作">
             <template #default="scope">
-              <el-button type="primary" @click="addressEdite(scope.row)"
-                >编辑</el-button
-              >
-              <el-button type="danger" @click="deleteAddress(scope.row)"
-                >删除</el-button
-              >
+              <el-button type="primary" @click="addressEdite(scope.row)">编辑</el-button>
+              <el-button type="danger" @click="deleteAddress(scope.row)">删除</el-button>
             </template>
           </el-table-column>
-        </el-table></el-tab-pane
-      >
+        </el-table></el-tab-pane>
       <el-tab-pane label="我的邮箱信息" name="five">
-        <el-button
-          type="primary"
-          style="margin-bottom: 10px"
-          @click="addFun('email')"
-          >新增</el-button
-        >
-        <el-table
-          :data="getMailLists"
-          stripe
-          style="width: 100%"
-          height="300px"
-        >
+        <el-button type="primary" style="margin-bottom: 10px" @click="addFun('email')">新增</el-button>
+        <el-table :data="getMailLists" stripe style="width: 100%" height="300px">
           <el-table-column type="index" width="50" />
           <el-table-column prop="mail" label="邮箱" />
           <!-- <el-table-column prop="expire_date" label="结束时间" />
@@ -151,50 +105,26 @@
 
           <el-table-column prop="name" label="操作">
             <template #default="scope">
-              <el-button type="primary" @click="emailEdit(scope.row)"
-                >编辑</el-button
-              >
-              <el-button type="danger" @click="deleteEmail(scope.row)"
-                >删除</el-button
-              >
+              <el-button type="primary" @click="emailEdit(scope.row)">编辑</el-button>
+              <el-button type="danger" @click="deleteEmail(scope.row)">删除</el-button>
             </template>
           </el-table-column>
-        </el-table></el-tab-pane
-      >
+        </el-table></el-tab-pane>
     </el-tabs>
 
     <el-dialog v-model="dialogVisible" title="我的发票" width="30%" center>
       <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm">
-        <el-form-item
-          label="抬头类型:"
-          prop="resource"
-          :rules="[{ required: true, message: '请选择抬头类型' }]"
-        >
-          <el-radio-group
-            v-model="numberValidateForm.resource"
-            @click="resetForm(formRef)"
-          >
+        <el-form-item label="抬头类型:" prop="resource" :rules="[{ required: true, message: '请选择抬头类型' }]">
+          <el-radio-group v-model="numberValidateForm.resource" @click="resetForm(formRef)">
             <el-radio label="1">个人</el-radio>
             <el-radio label="2">企业</el-radio>
             <el-radio label="3">事业单位</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item
-          label="发票抬头:"
-          prop="age"
-          :rules="[{ required: true, message: '请输入发票抬头' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.age"
-            type="text"
-            autocomplete="off"
-          />
+        <el-form-item label="发票抬头:" prop="age" :rules="[{ required: true, message: '请输入发票抬头' }]">
+          <el-input v-model="numberValidateForm.age" type="text" autocomplete="off" />
         </el-form-item>
-        <el-form-item
-          label="发票类型:"
-          prop="invoice"
-          :rules="[{ required: true, message: '请选择发票类型' }]"
-        >
+        <el-form-item label="发票类型:" prop="invoice" :rules="[{ required: true, message: '请选择发票类型' }]">
           <el-radio-group v-model="numberValidateForm.invoice">
             <el-radio label="1">增值税普通发票</el-radio>
             <el-radio label="2">增值税专用发票</el-radio>
@@ -202,48 +132,24 @@
         </el-form-item>
 
         <template v-if="numberValidateForm.resource != '1'">
-          <el-form-item
-            label="统一社会信用代码:"
-            prop="creditCode"
-            :rules="
-              numberValidateForm.resource == '2'
-                ? [{ required: true, message: '请输入统一社会信用代码' }]
-                : []
-            "
-          >
-            <el-input
-              v-model="numberValidateForm.creditCode"
-              type="text"
-              autocomplete="off"
-            />
+          <el-form-item label="统一社会信用代码:" prop="creditCode" :rules="
+            numberValidateForm.resource == '2'
+              ? [{ required: true, message: '请输入统一社会信用代码' }]
+              : []
+          ">
+            <el-input v-model="numberValidateForm.creditCode" type="text" autocomplete="off" />
           </el-form-item>
           <el-form-item label="开户银行名称:" prop="bankName">
-            <el-input
-              v-model="numberValidateForm.bankName"
-              type="text"
-              autocomplete="off"
-            />
+            <el-input v-model="numberValidateForm.bankName" type="text" autocomplete="off" />
           </el-form-item>
           <el-form-item label="基本开户账号:" prop="accountNo">
-            <el-input
-              v-model="numberValidateForm.accountNo"
-              type="text"
-              autocomplete="off"
-            />
+            <el-input v-model="numberValidateForm.accountNo" type="text" autocomplete="off" />
           </el-form-item>
           <el-form-item label="注册场所地址:" prop="addresss">
-            <el-input
-              v-model="numberValidateForm.addresss"
-              type="text"
-              autocomplete="off"
-            />
+            <el-input v-model="numberValidateForm.addresss" type="text" autocomplete="off" />
           </el-form-item>
           <el-form-item label="注册固定电话:" prop="phone">
-            <el-input
-              v-model="numberValidateForm.phone"
-              type="text"
-              autocomplete="off"
-            />
+            <el-input v-model="numberValidateForm.phone" type="text" autocomplete="off" />
           </el-form-item>
         </template>
       </el-form>
@@ -251,97 +157,34 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="submitForm(formRef, 'fapiao')"
-            >确定</el-button
-          >
+          <el-button type="primary" @click="submitForm(formRef, 'fapiao')">确定</el-button>
         </span>
       </template>
     </el-dialog>
     <!-- <Pagination :total="total" @changeList="changeList" /> -->
 
     <el-dialog v-model="addVisible" title="新增" width="30%" center>
-      <el-form
-        ref="formRef"
-        :model="numberValidateForm"
-        class="demo-ruleForm"
-        label-width="100px"
-      >
-        <el-form-item
-          label="姓名:"
-          prop="userName"
-          :rules="[{ required: true, message: '请输入姓名' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.userName"
-            type="text"
-            autocomplete="off"
-          />
+      <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm" label-width="100px">
+        <el-form-item label="姓名:" prop="userName" :rules="[{ required: true, message: '请输入姓名' }]">
+          <el-input v-model="numberValidateForm.userName" type="text" autocomplete="off" />
         </el-form-item>
-        <el-form-item
-          label="省份:"
-          prop="province"
-          :rules="[{ required: true, message: '请输入省份' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.province"
-            type="text"
-            autocomplete="off"
-          />
+        <el-form-item label="省份:" prop="province" :rules="[{ required: true, message: '请输入省份' }]">
+          <el-input v-model="numberValidateForm.province" type="text" autocomplete="off" />
         </el-form-item>
-        <el-form-item
-          label="市:"
-          prop="city"
-          :rules="[{ required: true, message: '请输入市' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.city"
-            type="text"
-            autocomplete="off"
-          />
+        <el-form-item label="市:" prop="city" :rules="[{ required: true, message: '请输入市' }]">
+          <el-input v-model="numberValidateForm.city" type="text" autocomplete="off" />
         </el-form-item>
-        <el-form-item
-          label="区:"
-          prop="area"
-          :rules="[{ required: true, message: '请输入区' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.area"
-            type="text"
-            autocomplete="off"
-          />
+        <el-form-item label="区:" prop="area" :rules="[{ required: true, message: '请输入区' }]">
+          <el-input v-model="numberValidateForm.area" type="text" autocomplete="off" />
         </el-form-item>
-        <el-form-item
-          label="详细地址:"
-          prop="dizhi"
-          :rules="[{ required: true, message: '请输入详细地址' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.dizhi"
-            type="text"
-            autocomplete="off"
-          />
+        <el-form-item label="详细地址:" prop="dizhi" :rules="[{ required: true, message: '请输入详细地址' }]">
+          <el-input v-model="numberValidateForm.dizhi" type="text" autocomplete="off" />
         </el-form-item>
-        <el-form-item
-          label="手机号码:"
-          prop="iphone"
-          :rules="[{ required: true, message: '请输入手机号码' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.iphone"
-            type="text"
-            autocomplete="off"
-          />
+        <el-form-item label="手机号码:" prop="iphone" :rules="[{ required: true, message: '请输入手机号码' }]">
+          <el-input v-model="numberValidateForm.iphone" type="text" autocomplete="off" />
         </el-form-item>
-        <el-form-item
-          label="邮政编码:"
-          prop="code"
-          :rules="[{ required: true, message: '请输入邮政编码' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.code"
-            type="text"
-            autocomplete="off"
-          />
+        <el-form-item label="邮政编码:" prop="code" :rules="[{ required: true, message: '请输入邮政编码' }]">
+          <el-input v-model="numberValidateForm.code" type="text" autocomplete="off" />
         </el-form-item>
         <!-- <el-form-item label="设置:" prop="defaults">
           <el-checkbox-group v-model="numberValidateForm.defaults">
@@ -360,22 +203,9 @@
       </template>
     </el-dialog>
     <el-dialog v-model="emailVisible" title="新增" width="30%" center>
-      <el-form
-        ref="formRef"
-        :model="numberValidateForm"
-        class="demo-ruleForm"
-        label-width="100px"
-      >
-        <el-form-item
-          label="邮箱:"
-          prop="email"
-          :rules="[{ required: true, message: '请输入邮箱' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.email"
-            type="text"
-            autocomplete="off"
-          />
+      <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm" label-width="100px">
+        <el-form-item label="邮箱:" prop="email" :rules="[{ required: true, message: '请输入邮箱' }]">
+          <el-input v-model="numberValidateForm.email" type="text" autocomplete="off" />
         </el-form-item>
       </el-form>
 
@@ -389,70 +219,26 @@
       </template>
     </el-dialog>
     <el-dialog v-model="invoiceVisible" title="开票" width="30%" center>
-      <el-form
-        ref="formRef"
-        :model="numberValidateForm"
-        class="demo-ruleForm"
-        label-width="100px"
-      >
-        <el-form-item
-          label="订单编号:"
-          prop="orderId"
-          :rules="[{ required: true, message: '请输入订单编号' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.orderId"
-            type="text"
-            disabled
-            autocomplete="off"
-          />
+      <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm" label-width="100px">
+        <el-form-item label="订单编号:" prop="orderId" :rules="[{ required: true, message: '请输入订单编号' }]">
+          <el-input v-model="numberValidateForm.orderId" type="text" disabled autocomplete="off" />
         </el-form-item>
-        <el-form-item
-          label="金额:"
-          prop="price"
-          :rules="[{ required: true, message: '请输入订单金额' }]"
-        >
-          <el-input
-            v-model="numberValidateForm.price"
-            type="text"
-            disabled
-            autocomplete="off"
-          />
+        <el-form-item label="金额:" prop="price" :rules="[{ required: true, message: '请输入订单金额' }]">
+          <el-input v-model="numberValidateForm.price" type="text" disabled autocomplete="off" />
         </el-form-item>
         <el-form-item label="开票信息:" prop="invoiceId">
-          <el-select
-            v-model="numberValidateForm.invoiceId"
-            placeholder="请选择"
-          >
-            <el-option
-              :label="item.company"
-              :value="item.id"
-              v-for="(item, index) in getInVoiceInfoLists"
-              :key="index"
-            />
+          <el-select v-model="numberValidateForm.invoiceId" placeholder="请选择">
+            <el-option :label="item.company" :value="item.id" v-for="(item, index) in getInVoiceInfoLists" :key="index" />
           </el-select>
         </el-form-item>
         <el-form-item label="邮寄地址:" prop="addressId">
-          <el-select
-            v-model="numberValidateForm.addressId"
-            placeholder="请选择"
-          >
-            <el-option
-              :label="item.name"
-              :value="item.id"
-              v-for="(item, index) in getMailAddressLists"
-              :key="index"
-            />
+          <el-select v-model="numberValidateForm.addressId" placeholder="请选择">
+            <el-option :label="item.name" :value="item.id" v-for="(item, index) in getMailAddressLists" :key="index" />
           </el-select>
         </el-form-item>
         <el-form-item label="邮箱:" prop="mailId">
           <el-select v-model="numberValidateForm.mailId" placeholder="请选择">
-            <el-option
-              :label="item.mail"
-              :value="item.id"
-              v-for="(item, index) in getMailLists"
-              :key="index"
-            />
+            <el-option :label="item.mail" :value="item.id" v-for="(item, index) in getMailLists" :key="index" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -551,7 +337,7 @@ const numberValidateForm = reactive({
 });
 
 onMounted(() => {
-  userInfo.value.style.height = props.boxHeight + "px";
+  // userInfo.value.style.height = props.boxHeight + "px";
   // getCompanyInfoByIdsFun();
 });
 
@@ -656,7 +442,7 @@ const openInvoice = (row) => {
   getMailAddressFun();
   getMailFun();
 };
-const changeList = () => {};
+const changeList = () => { };
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   // console.log(tab.props.label, 1);
   if (tab.props.label == "我的缴费") {
@@ -900,6 +686,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
   // width: 1460px;
   // height: 720px;
   position: relative;
+
   .demo-tabs {
     margin-top: 10px;
 
@@ -913,6 +700,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
     //   width: 46%;
     // }
   }
+
   .box {
     margin-top: 10px;
     height: 69px;
@@ -928,6 +716,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
       color: #058ffeff;
     }
   }
+
   .info {
     padding: 30px;
   }

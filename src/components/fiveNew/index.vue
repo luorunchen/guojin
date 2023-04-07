@@ -14,18 +14,11 @@
       <el-tab-pane label="新材料" name="4">
         <!-- <MyUpload :activeName="activeName" /> -->
       </el-tab-pane>
-      <el-tab-pane label="新产品" name="5">
-        <!-- <MyUpload :activeName="activeName" /> -->
-      </el-tab-pane>
+
       <el-tab-pane label="我的上传" name="6">
         <!-- <MyUpload :activeName="activeName" /> -->
       </el-tab-pane>
-      <MyUpload
-        :activeName="activeName"
-        :pageSizes="pageSizes"
-        :currentPages="currentPages"
-        @totalFun="totalFun"
-      />
+      <MyUpload :activeName="activeName" :pageSizes="pageSizes" :currentPages="currentPages" @totalFun="totalFun" />
       <!-- <el-tab-pane label="Task" name="fourth">Task</el-tab-pane> -->
     </el-tabs>
     <Pagination :total="total" @changeList="changeList" />
@@ -64,6 +57,7 @@ const totalFun = (totalData) => {
   .upload-demo {
     width: 100%;
   }
+
   .demo-tabs {
     margin-top: 10px;
 

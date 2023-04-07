@@ -7,12 +7,7 @@
             <el-col :span="14">
               <div class="box">
                 <h1>智慧安全，全方位守护</h1>
-                <el-button
-                  type="success"
-                  color="#058FFE"
-                  @click="(visible = true), medicalFun()"
-                  >全面体检</el-button
-                >
+                <el-button type="success" color="#058FFE" @click="(visible = true), medicalFun()">全面体检</el-button>
               </div>
             </el-col>
             <el-col :span="6">
@@ -54,10 +49,10 @@
           <img src="../../assets/4.png" alt="" />
           新材料
         </div>
-        <div class="container">
+        <!-- <div class="container">
           <img src="../../assets/5.png" alt="" />
           新产品
-        </div>
+        </div> -->
       </div>
     </el-tab-pane>
   </el-tabs>
@@ -69,18 +64,19 @@
           <div class="imgbox">{{ sum }}</div>
           <!-- <img src="../../assets/安全.png" alt="" /> -->
         </el-col>
-        <el-col :span="5">
+        <el-col :span="10">
           <h1 :id="titleId">
             {{ percentage == 100 ? "全面体检完成" : "正在全面体检..." }}
           </h1>
           <h4>{{ percentage == 100 ? `本次得分${sum}分` : "" }}</h4>
         </el-col>
-        <el-col :span="2" :offset="14">
+        <el-col :span="2" :offset="9">
           <el-button type="danger" @click="close">
-            <el-icon class="el-icon--left"><CircleCloseFilled /></el-icon>
+            <el-icon class="el-icon--left">
+              <CircleCloseFilled />
+            </el-icon>
             取消
-          </el-button></el-col
-        >
+          </el-button></el-col>
       </el-row>
       <!-- <div >
         <div>
@@ -108,16 +104,11 @@
       </el-row>
       
     </div> -->
-    <el-collapse
-      accordion
-      v-for="(item, index) in arrList"
-      :key="index"
-      v-show="percentage == 100"
-    >
+    <el-collapse accordion v-for="(item, index) in arrList" :key="index" v-show="percentage == 100">
       <el-collapse-item name="1">
         <template #title>
           <h4>{{ item.name }}</h4>
-          <span style="color: red"> (共{{ item.num }}项未完成)</span>
+          <span style="color: red"> (共{{ item.children.length + item.children2.length }}项,{{ item.num }}项未完成)</span>
         </template>
 
         <el-table :data="item.children" stripe style="width: 100%">
@@ -126,21 +117,10 @@
 
           <el-table-column prop="address" label="操作">
             <template #default="scope">
-              <el-button size="small" type="primary" @click="see(scope.row)"
-                >查看</el-button
-              >
-              <el-button
-                size="small"
-                type="primary"
-                @click="downloadFileFun(scope.row.url)"
-                >下载模板
+              <el-button size="small" type="primary" @click="see(scope.row)">查看</el-button>
+              <el-button size="small" type="primary" @click="downloadFileFun(scope.row.url)">下载模板
               </el-button>
-              <el-button
-                size="small"
-                type="success"
-                @click="onlineEditing(scope.row)"
-                >在线编辑</el-button
-              >
+              <el-button size="small" type="success" @click="onlineEditing(scope.row)">在线编辑</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -196,6 +176,7 @@ watch(
     if (val <= score.value) {
       window.clearInterval(sumSI.value);
       // percentage.value = 0;
+      sum.value = score.value
     }
   }
 );
@@ -239,14 +220,18 @@ const medicalFun = () => {
     score.value = res.data.data.score;
     // clearInterval(sI.value);
     let arr = res.data.data.mbInfo;
+    let arr2 = res.data.data.tzInfo;
     var newArr = [...new Set(arr.map((i) => i.name))]; // 去重的时候需要注意和普通数组不同
-    console.log(newArr, "newarr");
+    // 去重的时候需要注意和普通数组不同
+    // console.log(newArr, "newarr");
+    // console.log(newArr2, "newarr");
 
     var list = [];
+
     newArr.forEach((i) => {
       list.push(arr.filter((t) => t.name === i));
     });
-    console.log(list, "list");
+
 
     var mlist = [];
     list.forEach((i, index) => {
@@ -256,6 +241,18 @@ const medicalFun = () => {
         children: i,
       });
     });
+    mlist.forEach(item => {
+      item.children2 = []
+      // console.log(item.name, 'item');
+      arr2.forEach(arr => {
+        if (item.name == arr.name) {
+          item.children2.push(arr)
+        }
+        // console.log(arr.name, 'arr');
+
+      })
+    })
+
     arrList.value = mlist;
     console.log(mlist);
   });
@@ -297,7 +294,9 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 
   // line-height: 330px;
 }
+
 .my-header {
+
   // display: flex;
   // flex-direction: row;
   // justify-content: space-between;
@@ -316,12 +315,15 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
     line-height: 100px;
   }
 }
+
 .boxs {
   margin-bottom: 20px;
+
   img {
     width: 100px;
     height: 100px;
   }
+
   h4 {
     margin-left: 20px;
   }
@@ -329,11 +331,13 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
   span {
     color: rgb(127, 200, 245);
   }
+
   p {
     background: #f7f7f7;
     padding: 5px;
   }
 }
+
 .conter {
   // height: 80px;
   // background: #bfa;
@@ -362,7 +366,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
   line-height: 100px;
 
   .container {
-    width: 263px;
+    width: 363px;
     height: 110px;
     background: #eef1fb;
     text-align: center;

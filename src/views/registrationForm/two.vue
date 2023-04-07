@@ -5,20 +5,10 @@
       <!-- 市场监督管理注册信息 -->
       <el-tabs v-model="activeName" class="demo-radio">
         <el-tab-pane label="机构服务类型" name="first">
-          <el-form
-            :inline="true"
-            class="demo-form-inline"
-            ref="ruleFormRef1"
-            :model="ruleForm"
-            :rules="rules"
-            label-width="100px"
-          >
+          <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef1" :model="ruleForm" :rules="rules"
+            label-width="100px">
             <el-form-item label="请选择" prop="resource">
-              <el-radio-group
-                v-model="ruleForm.resource"
-                v-for="(item, index) in getInsTypeList"
-                :key="index"
-              >
+              <el-radio-group v-model="ruleForm.resource" v-for="(item, index) in getInsTypeList" :key="index">
                 <el-radio :label="item.id">{{ item.name }}</el-radio>
               </el-radio-group>
             </el-form-item>
@@ -28,14 +18,8 @@
       <!-- 市场监督管理注册信息 -->
       <el-tabs v-model="activeName" class="demo-tabs">
         <el-tab-pane label="市场监督管理注册信息" name="first">
-          <el-form
-            :inline="true"
-            class="demo-form-inline"
-            ref="ruleFormRef2"
-            :model="ruleForm"
-            :rules="rules"
-            label-width="120px"
-          >
+          <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef2" :model="ruleForm" :rules="rules"
+            label-width="120px">
             <el-form-item label="机构名称" prop="qiye">
               <el-input v-model="ruleForm.qiye" placeholder="请输入">
                 <template #append>
@@ -44,72 +28,34 @@
               </el-input>
             </el-form-item>
             <el-form-item label="法定代表人">
-              <el-input
-                v-model="ruleForm.daibiao"
-                placeholder="自动生成"
-                disabled
-              />
+              <el-input v-model="ruleForm.daibiao" placeholder="自动生成" disabled />
             </el-form-item>
             <el-form-item label="注册资本">
-              <el-input
-                v-model="ruleForm.ziben"
-                placeholder="自动生成"
-                disabled
-              >
+              <el-input v-model="ruleForm.ziben" placeholder="自动生成" disabled>
                 <template #append> 万元 </template>
               </el-input>
             </el-form-item>
             <el-form-item label="类型">
-              <el-input
-                v-model="ruleForm.type"
-                placeholder="自动生成"
-                disabled
-              />
+              <el-input v-model="ruleForm.type" placeholder="自动生成" disabled />
             </el-form-item>
             <el-form-item label="成立日期">
-              <el-input
-                v-model="ruleForm.time"
-                placeholder="自动生成"
-                disabled
-              />
+              <el-input v-model="ruleForm.time" placeholder="自动生成" disabled />
             </el-form-item>
             <el-form-item label="营业期限">
-              <el-input
-                v-model="ruleForm.qixian"
-                placeholder="自动生成"
-                disabled
-              />
+              <el-input v-model="ruleForm.qixian" placeholder="自动生成" disabled />
             </el-form-item>
             <el-form-item label="社会信用代码">
-              <el-input
-                v-model="ruleForm.daima"
-                placeholder="自动生成"
-                disabled
-              />
+              <el-input v-model="ruleForm.daima" placeholder="自动生成" disabled />
             </el-form-item>
             <el-form-item label="注册地址">
-              <el-input
-                v-model="ruleForm.address"
-                placeholder="自动生成"
-                disabled
-              >
+              <el-input v-model="ruleForm.address" placeholder="自动生成" disabled>
                 <template #append>
-                  <el-button
-                    type="success"
-                    :icon="MapLocation"
-                    @click="position"
-                  ></el-button>
+                  <el-button type="success" :icon="MapLocation" @click="position"></el-button>
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item label="经营范围">
-              <el-input
-                v-model="ruleForm.fanwei"
-                placeholder="自动生成"
-                disabled
-                type="textarea"
-                autosize
-              />
+              <el-input v-model="ruleForm.fanwei" placeholder="自动生成" disabled type="textarea" autosize />
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -117,34 +63,21 @@
       <!-- 其他信息 -->
       <el-tabs v-model="activeName" class="demo-tabs">
         <el-tab-pane label="其他信息" name="first">
-          <el-form
-            :inline="true"
-            class="demo-form-inline"
-            ref="ruleFormRef3"
-            :model="ruleForm"
-            :rules="rules"
-            label-width="150px"
-          >
+          <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef3" :model="ruleForm" :rules="rules"
+            label-width="150px">
             <el-form-item label="资质证书名称" prop="zs_name">
-              <el-input v-model="ruleForm.zs_name" placeholder="上年产值" />
+              <el-input v-model="ruleForm.zs_name" placeholder="上年营业额" />
             </el-form-item>
             <el-form-item label="证书有效期" prop="zs_date">
-              <el-date-picker
-                v-model="ruleForm.zs_date"
-                type="datetime"
-                placeholder="Select date and time"
-                value-format="YYYY/MM/DD HH:mm:ss"
-              />
+              <el-date-picker v-model="ruleForm.zs_date" type="datetime" placeholder="Select date and time"
+                value-format="YYYY/MM/DD HH:mm:ss" />
             </el-form-item>
 
             <el-form-item label="资质证书批准部门" prop="zs_pz">
               <el-input v-model="ruleForm.zs_pz" placeholder="请输入" />
             </el-form-item>
             <el-form-item label="服务区域" prop="service_region">
-              <el-input
-                v-model="ruleForm.service_region"
-                placeholder="请输入"
-              />
+              <el-input v-model="ruleForm.service_region" placeholder="请输入" />
             </el-form-item>
             <el-form-item label="员工人数" prop="number">
               <el-input v-model="ruleForm.number" placeholder="请输入" />
@@ -171,134 +104,109 @@
               <el-input v-model="ruleForm.fax" placeholder="请输入" />
             </el-form-item>
             <el-form-item label="经营面积" prop="operation_space">
-              <el-input
-                v-model="ruleForm.operation_space"
-                placeholder="请输入"
-              />
+              <el-input v-model="ruleForm.operation_space" placeholder="请输入" />
             </el-form-item>
-            <el-form-item
-              label="工作场所及档案室面积证明资料"
-              label-width="230px"
-              prop="file1"
-            >
-              <el-upload
-                ref="uploadRef"
-                class="upload-demo"
-                :auto-upload="false"
-                name="file1"
-                :on-change="handleChange"
-                :on-remove="handleChange"
-                :http-request="handleHttpRequest"
-              >
+            <el-form-item label="工作场所及档案室面积证明资料" label-width="230px" prop="file1">
+              <el-upload ref="uploadRef" class="upload-demo" :auto-upload="false" name="file1" :on-change="handleChange"
+                :on-remove="handleChange" :http-request="handleHttpRequest">
                 <el-button type="primary">文件上传</el-button>
               </el-upload>
             </el-form-item>
             <el-form-item label="内部管理制度清单" prop="file2">
-              <el-upload
-                ref="uploadRef"
-                class="upload-demo"
-                :auto-upload="false"
-                :data="{ companyId: ruleForm.qiyeId }"
-                name="file2"
-                :on-change="fileChange"
-                :on-remove="fileChange"
-                :http-request="handleHttpRequest"
-              >
+              <el-upload ref="uploadRef" class="upload-demo" :auto-upload="false" :data="{ companyId: ruleForm.qiyeId }"
+                name="file2" :on-change="fileChange" :on-remove="fileChange" :http-request="handleHttpRequest">
                 <el-button type="primary">文件上传</el-button>
               </el-upload>
             </el-form-item>
+
             <el-form-item label="注册安全工程师" prop="safe_height">
-              <el-row :gutter="10">
+              <el-form-item prop="safe_height" style="width: 100%;margin-bottom: 20px;">
+                <el-input v-model="ruleForm.safe_height">
+                  <template #prepend>高级</template>
+                  <template #append>人</template>
+                </el-input>
+              </el-form-item>
+              <el-form-item prop="safe_middle" style="width: 100%;margin-bottom: 20px;">
+                <el-input v-model="ruleForm.safe_middle">
+                  <template #prepend>中级</template>
+                  <template #append>人</template>
+                </el-input>
+              </el-form-item>
+              <el-form-item prop="safe_low" style="width: 100%">
+                <el-input v-model="ruleForm.safe_low">
+                  <template #prepend>初级</template>
+                  <template #append>人</template>
+                </el-input>
+              </el-form-item>
+              <!-- <el-row :gutter="10">
                 <el-col :span="8">
-                  <el-form-item prop="safe_height" style="width: 100%">
-                    <el-input v-model="ruleForm.safe_height" placeholder="人数">
-                      <template #prepend>高级</template>
-                    </el-input>
-                  </el-form-item>
+
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item prop="safe_middle" style="width: 100%">
-                    <el-input v-model="ruleForm.safe_middle" placeholder="人数">
-                      <template #prepend>中级</template>
-                    </el-input>
-                  </el-form-item>
+                 
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item prop="safe_low" style="width: 100%">
-                    <el-input v-model="ruleForm.safe_low" placeholder="人数">
-                      <template #prepend>初级</template>
-                    </el-input>
-                  </el-form-item>
+                
                 </el-col>
-              </el-row>
+              </el-row> -->
             </el-form-item>
-            <el-form-item label="注册安全工程师" prop="safe_one">
-              <el-row :gutter="10">
-                <el-col :span="8">
-                  <el-form-item prop="safe_one" style="width: 100%">
-                    <el-input v-model="ruleForm.safe_one" placeholder="人数">
-                      <template #prepend>一级</template>
-                    </el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item prop="safe_two" style="width: 100%">
-                    <el-input v-model="ruleForm.safe_two" placeholder="人数">
-                      <template #prepend>二级</template>
-                    </el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item prop="safe_three" style="width: 100%">
-                    <el-input v-model="ruleForm.safe_three" placeholder="人数">
-                      <template #prepend>三级</template>
-                    </el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+            <el-form-item label="安全评价师" prop="safe_one">
+
+              <el-form-item prop="safe_one" style="width: 100%;margin-bottom: 20px;">
+                <el-input v-model="ruleForm.safe_one">
+                  <template #prepend>一级</template>
+                  <template #append>人</template>
+                </el-input>
+              </el-form-item>
+
+
+              <el-form-item prop="safe_two" style="width: 100%;margin-bottom: 20px;">
+                <el-input v-model="ruleForm.safe_two">
+                  <template #prepend>二级</template>
+                  <template #append>人</template>
+                </el-input>
+              </el-form-item>
+
+              <el-form-item prop="safe_three" style="width: 100%">
+                <el-input v-model="ruleForm.safe_three">
+                  <template #prepend>三级</template>
+                  <template #append>人</template>
+                </el-input>
+              </el-form-item>
+
+            </el-form-item>
+
+            <el-form-item label="工程师" prop="engineer_height">
+
+              <el-form-item prop="engineer_height" style="width: 100%;margin-bottom: 20px;">
+                <el-input v-model="ruleForm.engineer_height">
+                  <template #prepend>高级</template>
+                  <template #append>人</template>
+                </el-input>
+              </el-form-item>
+
+              <el-form-item prop="engineer_middle" style="width: 100%;margin-bottom: 20px;">
+                <el-input v-model="ruleForm.engineer_middle">
+                  <template #prepend>中级</template>
+                  <template #append>人</template>
+                </el-input>
+              </el-form-item>
+
+              <el-form-item prop="engineer_low" style="width: 100%">
+                <el-input v-model="ruleForm.engineer_low">
+                  <template #prepend>初级</template>
+                  <template #append>人</template>
+                </el-input>
+              </el-form-item>
+
             </el-form-item>
             <el-form-item label="注册消防工程师" prop="fire_one">
-              <el-row :gutter="10">
-                <el-col :span="24">
-                  <el-input v-model="ruleForm.fire_one" placeholder="人数">
-                    <template #prepend>一级</template>
-                  </el-input>
-                </el-col>
-              </el-row>
-            </el-form-item>
-            <el-form-item label="工程师" prop="engineer_height">
-              <el-row :gutter="10">
-                <el-col :span="8">
-                  <el-form-item prop="engineer_height" style="width: 100%">
-                    <el-input
-                      v-model="ruleForm.engineer_height"
-                      placeholder="人数"
-                    >
-                      <template #prepend>高级</template>
-                    </el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item prop="engineer_middle" style="width: 100%">
-                    <el-input
-                      v-model="ruleForm.engineer_middle"
-                      placeholder="人数"
-                    >
-                      <template #prepend>中级</template>
-                    </el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item prop="engineer_low" style="width: 100%">
-                    <el-input
-                      v-model="ruleForm.engineer_low"
-                      placeholder="人数"
-                    >
-                      <template #prepend>初级</template>
-                    </el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+
+              <el-input v-model="ruleForm.fire_one">
+                <template #prepend>一级</template>
+                <template #append>人</template>
+              </el-input>
+
             </el-form-item>
           </el-form>
           <p>
@@ -309,11 +217,7 @@
             <el-link type="danger" @click="addPeople('del')">删除</el-link>
 
             <div class="people">
-              <el-form
-                :inline="true"
-                class="demo-form-inline"
-                label-width="100px"
-              >
+              <el-form :inline="true" class="demo-form-inline" label-width="100px">
                 <el-form-item label="姓名">
                   <el-input v-model="item.peopleName" placeholder="请输入" />
                 </el-form-item>
@@ -321,59 +225,40 @@
                   <el-input v-model="item.peopleNumber" placeholder="请输入" />
                 </el-form-item>
                 <el-form-item label="证书复印件">
-                  <el-upload
-                    ref="uploadRef"
-                    class="upload-demo"
-                    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                    :auto-upload="false"
-                    :http-request="peopleHttpRequest"
-                    :on-change="
+                  <el-upload ref="uploadRef" class="upload-demo"
+                    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :auto-upload="false"
+                    :http-request="peopleHttpRequest" :on-change="
                       (file, fileList) =>
                         peopleChange(file, fileList, index, 'file4')
-                    "
-                    :on-remove="
-                      (file, fileList) =>
-                        peopleChange(file, fileList, index, 'file4')
-                    "
-                  >
+                    " :on-remove="
+  (file, fileList) =>
+    peopleChange(file, fileList, index, 'file4')
+">
                     <el-button type="primary">文件上传</el-button>
                   </el-upload>
                 </el-form-item>
                 <el-form-item label="劳动合同">
-                  <el-upload
-                    ref="uploadRef"
-                    class="upload-demo"
-                    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                    :auto-upload="false"
-                    :http-request="peopleHttpRequest"
-                    :on-change="
+                  <el-upload ref="uploadRef" class="upload-demo"
+                    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :auto-upload="false"
+                    :http-request="peopleHttpRequest" :on-change="
                       (file, fileList) =>
                         peopleChange(file, fileList, index, 'file3')
-                    "
-                    :on-remove="
-                      (file, fileList) =>
-                        peopleChange(file, fileList, index, 'file3')
-                    "
-                  >
+                    " :on-remove="
+  (file, fileList) =>
+    peopleChange(file, fileList, index, 'file3')
+">
                     <el-button type="primary">文件上传</el-button>
                   </el-upload>
                 </el-form-item>
                 <el-form-item label="社保证明">
-                  <el-upload
-                    ref="uploadRef"
-                    class="upload-demo"
-                    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                    :auto-upload="false"
-                    :on-change="
+                  <el-upload ref="uploadRef" class="upload-demo"
+                    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :auto-upload="false" :on-change="
                       (file, fileList) =>
                         peopleChange(file, fileList, index, 'file5')
-                    "
-                    :on-remove="
-                      (file, fileList) =>
-                        peopleChange(file, fileList, index, 'file5')
-                    "
-                    :http-request="peopleHttpRequest"
-                  >
+                    " :on-remove="
+  (file, fileList) =>
+    peopleChange(file, fileList, index, 'file5')
+" :http-request="peopleHttpRequest">
                     <el-button type="primary">文件上传</el-button>
                   </el-upload>
                 </el-form-item>
@@ -386,13 +271,22 @@
         <p>特别提示:</p>
         <p>1.其他信息：请真实填写，不涉及项可不填。</p>
       </div>
-      <el-button
-        type="primary"
-        @click="submitForm(ruleFormRef1, ruleFormRef2, ruleFormRef3)"
-        class="submit"
-        >提交</el-button
-      >
+      <el-button type="primary" @click="submitForm(ruleFormRef1, ruleFormRef2, ruleFormRef3)"
+        class="submit">提交</el-button>
     </div>
+
+    <el-dialog v-model="dialogVisible" title="提示" width="30%" center :close-on-click-modal="false"
+      :close-on-press-escape="false" :show-close="false">
+      <h3> <span style="color:red">{{ ruleForm.qiye }}</span> 填写过该表单,无需填写,是否下一步或重新填写</h3>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="again">重新填写</el-button>
+          <el-button @click="next">
+            下一步
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -404,6 +298,7 @@ import {
   addInstFormInfo,
   login,
   fileInfo,
+  setIsExit
 } from "@/api/index";
 import router from "@/router";
 import {
@@ -422,6 +317,7 @@ const getInsTypeList = ref([]);
 const curFileList = ref<UploadUserFile[]>([]);
 let fd = [];
 const people = ref([]);
+const dialogVisible = ref(false);
 
 const uploadRef = ref<UploadInstance>();
 const ruleFormRef1 = ref<FormInstance>();
@@ -534,7 +430,50 @@ onMounted(() => {
     getInsTypeList.value = res.data.data;
   });
 });
-const peopleHttpRequest = () => {};
+const again = () => {
+  ruleForm.qiye = "";
+  ruleForm.qiyeId = ""
+  ruleForm.daibiao = ""
+  ruleForm.ziben = ""
+  ruleForm.type = ""
+  ruleForm.time = ""
+  ruleForm.qixian = ""
+  ruleForm.daima = ""
+  ruleForm.address = ""
+  ruleForm.fanwei = ""
+  dialogVisible.value = false
+}
+const next = () => {
+
+  let arr = document.cookie.split(";");
+  let userName = ''
+  let password = ''
+  for (let i = 0; i < arr.length; i++) {
+    // 再次切割，arr2[0]为key值，arr2[1]为对应的value
+    let arr2 = arr[i].split("=");
+
+
+    if (arr2[0].indexOf("userName") != -1) {
+      userName = arr2[1];
+      console.log('进来了');
+
+    } else if (arr2[0].indexOf("password") != -1) {
+      password = arr2[1];
+    }
+  }
+  // console.log(arr2, userName, password);
+  login(userName, password, sessionStorage.getItem('loginType')).then(res => {
+    sessionStorage.setItem("companyId", res.data.data.companyId);
+
+    sessionStorage.setItem(
+      "evaluation",
+      res.data.data.evaluation_standard
+    );
+  })
+  router.push("/");
+
+}
+const peopleHttpRequest = () => { };
 const handleHttpRequest = () => {
   var formData = new FormData();
   formData.append("file1", fd["file1"]);
@@ -576,7 +515,7 @@ const handleHttpRequest = () => {
     formData2.append("name", item.peopleName);
     formData2.append("id_card", item.peopleNumber);
     formData2.append("style", "1");
-    addInstFormInfo(formData2).then((res) => {});
+    addInstFormInfo(formData2).then((res) => { });
   });
   addInstFormInfo(formData).then((res) => {
     if (res.data.code == 200) {
@@ -588,6 +527,7 @@ const handleHttpRequest = () => {
       router.push("/");
     }
   });
+  setIsExit(ruleForm.qiyeId)
 };
 
 const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
@@ -627,6 +567,10 @@ const selectFun = () => {
       ruleForm.daima = res.data.data.code;
       ruleForm.address = res.data.data.address;
       ruleForm.fanwei = res.data.data.scope;
+
+      if (res.data.data.isexit == 1) {
+        dialogVisible.value = true
+      }
     } else {
       ElMessage({
         message: "搜索失败",
@@ -692,7 +636,7 @@ const submitForm = async (
     //   0,
 
     // ).then((result) => {});
-  } catch {}
+  } catch { }
 };
 </script>
 
@@ -721,6 +665,7 @@ const submitForm = async (
     /deep/.el-form-item {
       width: 46%;
     }
+
     /deep/.el-button--success {
       background: #1f459c;
       border: #1f459c 1px solid;
@@ -731,6 +676,7 @@ const submitForm = async (
         background: #02133a;
       }
     }
+
     .submit {
       border-radius: 22px;
       height: 50px;
@@ -738,15 +684,18 @@ const submitForm = async (
       margin-top: 20px;
     }
   }
+
   .demo-radio {
     /deep/.el-form-item {
       width: 100%;
     }
+
     /deep/.el-radio__label {
       // margin-right: 10px;
       width: 200px;
     }
   }
+
   .tips {
     // height: 153px;
     background: #f1f1f1;
@@ -763,9 +712,11 @@ const submitForm = async (
       }
     }
   }
+
   .el-link {
     vertical-align: revert;
   }
+
   .people {
     // height: 172px;
 
