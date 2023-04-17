@@ -53,21 +53,10 @@
         <el-drawer v-model="drawer" size="80%" :title="drawerTitle">
           <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
             <el-tab-pane label="备案信息" name="first">
-              <FilingInformationOne :status="'government'" :seeRowId="companyId" />
+              <FilingInformationOne :seeRowId="companyId" :status="'mange'" />
             </el-tab-pane>
             <el-tab-pane label="台账" name="second">
-              <el-table :data="tables" height="450px">
-                <el-table-column type="index" width="50" />
-                <el-table-column prop="title" label="标题" />
-                <el-table-column prop="create_date" label="上传时间" />
-                <el-table-column prop="create_name" label="上传人员" />
-                <el-table-column prop="address" label="操作">
-                  <template #default="scope">
-                    <el-button size="small" type="primary" @click="see(scope.row)">查看</el-button>
-                    <!-- <el-button size="small" type="danger" @click="delFileInfoFun(scope.row)">删除</el-button> -->
-                  </template>
-                </el-table-column>
-              </el-table>
+              <FilingInformationThree :companyId="companyId" :status="'mange'" />
             </el-tab-pane>
             <!-- <el-tab-pane label="Role" name="third">Role</el-tab-pane>
         <el-tab-pane label="Task" name="fourth">Task</el-tab-pane> -->
@@ -84,6 +73,7 @@ import { onMounted, reactive, ref } from "vue";
 import Pagination from "../../pagination/index.vue";
 import SeeFlie from "../../seeFlie/index.vue";
 import FilingInformationOne from "@/components/filingInformation/one.vue";
+import FilingInformationThree from "@/components/filingInformation/three.vue";
 import {
   getCompanyList,
   getHY,

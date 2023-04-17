@@ -10,8 +10,9 @@
           <el-col :span="10">
             <div class="box">
               <el-carousel ref="imgages">
-                <el-carousel-item v-for="item in 4" :key="item">
-                  <img src="http://yjglj.wenzhou.gov.cn/picture/-1/98d73409bf25401fa2ce4e89d4545d2b.jpg" alt="" />
+                <el-carousel-item v-for="item in carousel" :key="item">
+                  <!-- <img src="http://yjglj.wenzhou.gov.cn/picture/-1/98d73409bf25401fa2ce4e89d4545d2b.jpg" alt="" /> -->
+                  <img :src="item" alt="" />
                 </el-carousel-item>
               </el-carousel>
             </div>
@@ -20,14 +21,50 @@
             <ul>
               <li>
                 <el-row justify="space-between">
-                  <el-col :span="12">2022年下半年全国英语等级考试成绩公布</el-col>
-                  <el-col :span="7">2022-04-05 10:00:20</el-col>
+                  <el-col :span="12"><a target="_blank"
+                      href="http://yjglj.wenzhou.gov.cn/art/2023/4/7/art_1210123_58936214.html" class="bt_link"
+                      title="温州两县（市、区）列入常态化自然灾害综合风险普查评估工作省级试点">温州两县（市、区）列入常态化自然灾害综合风险普查评估工作省级试点</a></el-col>
+                  <el-col :span="7">2023-04-07</el-col>
                 </el-row>
               </li>
               <li>
                 <el-row justify="space-between">
-                  <el-col :span="12">2022年下半年全国英语等级考试成绩公布</el-col>
-                  <el-col :span="7">2022-04-05 10:00:20</el-col>
+                  <el-col :span="12"><a target="_blank"
+                      href="http://yjglj.wenzhou.gov.cn/art/2023/4/6/art_1210123_58936188.html" class="bt_link"
+                      title="市森防指召开乡镇（街道）森林防灭火一体化创建推进会">市森防指召开乡镇（街道）森林防灭火一体化创建推进会</a></el-col>
+                  <el-col :span="7">2023-04-06</el-col>
+                </el-row>
+              </li>
+              <li>
+                <el-row justify="space-between">
+                  <el-col :span="12"><a target="_blank"
+                      href="http://yjglj.wenzhou.gov.cn/art/2023/4/4/art_1210123_58936170.html" class="bt_link"
+                      title="全市防汛防台业务培训会在永嘉举办">全市防汛防台业务培训会在永嘉举办</a></el-col>
+                  <el-col :span="7">2023-04-04</el-col>
+                </el-row>
+              </li>
+              <li>
+                <el-row justify="space-between">
+                  <el-col :span="12"><a target="_blank"
+                      href="http://yjglj.wenzhou.gov.cn/art/2023/4/4/art_1210123_58936167.html" class="bt_link"
+                      title="聚焦重点抓突破 突出实效促提升——我局召开全市应急数字化工作汇报会">聚焦重点抓突破 突出实效促提升——我局召开全市应急数字化工作汇报会</a></el-col>
+                  <el-col :span="7">2023-04-04</el-col>
+                </el-row>
+              </li>
+              <li>
+                <el-row justify="space-between">
+                  <el-col :span="12"><a target="_blank"
+                      href="http://yjglj.wenzhou.gov.cn/art/2023/4/3/art_1210123_58936165.html" class="bt_link"
+                      title="全市安全生产基础工作座谈会暨环保设施安全生产专项整治行动部署会在瓯海区召开">全市安全生产基础工作座谈会暨环保设施安全生产专项整治行动部署会在瓯海区召开</a></el-col>
+                  <el-col :span="7">2023-04-03</el-col>
+                </el-row>
+              </li>
+              <li>
+                <el-row justify="space-between">
+                  <el-col :span="12"><a target="_blank"
+                      href="http://yjglj.wenzhou.gov.cn/art/2023/3/31/art_1210123_58936137.html" class="bt_link"
+                      title="市委直属机关工委巡听旁听市应急管理局党委理论学习中心组集体研讨会">市委直属机关工委巡听旁听市应急管理局党委理论学习中心组集体研讨会</a></el-col>
+                  <el-col :span="7">2023-03-31</el-col>
                 </el-row>
               </li>
             </ul>
@@ -82,6 +119,12 @@ const homepage: any = ref(null);
 const new2: any = ref(null);
 const imgages: any = ref(null);
 const store = useStore();
+const carousel = ref([
+  'http://yjglj.wenzhou.gov.cn/picture/0/s2212081033551037655.png',
+  'http://yjglj.wenzhou.gov.cn/picture/-1/221213150521916273.png',
+  'http://yjglj.wenzhou.gov.cn/picture/-1/5ee82821edfc46f298813364d8fcf0a4.jpg',
+  'http://yjglj.wenzhou.gov.cn/picture/-1/6c224578104b4a55b5fbad898644e768.jpg'
+])
 onMounted(() => {
 
 
@@ -171,6 +214,10 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 
 #homePage {
   height: calc(100vh - 410px);
+}
+
+a {
+  text-decoration: none;
 }
 
 .videoBox {

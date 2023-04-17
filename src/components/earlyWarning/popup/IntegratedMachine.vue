@@ -1,97 +1,98 @@
 <template>
-  <el-dialog v-model="centerDialogVisible" title="设备详情" width="70%" center>
+  <div id="yi">
+    <el-dialog v-model="centerDialogVisible" :title="typeName" width="70%" center>
 
 
-    <div class="demo-tabs">
-      <h3>设备信息</h3>
+      <div class="demo-tabs">
+        <h3>设备信息</h3>
 
-      <el-descriptions :column="3" border>
-        <el-descriptions-item label="设备号">{{ deviceBaseInfo.productNumber }}</el-descriptions-item>
-        <el-descriptions-item label="安装位置">{{ deviceBaseInfo.installLocation }}</el-descriptions-item>
-        <el-descriptions-item label="设备类型">{{ deviceBaseInfo.type_name }}</el-descriptions-item>
-        <el-descriptions-item label="设备名称">{{ deviceBaseInfo.device_name }}</el-descriptions-item>
-        <el-descriptions-item label="所属公司">{{ deviceBaseInfo.company }}</el-descriptions-item>
-        <el-descriptions-item label="创建时间">{{ deviceBaseInfo.regdate }}</el-descriptions-item>
-        <el-descriptions-item label="远程控制">
+        <el-descriptions :column="3" border>
+          <el-descriptions-item label="设备号">{{ deviceBaseInfo.productNumber }}</el-descriptions-item>
+          <el-descriptions-item label="安装位置">{{ deviceBaseInfo.installLocation }}</el-descriptions-item>
+          <el-descriptions-item label="设备类型">{{ deviceBaseInfo.type_name }}</el-descriptions-item>
+          <el-descriptions-item label="设备名称">{{ deviceBaseInfo.device_name }}</el-descriptions-item>
+          <el-descriptions-item label="所属公司">{{ deviceBaseInfo.company }}</el-descriptions-item>
+          <el-descriptions-item label="创建时间">{{ deviceBaseInfo.regdate }}</el-descriptions-item>
+          <el-descriptions-item label="远程控制">
 
-          <el-button type='success' @click="switchChang(1)">远程开机</el-button>
-          <el-button type='danger' @click="switchChang(2)">远程解锁</el-button>
-        </el-descriptions-item>
+            <el-button type='success' @click="switchChang(1)">远程开机</el-button>
+            <el-button type='danger' @click="switchChang(2)">远程解锁</el-button>
+          </el-descriptions-item>
 
-      </el-descriptions>
+        </el-descriptions>
 
-      <h3>设备状态 <el-button type="primary" @click="historyAlarmFun">历史报警
-        </el-button></h3>
-      <div class="typeBox">
-        <!-- <div class="devicesType" :style="devStateInfoInfo.switchs == 0 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
+        <h3>设备状态 <el-button type="primary" @click="historyAlarmFun">历史报警
+          </el-button></h3>
+        <div class="typeBox">
+          <!-- <div class="devicesType" :style="devStateInfoInfo.switchs == 0 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
           <p>运行状态</p>
           <p :style="devStateInfoInfo.switchs == 0 ? 'color:#49C988' : 'color:red'">
             {{ devStateInfoInfo.switchs == 0 ? '开机' : '关机' }}
           </p>
         </div> -->
-        <div class="devicesType" :style="devStateInfoInfo.io0 == 1 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
-          <p>水泵</p>
-          <p :style="devStateInfoInfo.io0 == 1 ? 'color:#49C988' : 'color:red'">
-            {{ devStateInfoInfo.io0 == 1 ? '正常' : '报警' }}
-          </p>
+          <div class="devicesType" :style="devStateInfoInfo.io0 == 1 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
+            <p>水泵</p>
+            <p :style="devStateInfoInfo.io0 == 1 ? 'color:#49C988' : 'color:red'">
+              {{ devStateInfoInfo.io0 == 1 ? '正常' : '报警' }}
+            </p>
+          </div>
+          <div class="devicesType" :style="devStateInfoInfo.io1 == 1 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
+            <p>风机</p>
+            <p :style="devStateInfoInfo.io1 == 1 ? 'color:#49C988' : 'color:red'">
+              {{ devStateInfoInfo.io1 == 1 ? '正常' : '报警' }}
+            </p>
+          </div>
+          <div class="devicesType" :style="devStateInfoInfo.io2 == 1 ? 'background:#dcefff' : 'background:#FAEFEB'">
+            <p>抛光机电机</p>
+            <p :style="devStateInfoInfo.io2 == 1 ? 'color:#49C988' : 'color:red'">
+              {{ devStateInfoInfo.io2 == 1 ? '正常' : '报警' }}
+            </p>
+          </div>
+          <div class="devicesType" :style="devStateInfoInfo.io3 == 1 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
+            <p>水位</p>
+            <p :style="devStateInfoInfo.io3 == 1 ? 'color:#49C988' : 'color:red'">
+              {{ devStateInfoInfo.io3 == 1 ? '正常' : '报警' }}
+            </p>
+          </div>
+          <div class="devicesType" :style="devStateInfoInfo.io4 == 1 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
+            <p>流量</p>
+            <p :style="devStateInfoInfo.io4 == 1 ? 'color:#49C988' : 'color:red'">
+              {{ devStateInfoInfo.io4 == 1 ? '正常' : '报警' }}
+            </p>
+          </div>
+          <div class="devicesType" :style="devStateInfoInfo.io4 == 1 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
+            <p>氢气浓度</p>
+            <p :style="devStateInfoInfo.io5 == 1 ? 'color:#49C988' : 'color:red'">
+              {{ devStateInfoInfo.io5 == 1 ? '正常' : '报警' }}
+            </p>
+          </div>
+
         </div>
-        <div class="devicesType" :style="devStateInfoInfo.io1 == 1 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
-          <p>风机</p>
-          <p :style="devStateInfoInfo.io1 == 1 ? 'color:#49C988' : 'color:red'">
-            {{ devStateInfoInfo.io1 == 1 ? '正常' : '报警' }}
-          </p>
-        </div>
-        <div class="devicesType" :style="devStateInfoInfo.io2 == 1 ? 'background:#dcefff' : 'background:#FAEFEB'">
-          <p>抛光机电机</p>
-          <p :style="devStateInfoInfo.io2 == 1 ? 'color:#49C988' : 'color:red'">
-            {{ devStateInfoInfo.io2 == 1 ? '正常' : '报警' }}
-          </p>
-        </div>
-        <div class="devicesType" :style="devStateInfoInfo.io3 == 1 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
-          <p>水位</p>
-          <p :style="devStateInfoInfo.io3 == 1 ? 'color:#49C988' : 'color:red'">
-            {{ devStateInfoInfo.io3 == 1 ? '正常' : '报警' }}
-          </p>
-        </div>
-        <div class="devicesType" :style="devStateInfoInfo.io4 == 1 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
-          <p>流量</p>
-          <p :style="devStateInfoInfo.io4 == 1 ? 'color:#49C988' : 'color:red'">
-            {{ devStateInfoInfo.io4 == 1 ? '正常' : '报警' }}
-          </p>
-        </div>
-        <div class="devicesType" :style="devStateInfoInfo.io4 == 1 ? 'background:#EBFAF2' : 'background:#FAEFEB'">
-          <p>氢气浓度</p>
-          <p :style="devStateInfoInfo.io5 == 1 ? 'color:#49C988' : 'color:red'">
-            {{ devStateInfoInfo.io5 == 1 ? '正常' : '报警' }}
-          </p>
-        </div>
+        <h3>流量统计图</h3>
+        <div id="echatsBox"></div>
 
       </div>
-      <h3>流量统计图</h3>
-      <div id="echatsBox"></div>
-
-    </div>
 
 
-    <el-dialog v-model="dialogVisible" title="历史报警" width="50%" center>
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="时间选择">
-          <el-date-picker v-model="formInline.time" type="datetimerange" range-separator="To" start-placeholder="开始时间"
-            end-placeholder="结束时间" value-format="YYYY/MM/DD HH:mm:ss" />
-        </el-form-item>
+      <el-dialog v-model="dialogVisible" title="历史报警" width="50%" center>
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+          <el-form-item label="时间选择">
+            <el-date-picker v-model="formInline.time" type="datetimerange" range-separator="To" start-placeholder="开始时间"
+              end-placeholder="结束时间" value-format="YYYY/MM/DD HH:mm:ss" />
+          </el-form-item>
 
-        <el-form-item>
-          <el-button type="primary" @click="historySearch">查询</el-button>
-        </el-form-item>
-      </el-form>
+          <el-form-item>
+            <el-button type="primary" @click="historySearch">查询</el-button>
+          </el-form-item>
+        </el-form>
 
-      <el-table :data="tableData" stripe style="width: 100%;margin-bottom: 30px;" height="300px">
-        <el-table-column type="index" />
-        <el-table-column prop="alarm_date" label="报警时间" />
-        <el-table-column prop="alarm_name" label="报警名称" />
-      </el-table>
-      <Pagination :total="total" @changeList="changeList" />
-      <!-- <template #footer>
+        <el-table :data="tableData" stripe style="width: 100%;margin-bottom: 30px;" height="300px">
+          <el-table-column type="index" />
+          <el-table-column prop="alarm_date" label="报警时间" />
+          <el-table-column prop="alarm_name" label="报警名称" />
+        </el-table>
+        <Pagination :total="total" @changeList="changeList" />
+        <!-- <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>
           <el-button type="primary" @click="dialogVisible = false">
@@ -99,9 +100,9 @@
           </el-button>
         </span>
       </template> -->
-    </el-dialog>
-    <el-dialog v-model="removeVisible" title="当前报警" width="50%" center>
-      <!-- <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      </el-dialog>
+      <el-dialog v-model="removeVisible" title="当前报警" width="50%" center>
+        <!-- <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="时间选择">
           <el-date-picker v-model="formInline.time" type="datetimerange" range-separator="To" start-placeholder="开始时间"
             end-placeholder="结束时间" value-format="YYYY/MM/DD HH:mm:ss" />
@@ -112,18 +113,18 @@
         </el-form-item>
       </el-form> -->
 
-      <el-table :data="devWarnInfo" stripe style="width: 100%;margin-bottom: 30px;" height="300px">
-        <el-table-column type="index" />
-        <el-table-column prop="alarm_date" label="报警时间" />
-        <el-table-column prop="alarm_name" label="报警名称" />
-        <el-table-column prop="alarm_name" label="操作">
-          <template #default="scope">
-            <el-button type="primary" @click="removeAlarmFun(scope.row.afid, scope.$index)">解除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <Pagination :total="total" @changeList="changeList" />
-      <!-- <template #footer>
+        <el-table :data="devWarnInfo" stripe style="width: 100%;margin-bottom: 30px;" height="300px">
+          <el-table-column type="index" />
+          <el-table-column prop="alarm_date" label="报警时间" />
+          <el-table-column prop="alarm_name" label="报警名称" />
+          <el-table-column prop="alarm_name" label="操作">
+            <template #default="scope">
+              <el-button type="primary" @click="removeAlarmFun(scope.row.afid, scope.$index)">解除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <Pagination :total="total" @changeList="changeList" />
+        <!-- <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>
           <el-button type="primary" @click="dialogVisible = false">
@@ -131,8 +132,8 @@
           </el-button>
         </span>
       </template> -->
-    </el-dialog>
-    <!-- <template #footer>
+      </el-dialog>
+      <!-- <template #footer>
         <span class="dialog-footer">
           <el-button @click="centerDialogVisible = false">Cancel</el-button>
           <el-button type="primary" @click="centerDialogVisible = false">
@@ -140,8 +141,9 @@
           </el-button>
         </span>
       </template> -->
-  </el-dialog>
-  <RemoveAlarm ref="removeAlarm" @getAlarmStatus="getAlarmStatus" />
+    </el-dialog>
+    <RemoveAlarm ref="removeAlarm" @getAlarmStatus="getAlarmStatus" />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -167,6 +169,7 @@ const pageSize4 = ref(10)
 const currentPage4 = ref(1)
 const tableData = ref([])
 const devWarnInfo = ref([])
+const typeName = ref('')
 
 
 const formInline = reactive({
@@ -277,10 +280,12 @@ const changeList = (pageSize, currentPage, type) => {
   currentPage4.value = currentPage;
   // fileInfoFun();
   // getCompDeviceListFun();
+  historySearch()
 };
-const show = (devId) => {
+const show = (devId, type_name) => {
   centerDialogVisible.value = true
   getDevInfoByDevIdFun(devId)
+  typeName.value = `${type_name}设备详情`
 
 }
 const historyAlarmFun = () => {
@@ -304,11 +309,33 @@ defineExpose({
 </script>
 
 <style lang="less" scoped>
+// .el-dialog {
+
+#yi {
+  /deep/.el-dialog__header {
+    margin-right: 0;
+    background: #1071e2;
+
+    .el-dialog__title {
+      color: #fff;
+    }
+
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
+    }
+  }
+
+}
+
+// }
+
 .demo-tabs {
   background: #ffffff;
   box-shadow: 0px 0px 13px 0px #ebebeb;
   border-radius: 4px;
   padding: 10px;
+
+
 
   h3 {
     clear: both;

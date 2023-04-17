@@ -19,6 +19,15 @@ export function getStreetList (code) {
     }
   })
 }
+export function sign (name, age, phone, address, description) {
+  return service({
+    url: `/home/sign`,
+    method: 'GET',
+    params: {
+      name, age, phone, address, description
+    }
+  })
+}
 export function setIsExit (companyId) {
   return service({
     url: `/form/setIsExit`,
@@ -65,6 +74,15 @@ export function setRegion (companyId, code, long_lat) {
     }
   })
 }
+export function getPlace () {
+  return service({
+    url: `/device/getPlace`,
+    method: 'GET',
+    params: {
+
+    }
+  })
+}
 //获取地图定位
 export function getMapInfo (key, address, subdistrict) {
   return map({
@@ -72,6 +90,15 @@ export function getMapInfo (key, address, subdistrict) {
     method: 'GET',
     params: {
       key, address, subdistrict
+    }
+  })
+}
+export function district (keywords, subdistrict, extensions) {
+  return map({
+    url: `https://restapi.amap.com/v3/config/district`,
+    method: 'GET',
+    params: {
+      keywords, subdistrict, extensions
     }
   })
 }
@@ -134,6 +161,33 @@ export function getVideoAppkey () {
     }
   })
 }
+export function addFormBank (formbank) {
+  return map({
+    url: `/gjsafe/form/addFormBank`,
+    method: 'POST',
+    data: {
+      formbank
+    }
+  })
+}
+export function editCompanyOther (last_value, number, floor_space, operation_space, industry, safe_input, evaluation_standard, products, up_down) {
+  return service({
+    url: `/form/editCompanyOther`,
+    method: 'GET',
+    params: {
+      last_value, number, floor_space, operation_space, industry, safe_input, evaluation_standard, products, up_down
+    }
+  })
+}
+export function select (content, pageNum, pageSize) {
+  return service({
+    url: `/company/select`,
+    method: 'GET',
+    params: {
+      content, pageNum, pageSize
+    }
+  })
+}
 export function viewCompanyList (pageNum, pageSize) {
   return service({
     url: `/inst/viewCompanyList`,
@@ -170,6 +224,24 @@ export function getTid (companyId) {
     }
   })
 }
+export function selectChatLog (username, servicename, pageNum, pageSize) {
+  return service({
+    url: `/manage/selectChatLog`,
+    method: 'GET',
+    params: {
+      username, servicename, pageNum, pageSize
+    }
+  })
+}
+export function getOnlineCount () {
+  return service({
+    url: `/manage/getOnlineCount`,
+    method: 'GET',
+    params: {
+
+    }
+  })
+}
 //设备详情
 export function remoteControlDev (productNumber, type, state, style) {
   return service({
@@ -177,6 +249,15 @@ export function remoteControlDev (productNumber, type, state, style) {
     method: 'GET',
     params: {
       productNumber, type, state, style
+    }
+  })
+}
+export function setParam (deviceid, APhasecur, BPhasecur, CPhasecur, APhaseVolt, BPhaseVolt, CPhaseVolt, ATemp, BTemp, CTemp, NTemp, Residualvalue, U_voltage) {
+  return service({
+    url: `/device/setParam`,
+    method: 'GET',
+    params: {
+      deviceid, APhasecur, BPhasecur, CPhasecur, APhaseVolt, BPhaseVolt, CPhaseVolt, ATemp, BTemp, CTemp, NTemp, Residualvalue, U_voltage
     }
   })
 }
@@ -771,6 +852,51 @@ export function setCompHy (tid, companyId, last_value) {
     }
   })
 }
+export function getLive (companyId, pageNum, pageSize) {
+  return service({
+    url: `/home/getLive`,
+    method: 'GET',
+    params: {
+      companyId, pageNum, pageSize
+    }
+  })
+}
+export function delLive (id) {
+  return service({
+    url: `/home/delLive`,
+    method: 'GET',
+    params: {
+      id
+    }
+  })
+}
+export function getParam (productNumber) {
+  return service({
+    url: `/device/getParam`,
+    method: 'GET',
+    params: {
+      productNumber
+    }
+  })
+}
+export function createLive (title, productNumber, type, uid, companyId) {
+  return service({
+    url: `/home/createLive`,
+    method: 'GET',
+    params: {
+      title, productNumber, type, uid, companyId
+    }
+  })
+}
+export function chatLog (uid, username, sid, servicename, startTime, endTime, appraise, content) {
+  return service({
+    url: `/home/chatLog`,
+    method: 'GET',
+    params: {
+      uid, username, sid, servicename, startTime, endTime, appraise, content
+    }
+  })
+}
 //企业表单提交
 export function addFormContent (last_value, companyId, number, floor_space, operation_space, products, up_down, ids) {
   return service({
@@ -868,12 +994,12 @@ export function getPayHistorys (pageNum, pageSize) {
   })
 }
 //企业备案信息
-export function getCompDeviceList (type, device_name, pageNum, pageSize) {
+export function getCompDeviceList (type, device_name, pageNum, pageSize, place) {
   return service({
     url: `/device/getCompDeviceList`,
     method: 'GET',
     params: {
-      type, device_name, pageNum, pageSize
+      type, device_name, pageNum, pageSize, place
     }
   })
 }
@@ -1058,12 +1184,12 @@ export function setMail (uid, mail, defaults) {
   })
 }
 //获取设备类型
-export function addDevice (device_name, type, supplier, productNumber, installLocation, long_lat) {
+export function addDevice (device_name, type, supplier, productNumber, installLocation, long_lat, maintainTime, cycle, place) {
   return service({
     url: `/device/addDevice`,
     method: 'GET',
     params: {
-      device_name, type, supplier, productNumber, installLocation, long_lat
+      device_name, type, supplier, productNumber, installLocation, long_lat, maintainTime, cycle, place
     }
   })
 }
@@ -1249,6 +1375,15 @@ export function moveToCompany (tid, inst_comp, id) {
     method: 'GET',
     params: {
       tid, inst_comp, id
+    }
+  })
+}
+export function getInstType (companyId) {
+  return service({
+    url: `/home/getInstType`,
+    method: 'GET',
+    params: {
+      companyId
     }
   })
 }

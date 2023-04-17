@@ -42,8 +42,9 @@
     <el-table :data="tableData" stripe style="width: 100%;margin-bottom:50px" height="400px">
       <el-table-column type="index" width="50" />
       <el-table-column prop="company" label="公司名称" />
-      <el-table-column prop="name" label="所属行业" />
       <el-table-column prop="address" label="公司地址" />
+      <el-table-column prop="name" label="所属行业" />
+
       <!-- <el-table-column prop="long_lat" label="公司地址" /> -->
 
       <!-- <el-table-column prop="create_name" label="上传人员" / -->

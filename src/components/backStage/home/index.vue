@@ -64,6 +64,9 @@
               <template v-if="item.id == '10'">
                 <img src="../../../assets/ss.png" />
               </template>
+              <template v-if="item.id == '11'">
+                <img src="../../../assets/zxz.png" />
+              </template>
               <!-- <template v-if="item.id == '11'">
                 <img src="../../../assets/tz.png" />
               </template> -->
@@ -111,7 +114,7 @@
           <Yidaoqi v-if="itemID == '6-2'" />
           <UserInfo v-if="itemID == '9-1'" />
           <TreeForm v-if="itemID == '10-1'" />
-          <Online v-if="itemID == '11-1'" />
+          <TakeNotes v-if="itemID == '11-1'" />
         </div>
       </el-col>
     </el-row>
@@ -146,6 +149,7 @@ import AuditList from "../audit/list.vue";
 import Databases from "../databases/index.vue";
 import AccountList from "../accountList/index.vue";
 import Online from "../online/index.vue";
+import TakeNotes from "../online/takeNotes.vue";
 import UserMange from "../userMange/index.vue";
 import Classification from "../databases/classification.vue";
 import AccountClassification from "../accountList/classification.vue";
@@ -263,11 +267,11 @@ const rightMenus = ref([
     name: "单位涉及场所",
     children: [{ id: "10-1", name: "单位涉及场所", children: [] }],
   },
-  // {
-  //   id: "11",
-  //   name: "在线咨询",
-  //   children: [{ id: "11-1", name: "在线咨询", children: [] }],
-  // },
+  {
+    id: "11",
+    name: "在线咨询记录",
+    children: [{ id: "11-1", name: "在线咨询记录", children: [] }],
+  },
 ]);
 
 onMounted(() => {
@@ -303,8 +307,8 @@ const out = () => {
   background: #0165d0;
 
   .cs {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
     position: fixed;
     bottom: 50px;
     right: 51px;
@@ -315,10 +319,11 @@ const out = () => {
     cursor: pointer;
     border-radius: 100%;
     transition: all 0.2s;
-    background: url('https://cs.goeasy.io/consult/consult.svg') no-repeat center center #D02129;
+    background: url('../../../assets/iz.png') no-repeat center center #3d96eeb3;
+    background-size: 80% 80%;
 
     span {
-      margin-top: 74px;
+      margin-top: 84px;
       font-weight: normal;
       font-size: 15px;
       line-height: 22px;

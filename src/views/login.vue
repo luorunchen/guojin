@@ -60,6 +60,10 @@
               推荐使用 <img src="../assets/chrome.png" alt="" /> 谷歌浏览器
               <el-link type="primary" @click="chromeDowload">点击下载</el-link>
             </div>
+            <div class="chrome">
+              企安互联客户端
+              <el-link type="primary" @click="exeDowload">点击下载</el-link>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -215,6 +219,9 @@ const submitForm = (formEl: FormInstance | undefined) => {
 const chromeDowload = () => {
   window.open("http://119.91.156.5/download/chrome/Chrome.exe");
 };
+const exeDowload = () => {
+  window.open("http://119.91.156.5/download/chrome/gjsoft.exe");
+};
 const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.resetFields();
@@ -257,7 +264,13 @@ const goToRegister = () => {
     .rightBox {
       width: 100%;
       height: 100%;
-      color: #000;
+      color: #fff;
+
+      // margin: 0 auto;
+      h1 {
+        line-height: 100px;
+      }
+
       // background: #bfa;
     }
 

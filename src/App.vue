@@ -11,6 +11,12 @@
       <el-button type="danger" @click="seeInfo">查看设备详情</el-button>
     </el-dialog>
   </div>
+  <Ranqi ref="ranqi" />
+  <Shipin ref="shipin" />
+  <Dianli ref="dianli" />
+  <Yangan ref="yangan" />
+  <!-- <Jiance ref="jiance" />
+    <Jxs ref="jxs" /> -->
   <IntegratedMachine ref="integratedMachine" />
   <router-view />
 </template>
@@ -20,18 +26,33 @@ import { onMounted, ref, watch, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import IntegratedMachine from './components/earlyWarning/popup/IntegratedMachine.vue'
+import Dianli from "./components/earlyWarning/popup/info/dianli.vue";
+import Yangan from "./components/earlyWarning/popup/info/yangan.vue";
+import Ranqi from "./components/earlyWarning/popup/info/ranqi.vue";
+// import Shuiwei from "./popup/info/shuiwei.vue";
+// import Jiance from "./popup/info/jiance.vue";
+// import Jxs from "./popup/info/jxs.vue";
+import Shipin from "./components/earlyWarning/popup/info/shipin.vue";
+
 const alarmVisible = ref(false)
 const content: any = ref({})
 const audo: any = ref({})
 const userID: any = ref(sessionStorage.getItem("userId"))
+const companyId: any = ref(sessionStorage.getItem("companyId"))
 const store = useStore();
 const integratedMachine: any = ref()
+const yangan: any = ref(null);
+
+const dianli: any = ref(null);
+
+const shipin: any = ref(null);
+const ranqi: any = ref(null);
 const router = useRouter();
 const goEasy = ref()
-watch(() => sessionStorage.getItem('companyId'), (val) => {
-  console.log(val, 'appdeval');
+// watch(() => sessionStorage.getItem('companyId'), (val) => {
+//   console.log(val, 'appdeval');
 
-})
+// })
 watch(
   () => alarmVisible.value,
   (value, old) => {
@@ -91,15 +112,45 @@ onMounted(() => {
 
 
 const seeInfo = () => {
-  integratedMachine.value.show(content.value.devId)
+  let row = content.value
+  switch (row.type) {
+    case 38:
+      integratedMachine.value.show(row.devId, row.deviceName);
+      break;
+    case 44:
+      shipin.value.show(row, row.deviceName);
+      break;
+    case 50:
+      dianli.value.show(row.devId, row.productNumber, row.deviceName);
+      break;
+    case 51:
+      dianli.value.show(row.devId, row.productNumber, row.deviceName);
+      break;
+    case 2:
+      yangan.value.show(row.devId, row.productNumber, row.deviceName);
+      break;
+    // case 26:
+    //   yangan.value.show(row.devId, row.productNumber, row.type_name);
+    //   break;
+    // case 47:
+    //   ranqi.value.show(row.devId, row.productNumber, row.type_name);
+    //   break;
+    default:
+      ranqi.value.show(row.devId, row.productNumber, row.deviceName);
+      break;
+    // case "5":
+    //   shuiwei.value.show("361403", 3, 4);
+    //   break;
+  }
 }
 
 // })
 
 const connect = () => {
 
-  console.log(userID.value, 'sss123123s');
+  // console.log(userID.value, 'sss123123s');
   if (userID.value == null) return
+  if (companyId.value == null) return
   goEasy.value.connect({
     id: userID.value,
     data: { "type": "front", "nickname": sessionStorage.getItem('userName') },
@@ -122,11 +173,12 @@ const connect = () => {
     },
   });
 
+  console.log(companyId.value, 'companyId.value');
 
 
   goEasy.value.pubsub.subscribe({
 
-    channel: userID.value, //替换为您自己的channel
+    channel: companyId.value, //替换为您自己的channel
 
     onMessage: function (message) {
 
@@ -252,7 +304,10 @@ body::-webkit-scrollbar {
 }
 
 .el-form-item__label {
-  white-space: nowrap
+  // white-space: nowrap
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 

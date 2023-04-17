@@ -1,6 +1,6 @@
 <template>
   <div id="shipin">
-    <el-dialog v-model="dialogVisible" title="设备详情" width="60%" destroy-on-close>
+    <el-dialog v-model="dialogVisible" :title="typeName" width="60%" destroy-on-close>
       <el-row :gutter="20">
         <el-col :span="20">
           <div id="ezuikitTalkData2"></div>
@@ -67,7 +67,7 @@ import {
   Delete,
 } from "@element-plus/icons-vue";
 const dialogVisible = ref(false);
-const dataVisible = ref(false);
+const typeName = ref('');
 const openFireExtinguisherMsg = ref(true);
 const getNFCInspectionByDevIdList = ref();
 const accessToken = ref();
@@ -110,7 +110,7 @@ const vedio = (item) => {
       accessToken: res.data.data,
       // url: ezuikitTalkData.ezopen, // 这里的url可以是直播地址.live  ，也可以是回放地址.rec 或 .cloud.rec
       url: ezuikitTalkData.ezopen, // 这里的url可以是直播地址.live  ，也可以是回放地址.rec 或 .cloud.rec
-      template: "standard", // simple - 极简版;standard-标准版;security - 安防版(预览回放);voice-语音版；
+      template: "simple", // simple - 极简版;standard-标准版;security - 安防版(预览回放);voice-语音版；
       // 视频上方头部控件
       header: ["capturePicture", "save"], // 如果templete参数不为simple,该字段将被覆盖
       plugin: ["talk"], // 加载插件，talk-对讲
@@ -154,10 +154,11 @@ const directionControl = (num) => {
   });
 };
 
-const show = (item: any) => {
+const show = (item: any, type_name: String) => {
   dialogVisible.value = true;
   // videoItem.value = item;
   vedio(item);
+  typeName.value = `${type_name}设备详情`
 };
 
 defineExpose({

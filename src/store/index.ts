@@ -6,7 +6,8 @@ export default createStore({
     menuName: '',
     parentId: '',
     menus: '',
-    goEasy: Function
+    goEasy: Function,
+    vedioId: ''
   },
   getters: {},
   mutations: {
@@ -24,6 +25,9 @@ export default createStore({
     },
     setgoEasy(state, val) {
       state.goEasy = val //state为vuex中的state,val为更改属性的值
+    },
+    setVedio(state, val) {
+      state.vedioId = val //state为vuex中的state,val为更改属性的值
     }
   },
   actions: {

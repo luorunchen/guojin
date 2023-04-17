@@ -11,13 +11,13 @@
             安全生产管理列表
           </el-button> -->
           <div class="name">
-            <h2> {{ loginName }}</h2>
+            <h4> {{ loginName }}</h4>
             <h2>
               安全生产管理系统
             </h2>
           </div>
 
-          <el-menu text-color="#fff" :default-active="activeIndex" class="el-menu-vertical-demo"
+          <el-menu text-color="#000" :default-active="activeIndex" class="el-menu-vertical-demo"
             :default-openeds="openeds" :key="key">
             <el-sub-menu :index="item.id" v-for="(item, index) in rightMenus" :key="index">
               <template #title>
@@ -48,8 +48,7 @@
                   item.name
                 }}</span> -->
 
-                <span @click="nameChange(item.name, item)">{{ item.name }} <el-badge v-if="item.id == 26"
-                    :value="1" /></span>
+                <span @click="nameChange(item.name, item)">{{ item.name }} </span>
               </template>
 
               <template v-for="(arr, index2) in item.children" :key="index2">
@@ -107,8 +106,9 @@
               </el-input>
             </el-col>
             <el-col :span="14">
-              <marquee direction="left" height="100%" bgcolor="#f5f5f5" scrollamount="10" vspace="10px">
-                <span>需要专家组现场隐患排查、安全评价、安全设计、标准化体系咨询、风控体系建设、应急预案编制等服务，请拨打****</span>
+              <marquee direction="left" onmouseover=this.stop() onmouseout=this.start() height="100%" bgcolor="#f5f5f5"
+                scrollamount="10">
+                <span class="fontSpan">需要专家组现场隐患排查、安全评价、安全设计、标准化体系咨询、风控体系建设、应急预案编制等服务，请拨打****</span>
               </marquee>
             </el-col>
             <el-col :span="2">
@@ -159,7 +159,7 @@
                 <Account :tid="item.id" :status="item.status" :title="item.title"
                   v-if="item.status == '安全生产管理台账' || item.status == '专项台账' || item.status == '风控体系建设' || item.status == '应急预案(备案)'" />
                 <!-- 预警检测 -->
-                <EarlyWarning v-if="item.status == '监测预警处理'" />
+                <EarlyWarning v-if="item.status == '监测预警处理'" :pid="item.id" />
                 <VideoOnline v-else-if="item.status == '在线巡视'" />
                 <!-- 安全生产管理体检 -->
                 <Text v-if="item.id == 10089" @fiveNewChang="fiveNewChang" />
@@ -181,13 +181,15 @@
               <!-- 首页 -->
               <HomePage v-if="item.id == 10086" @fiveNewChang="fiveNewChang" />
 
+              <DirectSeeding v-if="item.status == '网络直播'" />
+              <Vedio v-if="item.status == '直播间'" :message="item.id" />
 
-
-              <!-- 用户信息 -->
+              <!--用户信息 -->
               <UserInfo v-if="item.id == 10087" :boxHeight="boxHeight" />
 
               <!-- 五新商店 -->
               <FiveNew v-if="item.id == 10088" />
+              <Whole v-if="item.status == '全局搜索'" :tid="item.id" />
               <ElectronicLicense v-else-if="item.status == '电子证照'" :tid="item.id" />
 
               <Online v-else-if="item.status == '在线咨询'" />
@@ -235,38 +237,34 @@
     </el-row>
 
     <div class="bottom">
-      <!-- <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
-          <el-select v-model="formInline.region" placeholder="Activity zone">
-            <el-option label="Zone one" value="shanghai" />
-            <el-option label="Zone two" value="beijing" />
+          <el-select placeholder="全国应急管理系统" @change="skipFun">
+            <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.one" :key="index" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.region" placeholder="Activity zone">
-            <el-option label="Zone one" value="shanghai" />
-            <el-option label="Zone two" value="beijing" />
+          <el-select placeholder="应急管理厅直属单位" @change="skipFun">
+            <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.two" :key="index">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.region" placeholder="Activity zone">
-            <el-option label="Zone one" value="shanghai" />
-            <el-option label="Zone two" value="beijing" />
+          <el-select placeholder="市级应急管理部门" @change="skipFun">
+            <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.three" :key="index" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.region" placeholder="Activity zone">
-            <el-option label="Zone one" value="shanghai" />
-            <el-option label="Zone two" value="beijing" />
+          <el-select placeholder="其他链接" @change="skipFun">
+            <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.four" :key="index" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.region" placeholder="Activity zone">
-            <el-option label="Zone one" value="shanghai" />
-            <el-option label="Zone two" value="beijing" />
+          <el-select placeholder="相关系统" @change="skipFun">
+            <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.five" :key="index" />
           </el-select>
         </el-form-item>
-      </el-form> -->
+      </el-form>
 
       <el-row :gutter="10">
         <el-col :span="4">
@@ -278,17 +276,13 @@
         </el-col>
         <el-col :span="6">
           <p>网站标识</p>
-          <p>主办：浙江省应急管理厅</p>
-          <p>网站标识码：3300000038</p>
-          <p>备案：浙ICP备20002351号-1</p>
-          <p>浙公网安备 33010602010709号</p>
+
+          <p>备案：浙ICP备2023004010号</p>
+
         </el-col>
         <el-col :span="7">
           <p>联系我们</p>
-          <p>邮箱：syjglt@zj.gov.cn</p>
-          <p>(仅受理本网站相关事宜)</p>
-          <p>地址：温州市体育场路47号</p>
-          <p>中文域名：浙江省应急管理厅政务</p>
+
         </el-col>
         <el-col :span="5">
 
@@ -319,11 +313,15 @@
         </el-col>
       </el-row>
     </div>
+    <el-badge :value="unreadTotal" class="cs" @click="zixun">
+      <!-- <div> -->
 
-    <div class="cs" @click="zixun">
       <span>在线咨询</span>
+
       <!-- <p>有消息</p> -->
-    </div>
+      <!-- </div> -->
+
+    </el-badge>
 
     <el-dialog v-model="visible" :show-close="false" width="75%">
       <template #header="{ close, titleId, titleClass }">
@@ -343,7 +341,7 @@
 </template>
 
 <script setup lang="ts">
-import { getList, logout, getStandList } from "@/api/index.js";
+import { getList, logout, getStandList, delLive } from "@/api/index.js";
 import router from "@/router/index";
 
 import Law from "../components/flieList/Law/index.vue";
@@ -364,6 +362,9 @@ import GovernmentQuery from "../components/government/query/query.vue";
 import DataAnalysis from "../components/government/dataAnalysis/index.vue";
 import Yizhangtu from "../components/government/dataAnalysis/yizhangtu.vue";
 import HiddenDanger from "../components/hiddenDanger/index.vue";
+import DirectSeeding from "../components/directSeeding/index.vue";
+import Vedio from "../components/directSeeding/list.vue";
+import Whole from "../components/whole/index.vue";
 import {
   onMounted,
   ref,
@@ -383,7 +384,7 @@ import {
   Setting,
   ArrowDown,
 } from "@element-plus/icons-vue";
-import { ElMessage, ElNotification } from "element-plus";
+import { ElMessage, ElMessageBox, ElNotification } from "element-plus";
 
 // const Law = () => import(/* webpackChunkName: 'ImportFuncDemo' */ '../components/flieList/Law/index.vue')
 const select = ref("企业用户");
@@ -398,6 +399,7 @@ const openeds = ref([]);
 const itemID = ref(10086);
 const activeName = ref("first");
 const itemName = ref();
+// const vedioId = ref();
 const boxHeight = ref();
 const tabBox = ref(null);
 const content = ref(null);
@@ -409,7 +411,9 @@ const whole = ref();
 const titleChangeName = ref("首页");
 const key = ref(1);
 const store = useStore();
+// const store = useStore();
 const elementName = ref()
+const unreadTotal = ref()
 const evaluationValue = ref()
 let tabIndex = 2
 const editableTabsValue = ref(10086)
@@ -419,14 +423,144 @@ const editableTabs = ref([
     id: 10086,
     status: '首页',
   },
-  // {
 
-  //   title: '我的备案信息',
-  //   id: 10087,
-  //   status: '我的备案信息',
-
-  // }
 ])
+
+
+const bottom = ref({
+  one: [
+    { name: '天津市应急管理局', value: 'http://yjgl.tj.gov.cn/' },
+    { name: '上海市应急管理局', value: 'http://yjglj.sh.gov.cn/' },
+    { name: '重庆市应急管理局', value: 'http://yjj.cq.gov.cn/' },
+    { name: '河北省应急管理厅', value: 'http://yjgl.hebei.gov.cn/' },
+    { name: '河南省应急管理厅', value: 'http://yjglt.henan.gov.cn/' },
+    { name: '云南省应急管理厅', value: 'http://yjglt.yn.gov.cn/' },
+    { name: '辽宁省应急管理厅', value: 'http://yjgl.ln.gov.cn/' },
+    { name: '黑龙江省应急管理厅', value: 'http://yjgl.hlj.gov.cn/' },
+    { name: '湖南省应急管理厅', value: 'http://yjt.hunan.gov.cn/' },
+    { name: '安徽省应急管理厅', value: 'http://yjt.ah.gov.cn/' },
+    { name: '山东省应急管理厅', value: 'http://yjt.shandong.gov.cn/' },
+    { name: '新疆维吾尔自治区应急管理厅', value: 'http://yjgl.xinjiang.gov.cn/' },
+    { name: '江苏省应急管理厅', value: 'http://ajj.jiangsu.gov.cn/' },
+    { name: '江西省应急管理厅', value: 'http://yjglt.jiangxi.gov.cn/' },
+    { name: '湖北省应急管理厅', value: 'http://yjt.hubei.gov.cn/' },
+    { name: '广西壮族自治区应急管理厅', value: 'http://yjglt.gxzf.gov.cn/' },
+    { name: '甘肃省应急管理厅', value: 'http://yjgl.gansu.gov.cn/' },
+    { name: '山西省应急管理厅', value: 'http://yjt.shanxi.gov.cn/' },
+    { name: '内蒙古自治区应急管理厅', value: 'http://yjglt.nmg.gov.cn/' },
+    { name: '陕西省应急管理厅', value: 'http://yjt.shaanxi.gov.cn/' },
+    { name: '吉林省应急管理厅', value: 'http://yjt.jl.gov.cn/' },
+    { name: '福建省应急管理厅', value: 'https://yjt.fujian.gov.cn/' },
+    { name: '贵州省应急管理厅', value: 'http://yjgl.guizhou.gov.cn/' },
+    { name: '广东省应急管理厅', value: 'http://yjgl.gd.gov.cn/' },
+    { name: '青海省应急管理厅', value: 'http://yjt.qinghai.gov.cn/' },
+    { name: '西藏自治区应急管理厅', value: 'http://yjt.xizang.gov.cn/' },
+    { name: '四川省应急管理厅', value: 'https://yjt.sc.gov.cn/' },
+    { name: '宁夏回族自治区应急管理厅', value: 'http://nxyjglt.nx.gov.cn/' },
+    { name: '海南省应急管理厅', value: 'http://yjglt.hainan.gov.cn/' }
+  ],
+  two: [
+    {
+      name: '浙江省应急管理科学研究院', value: 'https://yjt.zj.gov.cn/art/2021/11/9/art_1229226095_40352.html'
+    },
+    {
+      name: '浙江省应急管理宣传教育中心 ', value: 'https://yjt.zj.gov.cn/art/2021/11/9/art_1229226095_40325.html'
+    },
+    {
+      name: '浙江省航空护林管理站 ', value: 'https://yjt.zj.gov.cn/art/2021/11/9/art_1229226095_40320.html'
+    },
+    {
+      name: '浙江省航空护林管理站 ', value: 'http://yjt.zj.gov.cn/art/2021/11/9/art_1229226095_40314.html'
+    },
+    {
+      name: '浙江省工业企业安全在线', value: 'https://gkaqsc.yjt.zj.gov.cn/dist/#/login'
+    },
+    {
+      name: '消防管理系统云平台', value: 'http://fire.tpson.com.cn/login'
+    },
+  ],
+  three: [
+    {
+      name: '杭州市应急管理局',
+      value: 'http://safety.hangzhou.gov.cn/'
+    },
+    {
+      name: '宁波市应急管理局',
+      value: 'http://yjglj.ningbo.gov.cn/'
+    },
+    {
+      name: '温州市应急管理局',
+      value: 'http://yjglj.wenzhou.gov.cn/'
+    },
+    {
+      name: '湖州市应急管理局',
+      value: 'http://yjglj.huzhou.gov.cn/'
+    },
+    {
+      name: '嘉兴市应急管理局',
+      value: 'http://yjglj.jiaxing.gov.cn/'
+    },
+    {
+      name: '绍兴市应急管理局',
+      value: 'http://ajj.sx.gov.cn/'
+    },
+    {
+      name: '金华市应急管理局',
+      value: 'http://yjglj.jinhua.gov.cn/'
+    },
+    {
+      name: '衢州市应急管理局',
+      value: 'http://yjj.qz.gov.cn/'
+    },
+    {
+      name: '舟山市应急管理局',
+      value: 'http://zsyj.zhoushan.gov.cn/'
+    },
+    {
+      name: '台州市应急管理局',
+      value: 'http://yjglj.zjtz.gov.cn/'
+    },
+    {
+      name: '丽水市应急管理局',
+      value: 'http://yjj.lishui.gov.cn/'
+    },
+  ],
+  four: [
+    { name: "省发改委", value: "http://fzggw.zj.gov.cn/" },
+    { name: "省经信厅", value: "http://jxt.zj.gov.cn/" },
+    { name: "省教育厅", value: "http://jyt.zj.gov.cn/" },
+    { name: "省科技厅", value: "https://kjt.zj.gov.cn/" },
+    { name: "省公安厅", value: "http://gat.zj.gov.cn/" },
+    { name: "省监察厅", value: "http://www.zjsjw.gov.cn/" },
+    { name: "省民政厅", value: "http://mzt.zj.gov.cn/" },
+    { name: "省司法厅", value: "http://sft.zj.gov.cn/" },
+    { name: "省财政厅", value: "http://czt.zj.gov.cn/" },
+    { name: "省人力社保厅", value: "http://rlsbt.zj.gov.cn/" },
+    { name: "省自然资源厅", value: "http://zrzyt.zj.gov.cn/" },
+    { name: "省生态环境厅", value: "http://sthjt.zj.gov.cn/" },
+    { name: "省建设厅", value: "http://jst.zj.gov.cn/" },
+    { name: "省交通运输厅", value: "http://jtyst.zj.gov.cn/" },
+    { name: "省水利厅", value: "http://slt.zj.gov.cn/" },
+    { name: "省农业农村厅", value: "http://nynct.zj.gov.cn/" },
+    { name: "省商务厅", value: "http://www.zcom.gov.cn/" },
+    { name: "省文化和旅游厅", value: "http://ct.zj.gov.cn/" },
+    { name: "省审计厅", value: "http://sjt.zj.gov.cn/" },
+    { name: "省国资委", value: "http://gzw.zj.gov.cn/" },
+    { name: "省市场监管局", value: "http://zjamr.zj.gov.cn/" },
+    { name: "省统计局", value: "http://tjj.zj.gov.cn/" }
+  ],
+  five: [
+    {
+      name: '洪水预警', value: 'https://www.zj.gov.cn/zjyhzx/member/login/gotoother.do?code=zjrmzfmh&amp;src=http://slt.zj.gov.cn/col/col1675635/index.html'
+    },
+    {
+      name: '气象网站', value: 'https://www.zj.gov.cn/zjyhzx/member/login/gotoother.do?code=zjrmzfmh&src=http://zj.weather.com.cn/'
+    },
+    {
+      name: '潮汐预报', value: 'https://www.zj.gov.cn/zjyhzx/member/login/gotoother.do?code=zjrmzfmh&src=http://www.zj.msa.gov.cn/ZJ/ggfw/sjfw/hssk/chaoxi/?tdsourcetag=s_pctim_aiomsg'
+    },
+  ]
+})
 const formInline = reactive({
   user: "",
   region: "",
@@ -458,28 +592,7 @@ watch(
     sessionStorage.setItem("tid", val[0]);
   }
 );
-// watch(
-//   () => itemID.value,
-//   (val) => {
-//     if (val != 10086) {
-//       nextTick(() => {
-//         let box2 = content.value.clientHeight;
-//         if (val < 10086) {
-//           // console.log(tabBox, 88);
 
-//           let box3 = tabBox.value.$el;
-//           // box3.style.height = box2 - 100 + "px";
-//         }
-
-//         // boxHeight.value = box2 - 150;
-
-//         // console.log(box2, box3, "box");
-//       });
-//     }
-
-//     // console.log(val);
-//   }
-// );
 watch(
   () => store.state.menus,
   (val) => {
@@ -501,13 +614,25 @@ watch(
   }
 );
 
-// const wholeFun = () => {
-//   window.open(`https://baike.baidu.com/item/${whole.value}`)
-// }
+const skipFun = (e) => {
+  // console.log(e);
+  window.open(e, "_blank");
+}
 const onConversationsUpdated = (conversations) => {
   console.log(conversations, '首页列表监听');
-  if (conversations.unreadTotal > 0
+
+
+  let arr = conversations.conversations.filter(item => {
+    return item.type == 'cs'
+  })
+  let num = 0
+  arr.forEach(element => {
+    num += element.unread
+  });
+  unreadTotal.value = num == 0 ? '' : num
+  if (num > 0
   ) {
+
     ElNotification({
       title: 'Success',
       message: '您有新的咨询消息',
@@ -543,6 +668,16 @@ const digui = (arr) => {
 
   }
 
+}
+
+const wholeFun = () => {
+  if (whole.value == '') return
+  let arr = {
+    title: '全局搜索',
+    status: '全局搜索',
+    id: whole.value,
+  }
+  store.commit("setMenus", arr);
 }
 const information = () => {
 
@@ -889,13 +1024,13 @@ const getListFun = (parent_id: string) => {
       name: "首页",
       children: [],
     });
-    if (sessionStorage.getItem('loginType') == '1') {
-      res.data.data[0].children.forEach(element => {
-        // console.log(element, 'element');
-        elementName.value = `资料库-${element.name}`
-        digui(element)
-      });
-    }
+    // if (sessionStorage.getItem('loginType') == '1') {
+    res.data.data[0].children.forEach(element => {
+      // console.log(element, 'element');
+      elementName.value = `资料库-${element.name}`
+      digui(element)
+    });
+    // }
 
   });
 };
@@ -957,7 +1092,80 @@ const handleTabsEdit = (targetName: Number, action: 'remove' | 'add') => {
         type: 'warning'
       })
     }
+    if (typeof (targetName) === 'string') {
+      let message = JSON.parse(targetName)
+      console.log(message, '删除tab');
+      if (message.userId == sessionStorage.getItem('userId')) {
+        // ElMessageBox
+        ElMessageBox.confirm(
+          '是否确定关闭直播',
+          '关闭直播',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        )
+          .then(() => {
 
+            delLive(message.roomId).then(res => {
+              if (res.data.code == 200) {
+
+                // console.log(activeName, targetName, 'sdsadsada');
+                store.state.goEasy.pubsub.publish({
+                  channel: message.roomId,//替换为您自己的channel
+                  message: JSON.stringify({ type: 'off', "nickname": sessionStorage.getItem('userName'), message: '主播已关闭直播' }),//替换为您想要发送的消息内容
+                  onSuccess: function () {
+                    console.log("消息发布成功。");
+                  },
+                  onFailed: function (error) {
+                    console.log("消息发送失败，错误编码：" + error.code + " 错误信息：" + error.content);
+                  }
+                });
+                // vedioId.value = message.roomId
+                store.commit('setVedio', message.roomId)
+                if (activeName === targetName) {
+                  tabs.forEach((tab, index) => {
+                    console.log(tab, 'tab');
+
+                    if (tab.id === targetName) {
+                      const nextTab = tabs[index + 1] || tabs[index - 1]
+                      if (nextTab) {
+                        activeName = nextTab.id
+                      }
+                    }
+                  })
+                }
+
+                editableTabsValue.value = activeName
+                editableTabs.value = tabs.filter((tab) => tab.id !== targetName)
+                ElMessage({
+                  type: 'success',
+                  message: '关闭成功',
+                })
+              }
+            })
+
+
+            // console.log(targetName, 'targetName直播间');
+
+
+
+
+          })
+
+        return
+        // console.log('执行你');
+
+
+      }
+
+
+    }
+    // console.log(typeof (targetName), 'typeof (targetName)');
+
+
+    // return
 
     if (activeName === targetName) {
       tabs.forEach((tab, index) => {
@@ -971,6 +1179,8 @@ const handleTabsEdit = (targetName: Number, action: 'remove' | 'add') => {
         }
       })
     }
+    // console.log(targetName, 'targetName直播间');
+
 
     editableTabsValue.value = activeName
     editableTabs.value = tabs.filter((tab) => tab.id !== targetName)
@@ -1036,6 +1246,9 @@ defineComponent({
 
 #home {
   width: calc(100vw);
+  height: calc(100vh);
+  // box-sizing: border-box;
+  overflow: hidden;
 
   .imgBox {
     width: 100%;
@@ -1049,10 +1262,10 @@ defineComponent({
   }
 
   .cs {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
     position: fixed;
-    bottom: 100px;
+    bottom: 50px;
     right: 51px;
     z-index: 100;
     display: flex;
@@ -1061,10 +1274,11 @@ defineComponent({
     cursor: pointer;
     border-radius: 100%;
     transition: all 0.2s;
-    background: url('https://cs.goeasy.io/consult/consult.svg') no-repeat center center #D02129;
+    background: url('../assets/iz.png') no-repeat center center #3d96eeb3;
+    background-size: 80% 80%;
 
     span {
-      margin-top: 74px;
+      margin-top: 84px;
       font-weight: normal;
       font-size: 15px;
       line-height: 22px;
@@ -1161,17 +1375,22 @@ defineComponent({
 
   .menus {
     overflow-y: auto;
-    height: calc(100vh - 247px);
+    height: calc(100vh - 260px);
     margin-top: -5px;
-    background-image: url("../assets/bg.png");
-    background-size: 100% 100%;
+    // background-image: url("../assets/bg.png");
+    // background-size: 100% 100%;
+    background-color: #DAE3F3;
 
     &::-webkit-scrollbar {
       display: none;
     }
 
     .name {
-      background: #0165d0;
+      padding: 10px 0;
+      background: #b7cbee;
+      // color: #000;
+      text-align: center;
+      color: #000;
     }
 
     // padding-bottom: 100px;
@@ -1182,10 +1401,7 @@ defineComponent({
       height: 100px;
     }
 
-    h2 {
-      text-align: center;
-      color: #fff;
-    }
+
 
     .el-menu {
       // height: calc(100vh - 260px);
@@ -1199,11 +1415,11 @@ defineComponent({
       }
 
       span {
-        font-size: 16px;
-        font-family: PingFang SC;
-        font-weight: bold;
+        font-size: 18px;
+        // font-family: PingFang SC;
+        font-weight: 900;
         // background: #bfa;
-        color: #fff;
+        color: #000;
         height: 35px;
         line-height: 35px;
       }
@@ -1232,7 +1448,7 @@ defineComponent({
         font-size: 15px;
         font-family: PingFang SC;
         // font-weight: bold;
-        background-color: #0165d0;
+        background-color: #DAE3F3;
         height: 35px;
 
         span {
@@ -1244,10 +1460,10 @@ defineComponent({
       }
 
       /deep/.el-sub-menu.is-active {
-        span {
-          // background: #bfa;
-          color: #fff;
-        }
+        // span {
+        //   // background: #bfa;
+        //   color: #000;
+        // }
 
         .el-menu-item.is-active {
           background: #319bff;
@@ -1257,13 +1473,13 @@ defineComponent({
       }
 
       /deep/.el-menu-item {
-        font-size: 14px;
+        font-size: 16px;
         font-family: PingFang SC;
         // font-weight: bold;
-        color: #fff;
+        color: #000;
         height: 35px;
         // padding: 0;
-        background: #0165d0; // background: #0165D0;
+        background: #DAE3F3; // background: #0165D0;
 
         span {
           width: 75%;
@@ -1277,29 +1493,6 @@ defineComponent({
         // }
       }
 
-      // /deep/ .el-submenu__title {
-      //   display: flex;
-      //   align-items: center;
-      // }
-      // /deep/.el-submenu__title span {
-      //   white-space: normal;
-      //   word-break: break-all;
-      //   line-height: 20px;
-      //   flex: 1;
-      //   padding-right: 20px;
-      // }
-
-      // /deep/.el-menu-item {
-      //   display: flex;
-      //   align-items: center;
-      //   padding-right: 20px !important;
-      // }
-      // /deep/.el-menu-item span {
-      //   white-space: normal;
-      //   word-break: break-all;
-      //   line-height: 20px;
-      //   flex: 1;
-      // }
     }
   }
 
@@ -1312,7 +1505,7 @@ defineComponent({
 
   .content {
     background: #f6f8f9;
-    height: calc(100vh - 230px);
+    height: calc(100vh - 260px);
     overflow-x: hidden; // padding: 10px;
     // margin-left: 15px;
     // margin-right: 20px;
@@ -1327,7 +1520,11 @@ defineComponent({
     //   background: #dcefff;
     // }
 
-
+    .fontSpan {
+      vertical-align: sub;
+      font-weight: 900;
+      font-size: 18px;
+    }
 
     .info {
       padding: 10px 20px 0px 20px;
@@ -1390,21 +1587,25 @@ defineComponent({
   }
 
   /deep/.el-tabs--border-card>.el-tabs__content {
-    padding-bottom: 0px;
+    padding-bottom: 10px;
   }
 
   .bottom {
-    height: 150px;
+    height: 180px;
     background: #125589;
     color: #b1cde3;
     font-size: 14px;
     box-sizing: border-box;
-    padding-top: 20px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    // padding-top: 20px;
 
     /deep/.el-form-item {
       width: 20%;
       margin-right: 0;
       margin-top: 10px;
+      margin-bottom: 5px;
 
       .el-select {
         .el-input__wrapper {

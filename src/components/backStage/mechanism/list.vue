@@ -3,13 +3,7 @@
     <el-col :span="5">
       <div class="box">
         <p>行政区域</p>
-        <el-tree
-          :props="props"
-          :load="loadNode"
-          lazy
-          highlight-current
-          @node-click="treeChange"
-        />
+        <el-tree :props="props" :load="loadNode" lazy highlight-current @node-click="treeChange" />
         <!-- <el-tree
           :data="databasesList"
           :props="defaultProps"
@@ -25,24 +19,13 @@
             <el-input v-model="formInline.user" placeholder="请输入" />
           </el-form-item>
           <el-form-item orm-item label="机构服务类型:">
-            <el-select
-              v-model="formInline.region"
-              clearable
-              placeholder="请选择"
-            >
-              <el-option
-                :label="item.name"
-                :value="item.id"
-                v-for="(item, index) in industryList"
-                :key="index"
-              />
+            <el-select v-model="formInline.region" clearable placeholder="请选择">
+              <el-option :label="item.name" :value="item.id" v-for="(item, index) in industryList" :key="index" />
             </el-select>
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="getCompanyListFun('select')"
-              >查询</el-button
-            >
+            <el-button type="primary" @click="getCompanyListFun('select')">查询</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -60,12 +43,7 @@
 
           <el-table-column prop="address" label="操作">
             <template #default="scope">
-              <el-button
-                size="small"
-                type="primary"
-                @click="drawerOpen(scope.row)"
-                >详情</el-button
-              >
+              <el-button size="small" type="primary" @click="drawerOpen(scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -73,7 +51,7 @@
         <SeeFlie ref="seeFile"></SeeFlie>
 
         <el-drawer v-model="drawer" size="80%" :title="drawerTitle">
-          <FilingInformationTwo :status="status" />
+          <FilingInformationTwo :status="status" :seeRowId="companyId" />
         </el-drawer>
         <SeeFlie ref="seeFile"></SeeFlie>
       </div>
@@ -208,7 +186,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 };
 //企业详情
 const getCompanyInfoByIdFun = () => {
-  getCompanyInfoById(companyId.value).then((res) => {});
+  getCompanyInfoById(companyId.value).then((res) => { });
 };
 const drawerOpen = (row) => {
   drawer.value = true;
@@ -252,6 +230,7 @@ const changeList = (pageSize, currentPage, type) => {
   box-sizing: border-box;
   position: relative;
 }
+
 .box {
   margin-top: 10px;
   width: 100%;
@@ -285,20 +264,17 @@ const changeList = (pageSize, currentPage, type) => {
     // }
   }
 
-  /deep/.el-tree--highlight-current
-    .el-tree-node.is-current
-    > .el-tree-node__content {
+  /deep/.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
     // 设置颜色
-    background-color: rgba(
-      135,
-      206,
-      235,
-      0.2
-    ); // 透明度为0.2的skyblue，作者比较喜欢的颜色
+    background-color: rgba(135,
+        206,
+        235,
+        0.2); // 透明度为0.2的skyblue，作者比较喜欢的颜色
     color: #0165d0ff; // 节点的字体颜色
     font-weight: bold; // 字体加粗
   }
 }
+
 /deep/.el-drawer.rtl {
   height: 88%;
   top: 100px;

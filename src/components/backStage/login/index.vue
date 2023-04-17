@@ -125,6 +125,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
             sessionStorage.setItem("userName", numberValidateForm.userName);
             sessionStorage.setItem("userId", res.data.data.id);
             sessionStorage.setItem('satoken', res.data.data.token.tokenValue)
+            sessionStorage.setItem('loginType', 3)
             if (numberValidateForm.type.length > 0) {
               window.document.cookie =
                 "userNameBack" + "=" + numberValidateForm.userName;

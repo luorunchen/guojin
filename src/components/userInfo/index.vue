@@ -5,7 +5,7 @@
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane label="备案信息" name="first">
         <FilingInformationOne v-if="loginType == '1'" />
-        <FilingInformationTwo v-if="loginType == '2'" :status="'reception'" />
+        <FilingInformationTwo v-if="loginType == '2'" :status="'reception'" :seeRowId="companyId" />
       </el-tab-pane>
       <el-tab-pane label="我的缴费" name="second">
         <el-table :data="getPayHistorysList" stripe style="width: 100%" height="300px">
@@ -293,6 +293,7 @@ const editMailID = ref(0);
 const userInfo = ref(null);
 
 const loginType = ref(sessionStorage.getItem("loginType"));
+const companyId = ref(sessionStorage.getItem("companyId"));
 const getInVoiceInfoLists = ref([]);
 const getMailAddressLists = ref([]);
 const getMailLists = ref([]);
@@ -303,11 +304,7 @@ const newData = ref(false);
 const emailVisible = ref(false);
 const getPayHistorysList = ref([]);
 const tableData = [
-  {
-    date: "2016-05-03",
-    name: "Tom",
-    address: "No. 189, Grove St, Los Angeles",
-  },
+
 ];
 const formRef = ref<FormInstance>();
 

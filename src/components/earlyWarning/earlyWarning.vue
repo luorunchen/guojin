@@ -19,7 +19,7 @@
       </el-form-item>
     </el-form>
     <!-- <br /> -->
-    <el-table :data="tableData" stripe height="90%">
+    <el-table :data="tableData" stripe height="45vh" style="width: 100%;margin-bottom: 50px;">
       <el-table-column type="index" width="50" />
       <el-table-column prop="productNumber" label="设备号" />
       <el-table-column prop="type_name" label="设备类型" />
@@ -43,13 +43,29 @@
 
 
     <el-dialog v-model="addDevicesDialogVisible" title="新增设备" width="40%" center>
-      <el-form :inline="true" :model="formInline" class="demo-form">
+      <!-- <el-form ref="formRef" :model="numberValidateForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="age" prop="age" :rules="[
+          { required: true, message: 'age is required' },
+          { type: 'number', message: 'age must be a number' },
+        ]">
+          <el-input v-model.number="numberValidateForm.age" type="text" autocomplete="off" />
+        </el-form-item>
+      
+      </el-form> -->
+      <el-form ref="formRef" :inline="true" :model="formInline" class="demo-form" require-asterisk-position="right">
 
         <el-row :gutter="20">
-          <el-col :span="12"> <el-form-item label="设备编号">
+          <el-col :span="12">
+            <el-form-item label="设备编号" prop="imei" :rules="[
+              { required: true, message: '请输入设备编号' },
+            ]">
               <el-input v-model="formInline.imei" placeholder="请输入" />
-            </el-form-item></el-col>
-          <el-col :span="12"> <el-form-item label="设备类型">
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="设备类型" prop="type" :rules="[
+              { required: true, trigger: 'change', message: '请选择设备类型' },
+            ]">
               <el-select v-model="formInline.type" placeholder="请选择">
                 <el-option v-for="(item, index) in typeList" :key="index" :label="item.type_name" :value="item.id" />
               </el-select>
@@ -60,24 +76,49 @@
             <!-- <el-form-item label="设备厂商">
               <el-input v-model="formInline.chang" placeholder="请输入" />
             </el-form-item> -->
-            <el-form-item label="经纬度 &nbsp;&nbsp; ">
+            <el-form-item label="经纬度 &#12288;&nbsp; ">
               <el-input v-model="formInline.lanlat" placeholder="自动生成" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="设备名称">
+            <el-form-item label="安装位置" prop="name" :rules="[
+              { required: true, message: '请输入安装位置' },
+            ]">
               <el-input v-model="formInline.name" placeholder="请输入" />
             </el-form-item></el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="设备地址">
+            <el-form-item label="应用场所" prop="changsuo" :rules="[
+              { required: true, trigger: 'change', message: '请选择应用场所' },
+            ]">
+              <el-select v-model="formInline.changsuo" placeholder="请选择">
+                <el-option v-for="(item, index) in placeList" :key="index" :label="item.place" :value="item.id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+
+            <el-form-item label="维护时间&#12288;">
+              <el-date-picker v-model="formInline.maintainTime" type="datetime" label="设备下次维护时间" placeholder="设备下次维护时间"
+                style="width: 100%" value-format="YYYY/MM/DD HH:mm:ss" />
+
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="设备地址" prop="address" :rules="[
+              { required: true, message: '请输入设备地址' },
+            ]">
               <el-input v-model="formInline.address" id="tipinput" placeholder="请输入" />
             </el-form-item></el-col>
-          <!-- <el-col :span="12">
-            <el-form-item label="经纬度">
-              <el-input v-model="formInline.lanlat" placeholder="自动生成" disabled />
-            </el-form-item></el-col> -->
+
+          <el-col :span="12">
+            <el-form-item label="维护周期(天)">
+              <el-input-number v-model="formInline.cycle" :precision="0" :min="10" :max="1000" />
+            </el-form-item></el-col>
         </el-row>
 
 
@@ -90,17 +131,19 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="addDevicesDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="addDecivesFun"> 确定 </el-button>
+          <el-button type="primary" @click="submitForm(formRef)"> 确定 </el-button>
         </span>
       </template>
     </el-dialog>
     <Pagination :total="total" @changeList="changeList" />
-    <!-- <Yangan ref="yangan" />
-    <Dianli ref="dianli" />
-    <Ranqi ref="ranqi" />
+    <!-- 
+   
+    
     <Shuiwei ref="shuiwei" /> -->
+    <Ranqi ref="ranqi" />
     <Shipin ref="shipin" />
-
+    <Dianli ref="dianli" />
+    <Yangan ref="yangan" />
     <!-- <Jiance ref="jiance" />
     <Jxs ref="jxs" /> -->
     <IntegratedMachine ref="integratedMachine" />
@@ -111,41 +154,34 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from "../pagination/index.vue";
 import { ref, reactive, onMounted, nextTick, watch } from "vue";
-import { getCompDeviceList, getDeviceType, addDevice, getDevInfoByDevId, delDevice } from "@/api/index.js";
+import { getCompDeviceList, getDeviceType, addDevice, getDevInfoByDevId, delDevice, getPlace } from "@/api/index.js";
 import { useStore } from "vuex";
 import type { FormInstance } from "element-plus";
-// import Dianli from "./popup/info/dianli.vue";
-// import Yangan from "./popup/info/yangan.vue";
-// import Ranqi from "./popup/info/ranqi.vue";
+import Dianli from "./popup/info/dianli.vue";
+import Yangan from "./popup/info/yangan.vue";
+import Ranqi from "./popup/info/ranqi.vue";
 // import Shuiwei from "./popup/info/shuiwei.vue";
 // import Jiance from "./popup/info/jiance.vue";
 // import Jxs from "./popup/info/jxs.vue";
 import Shipin from "./popup/info/shipin.vue";
 import IntegratedMachine from "./popup/IntegratedMachine.vue";
+import { getPlacementList } from "@floating-ui/core/src/middleware/autoPlacement";
 const formRef = ref<FormInstance>();
 
 const numberValidateForm = reactive({
   age: "",
 });
-const submitForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.validate((valid) => {
-    if (valid) {
-      console.log("submit!");
-    } else {
-      console.log("error submit!");
-      return false;
-    }
-  });
-};
+
 const tableData = ref([]);
 const typeList = ref([]);
+const placeList = ref([]);
 const yangan: any = ref(null);
 
 const dianli: any = ref(null);
-const jiance: any = ref(null);
+
 const shipin: any = ref(null);
 const ranqi: any = ref(null);
+const jiance: any = ref(null);
 const jxs: any = ref(null);
 const shuiwei: any = ref(null);
 const integratedMachine: any = ref(null);
@@ -165,14 +201,22 @@ const formInline = reactive({
   name: "",
   chang: "2",
   lanlat: "",
+  maintainTime: "",
+  cycle: "10",
+  changsuo: ''
 });
 const activeName = ref("first");
-// const
+const props = defineProps({
+  pid: Number
+})
 onMounted(() => {
   getCompDeviceListFun();
   getDeviceType().then((res) => {
     typeList.value = res.data.data;
   });
+  getPlace().then(res => {
+    placeList.value = res.data.data
+  })
 });
 const delDevicesFun = (row) => {
   ElMessageBox.confirm(
@@ -252,57 +296,92 @@ const select = (e: any) => {
 
   // regionListFun(e.poi.adcode);
 };
-const addDecivesFun = () => {
-  // addDevicesDialogVisible.value = true
-  addDevice(
-    formInline.name,
-    formInline.type,
-    formInline.chang,
-    formInline.imei,
-    formInline.address,
-    formInline.lanlat
-  ).then((res) => {
-    if (res.data.code == 200) {
-      ElMessage({
-        showClose: true,
-        message: "添加成功",
-        type: "success",
+
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    console.log(valid, 'valid');
+
+    if (valid) {
+      addDevice(
+        formInline.name,
+        formInline.type,
+        '2',
+        formInline.imei,
+        formInline.address,
+        formInline.lanlat,
+        formInline.maintainTime != '' ? formInline.maintainTime : '2029/01/01 00:00:00',
+        formInline.cycle,
+        formInline.changsuo
+      ).then((res) => {
+        if (res.data.code == 200) {
+          ElMessage({
+            showClose: true,
+            message: "添加成功",
+            type: "success",
+          });
+          addDevicesDialogVisible.value = false;
+          for (let key in formInline) {
+            formInline[key] = ''
+          }
+          getCompDeviceListFun();
+        } else {
+          ElMessage({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        }
       });
-      addDevicesDialogVisible.value = false;
-      getCompDeviceListFun();
     } else {
-      ElMessage({
-        showClose: true,
-        message: res.data.msg,
-        type: "error",
-      });
+      console.log('error submit!')
+      return false
     }
-  });
-};
+  })
+}
+// const addDecivesFun = () => {
+//   console.log(formInline.maintainTime, 'formInline.maintainTime');
+
+//   // addDevicesDialogVisible.value = true
+
+// };
 const see = (row) => {
 
   // centerDialogVisible.value = true;
+  console.log(row.type_name);
 
   switch (row.type) {
     case 38:
-      integratedMachine.value.show(row.devId);
+      integratedMachine.value.show(row.devId, row.type_name);
       break;
     case 44:
-      shipin.value.show(row);
+      shipin.value.show(row, row.type_name);
       break;
-    // case "3":
-    //   ranqi.value.show("389024", 7);
+    case 50:
+      dianli.value.show(row.devId, row.productNumber, row.type_name);
+      break;
+    case 51:
+      dianli.value.show(row.devId, row.productNumber, row.type_name);
+      break;
+    case 2:
+      yangan.value.show(row.devId, row.productNumber, row.type_name);
+      break;
+    // case 26:
+    //   yangan.value.show(row.devId, row.productNumber, row.type_name);
     //   break;
-    // case "4":
-    //   shuiwei.value.show("359834", 3, 8);
+    // case 47:
+    //   ranqi.value.show(row.devId, row.productNumber, row.type_name);
     //   break;
+    default:
+      ranqi.value.show(row.devId, row.productNumber, row.type_name);
+      break;
     // case "5":
     //   shuiwei.value.show("361403", 3, 4);
     //   break;
   }
 };
 const getCompDeviceListFun = () => {
-  getCompDeviceList(formInline.region, formInline.user, currentPage4.value, pageSize4.value).then((res) => {
+  getCompDeviceList(formInline.region, formInline.user, currentPage4.value, pageSize4.value, props.pid).then((res) => {
     tableData.value = res.data.data;
     total.value = res.data.dataCount;
   });
@@ -320,7 +399,7 @@ const changeList = (pageSize, currentPage, type) => {
 </script>
 <style lang='less' scoped>
 #earlyWarning {
-  height: 55vh;
+  // height: 55vh;
 
 
 
@@ -328,6 +407,10 @@ const changeList = (pageSize, currentPage, type) => {
     /deep/.el-form-item {
       width: 100%;
     }
+  }
+
+  /deep/.el-select {
+    width: 100%;
   }
 
   #map {

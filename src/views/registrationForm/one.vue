@@ -58,6 +58,7 @@
       <!-- 其他信息 -->
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label="其他信息" name="first">
+
           <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef" :model="ruleForm" :rules="rules"
             label-width="100px">
             <el-form-item label="上年产值" prop="chanzhi">
@@ -310,7 +311,7 @@ import {
 } from "@/api/index";
 import { ref, reactive, onMounted, watch, nextTick } from "vue";
 import router from "@/router";
-import { ElMessage, TabsPaneContext } from "element-plus";
+import { ElMessage, TabsPaneContext, ElMessageBox } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import { MapLocation } from "@element-plus/icons-vue";
 const activeName = ref("first");
@@ -492,6 +493,18 @@ const industryChang = (value) => {
   setCompHy(value[value.length - 1], ruleForm.qiyeId, ruleForm.chanzhi).then(
     (res) => {
       if (res.data.code == 200) {
+        ElMessageBox.alert('行业已选定,如有疑问请拨打*******咨询专家', '提示', {
+          // if you want to disable its autofocus
+          // autofocus: false,
+          confirmButtonText: '确定',
+          // callback: (action: Action) => {
+          //   ElMessage({
+          //     type: 'info',
+          //     message: `action: ${action}`,
+          //   })
+          // },
+        })
+
         ruleForm.hangye = res.data.data.industry;
         ruleForm.biaozhun = res.data.data.evaluation_standard;
         ruleForm.touru = res.data.data.safe_input;

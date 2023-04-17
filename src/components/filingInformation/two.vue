@@ -4,7 +4,7 @@
     <el-tabs v-model="activeName" class="demo-tabs">
       <el-tab-pane label="机构服务类型" name="first">
         <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef1" label-width="100px">
-          <el-form-item label="请选择" prop="resource">
+          <el-form-item label="类型" prop="resource">
             <el-input v-model="ruleForm.resource" disabled> </el-input>
           </el-form-item>
         </el-form>
@@ -298,6 +298,7 @@ import {
   getInstitutionsInfoById,
   manageGetInstitutionsInfoById,
   governmentGetInstitutionsInfoById,
+  getInstType
 } from "@/api/index";
 import { ref, onMounted, reactive } from "vue";
 
@@ -346,8 +347,13 @@ const ruleForm = reactive({
 });
 onMounted(() => {
   onMountedFun();
+  console.log('dadadadas', props.seeRowId)
 });
 const onMountedFun = () => {
+  getInstType(props.seeRowId).then(res => {
+    // console.log();
+    ruleForm.resource = res.data.data
+  })
   if (props.status == "reception") {
     getInstitutionsInfoById().then((res) => {
       for (let key in res.data.data.institutions_other) {

@@ -331,6 +331,15 @@ const example = async (row) => {
                 // console.log(key, 'key');
 
                 if (item.indexOf(key) != -1) {
+
+
+                  // const bookmarkText = await bookmarks.GetBookmarkText(item);
+
+
+
+                  // bookmarkText.trim() != '' ? ++num.trues : num.falses++
+
+
                   const isEmpty = await app.ActiveDocument.Bookmarks.Item(item).Empty;
                   // console.log(isEmpty, 'isEmpty');
                   if (!isEmpty) {

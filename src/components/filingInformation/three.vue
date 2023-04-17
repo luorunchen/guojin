@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-import { governmentGetCompanyStandInfo, getStandList } from '@/api/index.js'
+import { governmentGetCompanyStandInfo, getStandList, getCompanyStandInfo } from '@/api/index.js'
 import { onMounted, reactive, ref } from 'vue'
 import Pagination from "../pagination/index.vue";
 import SeeFlie from "../seeFlie/index.vue";
@@ -57,6 +57,7 @@ const formInline = reactive({
   tid: ''
 })
 const props = defineProps({
+  status: String,
   companyId: String
 })
 const defaultProps = {
@@ -89,18 +90,36 @@ const changeList = (pageSize, currentPage) => {
   // fileInfoFun();
 };
 const infoFun = () => {
-  governmentGetCompanyStandInfo(
-    props.companyId,
-    formInline.user,
-    3,
-    formInline.tid,
-    currentPage4.value,
-    pageSize4.value
-  ).then(res => {
+  if (props.status == 'government') {
+    governmentGetCompanyStandInfo(
+      props.companyId,
+      formInline.user,
+      3,
+      formInline.tid,
+      currentPage4.value,
+      pageSize4.value
+    ).then(res => {
 
-    tableData.value = res.data.data
-    total.value = res.data.dataCount
-  })
+      tableData.value = res.data.data
+      total.value = res.data.dataCount
+    })
+  } else {
+    getCompanyStandInfo(
+      props.companyId,
+      formInline.user,
+      "",
+      formInline.tid,
+      '2',
+      currentPage4.value,
+      pageSize4.value
+    ).then(res => {
+
+      tableData.value = res.data.data
+      total.value = res.data.dataCount
+    })
+  }
+
+
 }
 </script>
 

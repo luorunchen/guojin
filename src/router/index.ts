@@ -43,6 +43,14 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "about" */ '../views/register.vue')
   },
   {
+    path: '/vedio',
+    name: 'vedio',
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ '../components/directSeeding/list.vue'
+      )
+  },
+  {
     path: '/registerFormOne',
     name: 'registerFormOne',
     component: () =>

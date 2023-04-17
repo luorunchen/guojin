@@ -28,6 +28,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="hiddenListFun">查询</el-button>
+          <!-- <el-button type="primary" @click="hiddenListFun">申请成为专家</el-button> -->
         </el-form-item>
         <!-- <el-row>
           <el-col :span="8">
@@ -104,6 +105,8 @@
         <el-col :span="8">
           <el-button type="primary" @click="fileInfoFun">搜索</el-button>
           <el-button type="primary" @click="baikeFun" v-if="props.titleChangeName == '设备设施'">百科搜索</el-button>
+          <el-button type="primary" @click="specialistVisible = true"
+            v-if="props.titleChangeName == '专业技术人员'">申请成为专家</el-button>
 
         </el-col>
       </el-row>
@@ -112,7 +115,7 @@
 
 
 
-      <el-table :data="tableData" style="width: 100%;margin-bottom: 50px;" stripe height="400px" v-loading="loading"
+      <el-table :data="tableData" style="width: 100%;margin-bottom: 50px;" stripe height="45vh" v-loading="loading"
         element-loading-text="正在加载中..." :element-loading-spinner="svg" element-loading-svg-view-box="-10, -10, 50, 50"
         element-loading-background="rgba(255, 255, 255)">
         <el-table-column type="index" width="50" />
@@ -154,6 +157,56 @@
 
     </el-dialog>
 
+    <el-dialog v-model="specialistVisible" width="40%" title="申请成为专家" center>
+
+      <el-form ref="formRef" :model="numberValidateForm" label-width="100px" class="demo-ruleForm">
+
+        <el-form-item label="姓名" prop="name" :rules="[
+          { required: true, message: '请输入年龄' },
+
+        ]">
+          <el-input v-model="numberValidateForm.name" type="text" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="年龄" prop="age" :rules="[
+          { required: true, message: '请输入年龄' },
+          { type: 'number', message: '请输入数字' },
+
+        ]">
+          <el-input v-model.number="numberValidateForm.age" type="text" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="电话" prop="phone" :rules="[
+          { required: true, message: '请输入电话' },
+
+        ]">
+          <el-input v-model="numberValidateForm.phone" type="text" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="地址" prop="address" :rules="[
+          { required: true, message: '请输入地址' },
+
+        ]">
+          <el-input v-model="numberValidateForm.address" type="text" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="申请理由" prop="description" :rules="[
+          { required: true, message: '请输入申请理由' },
+
+        ]">
+          <el-input v-model="numberValidateForm.description" type="textarea" autocomplete="off" />
+        </el-form-item>
+
+
+
+        <el-form-item>
+
+
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="submitForm(formRef)">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
 
     <AuditFile ref="auditFile" />
 
@@ -172,16 +225,28 @@ import {
   hiddenList,
   getDomainList,
   getHdLevel,
-  getHYHome
+  getHYHome,
+  sign
 } from "@/api/index";
 import { onMounted, reactive, ref, defineProps, watch } from "vue";
 import SeeFlie from "../../seeFlie/index.vue";
 import Upload from "../../upload/index.vue";
 import Pagination from "../../pagination/index.vue";
 import AuditFile from "../../auditFile/index.vue";
-import { Search } from "@element-plus/icons-vue";
+
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
+import type { FormInstance } from 'element-plus'
+
+const formRef = ref<FormInstance>()
+
+const numberValidateForm = reactive({
+  age: '',
+  name: "",
+  phone: "",
+  address: '',
+  description: ""
+})
 const currentPage4 = ref(1);
 const pageSize4 = ref(10);
 const currentPage3 = ref(1);
@@ -192,6 +257,7 @@ const labelName = ref([]);
 const status = ref("Law");
 
 const dialogVisible = ref(false);
+const specialistVisible = ref(false);
 const gridData = ref([]);
 const formInline = reactive({
   user: "",
@@ -273,7 +339,30 @@ const hiddenListFun = () => {
     total.value = res.data.dataCount
   })
 }
+const submitForm = (formEl: FormInstance | undefined) => {
+  console.log(formEl, 'formEl');
 
+  if (!formEl) return
+  formEl.validate((valid) => {
+    console.log(valid, 'valid');
+
+    if (valid) {
+      sign(numberValidateForm.name, numberValidateForm.age, numberValidateForm.phone, numberValidateForm.address, numberValidateForm.description).then(res => {
+        if (res.data.code == 200) {
+          ElMessage({
+            showClose: true,
+            message: '申请成功,请等待审核',
+            type: 'success'
+          })
+          specialistVisible.value = false
+        }
+      })
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
+}
 //删除资料文件
 const delFileInfoFun = (row: any) => {
   ElMessageBox.confirm(

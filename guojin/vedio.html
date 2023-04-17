@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Document</title>
+</head>
+<script type="text/javascript" src="./dss.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+	integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+	integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
+	</script>
+<title></title>
+<style>
+	#myPlayer {
+		background-color: #bfa;
+		height: 400px;
+		width: 100%;
+	}
+
+	.btnBox {
+		display: flex;
+		justify-content: space-between;
+
+	}
+
+	.btns {
+		color: #fff;
+		background: royalblue;
+		width: 33%;
+	}
+
+	.primary {
+		width: 100%;
+		color: #fff;
+		background: royalblue;
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+</style>
+
+<body>
+
+	<div id="myPlayer"></div>
+
+	<!-- <div class="btnBox">
+			<button class="btns">通道1</button>
+			<button class="btns">通道2</button>
+			<button class="btns">通道3</button>
+			<button class="btns">通道4</button>
+		</div>
+		<button class="primary">启动灭火器</button> -->
+	<!-- 	<ul class="list-group">
+			<li class="list-group-item">
+				<span class="badge">14</span>
+				Cras justo odio
+			</li>
+			<li class="list-group-item">
+				<span class="badge">14</span>
+				Cras justo odio
+			</li>
+			<li class="list-group-item">
+				<span class="badge">14</span>
+				Cras justo odio
+			</li>
+		</ul> -->
+	<!-- <button class="btns">启动灭火器</button> -->
+	<script>
+		window.onload = () => {
+			//标题设置为空，如果不设置为空，会与uni-app自带标题冲突
+			document.title = '\u200E';
+			// 截取url与accessToken
+			let url = window.location.href
+				.split('?')[1]
+				.split('&')[0]
+				.split('=')[1]; //url
+			let accessToken = window.location.href
+				.split('?')[1]
+				.split('&')[1]
+				.split('=')[1]; //token
+			let devId = window.location.href
+				.split('?')[1]
+				.split('&')[2]
+				.split('=')[1]; //token
+			init(url, accessToken);
+			// getDeviceByDevIdFun(devId)
+			// console.log(devId, 'url');
+
+			function init (url, accessToken) {
+				console.log('进到HTML文件', url);
+				var player = new EZUIKit.EZUIKitPlayer({
+					id: 'myPlayer',
+					url: url,
+					template: 'standard',
+					accessToken: accessToken,
+					autoplay: true,
+					// width: 960,
+					// height: 650
+				});
+			}
+
+			// function getDeviceByDevIdFun (devId) {
+			// 	$.ajax({
+			// 		type: 'get', //请求方式     
+			// 		url: `https://psy119.cn/earlyWarn/admin/device/getDeviceByDevId.action?devid=${devId}&my_username=${window.sessionStorage.getItem('userName')}`, //URL地址
+			// 		data: {}, //携带的数据
+			// 		success: (res) => {
+			// 			let devStaus = res.data.list[0].mess[0];
+			// 			console.log(res, 'wwwwwww'); //打印数据
+			// 			let html = `
+			// 						<li class="list-group-item">
+			// 							<span class="badge">${devStaus.name}</span>
+			// 							项目分组
+			// 						</li>
+			// 						<li class="list-group-item">
+			// 							<span class="badge">14</span>
+			// 							设备类型
+			// 						</li>
+			// 						<li class="list-group-item">
+			// 							<span class="badge">14</span>
+			// 							Cras justo odio
+			// 						</li>
+			// 				`
+			// 			$(".list-group").append()
+			// 		}
+			// 	})
+
+			// }
+		};
+	</script>
+</body>
+
+</html>

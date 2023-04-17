@@ -110,12 +110,31 @@
                   </div>
                   <div class="message-content">
                     <div class="message-payload">
+                      <!-- {{ item.status }} -->
                       <div class="content-text" v-if="item.status == 'text'">{{ item.message }}</div>
-                      <div class="content-text" v-else>{{ item.status == 'CS_END' ? '会话已结束' : '会话已接入' }}</div>
+                      <div class="content-text" v-else>{{ item.status == 'CS_END' ? '会话已结束' : '会话已接入' }}
 
+                      </div>
+                      <!-- <div>我要评价</div> -->
                     </div>
+
                   </div>
+
                 </div>
+              </div>
+              <div style="text-align: center;"
+                v-if="item.status == 'CS_END' && moment().diff(moment(item.timestamp), 'minutes') < 3">
+
+                <h5>请为本次对话评分</h5>
+                <el-rate v-model="start" :disabled="disabledStart" />
+                <br />
+                <!-- <el-row>
+                  <el-col :span="3"> 建议：</el-col>
+                  <el-col :span="21"></el-col>
+                </el-row> -->
+                评价:
+                <el-input style="width:30%" v-model="remake"></el-input>
+                <el-button @click="startFun(item)" :disabled="disabledStart">确定</el-button>
               </div>
               <!-- <p v-if="messageType == 'CS_TRANSFER'">已接入会话</p>
               <p v-if="messageType == 'CS_END'">已结束会话</p>
@@ -154,14 +173,18 @@
 <script setup lang="ts">
 import { onMounted, ref, } from 'vue'
 import { useStore } from "vuex";
-import { getPersonList } from '@/api/index.js'
+import { getPersonList, chatLog } from '@/api/index.js'
 import moment from 'moment'
+import { ElMessage } from 'element-plus';
 const store = useStore();
 const tian = ref(true)
 const jia = ref(false)
+const disabledStart = ref(false)
 const specialistID: any = ref('')
 const textarea = ref('')
 const messageType = ref('')
+const start = ref('')
+const remake = ref('')
 const messageList = ref([])
 const chatList: any = ref([])
 const personList = ref([])
@@ -176,8 +199,15 @@ onMounted(() => {
 
   store.state.goEasy.im.latestConversations({
     onSuccess: function (result) {
+
+      console.log(result, '获取已读列表');
+      let arr = result.content.conversations.filter(item => {
+        return item.type == 'cs'
+      })
+      // console.log(arr, 'arrsss');
+
       // chatList.value = result.content.conversations
-      hereNow(result.content.conversations, 'chatList')
+      hereNow(arr, 'chatList')
 
 
 
@@ -202,16 +232,9 @@ const hereNow = (list, container) => {
 
     arr.push(item.id)
 
-    // store.state.goEasy.im.removeConversation({
-    //   conversation: item,
-    //   onSuccess: function () {
-    //     console.log('删除会话成功');
-    //   },
-    //   onFailed: function (error) {
-    //     console.log(error);
-    //   },
-    // });
+
   })
+
 
 
   store.state.goEasy.im.hereNow({
@@ -312,8 +335,11 @@ const onConversationsUpdated = (conversations) => {
   //     ).format('HH:mm')
 
   // })
+  let arr = conversations.conversations.filter(item => {
+    return item.type == 'cs'
+  })
 
-  hereNow(conversations.conversations, 'chatList')
+  hereNow(arr, 'chatList')
   // store.state.goEasy.im.hereNow({
   //   userIds: arr, //每次查询最多不超过50个
   //   onSuccess: function (res) {
@@ -348,7 +374,22 @@ const scrollToBottom = () => {
   }, 500);
 
 }
+const startFun = (item) => {
+  console.log(item, 'item');
 
+  chatLog(sessionStorage.getItem('userId'),
+    sessionStorage.getItem('userName'), item.backId, item.backName, moment(item.timestamp).format('YYYY/MM/DD HH:mm:ss'), moment(item.timestamp).format('YYYY/MM/DD HH:mm:ss'), start.value, remake.value
+  ).then(res => {
+    if (res.data.code == 200) {
+      ElMessage({
+        showClose: true,
+        message: '评价成功',
+        type: 'success'
+      })
+      // disabledStart.value = true
+    }
+  })
+}
 
 const getPersonListFun = () => {
 
@@ -397,7 +438,7 @@ const onCsMessageReceived = (message) => {
   // if (message.payload != null || message.payload.text != '') {
   messageList.value.push({
     message: talk, talkType: 'back', status: message.type, timestamp
-      : message.timestamp
+      : message.timestamp, backId: message.senderId, backName: message.senderData.nickname
   })
   if (specialistID.value != '') {
     markMessageAsRead()
@@ -476,16 +517,16 @@ const specialist = (item) => {
     type: GoEasy.IM_SCENE.CS, //查询客服消息
     id: item.id, //客服团队或者商家id
     lastTimestamp: '',//空表示查询最新的，也可以传入上次查询的最后一条消息id，接着查询
-    limit: 10,//每次查询十条
+    limit: 100,//每次查询十条
     onSuccess: (result) => {
-      // console.log('历史消息', result);
+      console.log('历史消息', result);
       let arr = []
       result.content.forEach((item => {
         let talk = item.payload != undefined ? item.payload.text : ''
-        if (item.type != 'text') return
+        // if (item.type != 'text') return
         arr.push({
-          message: talk, talkType: item.senderData.type, status: 'text', timestamp
-            : item.timestamp
+          message: talk, talkType: item.senderData.type, status: item.type, timestamp
+            : item.timestamp, backId: item.senderId, backName: item.senderData.nickname
         })
 
       }))
@@ -639,6 +680,11 @@ const Iwant = () => {
               border-radius: 8px;
               word-break: break-all;
               flex-wrap: wrap;
+
+              // span {
+              //   font-size: 11px;
+              //   color: blue;
+              // }
             }
           }
 

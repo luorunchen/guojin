@@ -97,6 +97,28 @@
         <el-date-picker value-format="YYYY/MM/DD HH:mm:ss" v-model="numberValidateForm.date" type="datetime"
           style="width: 100%" />
       </el-form-item>
+      <el-form-item label="提醒到期手机" prop="phone" :rules="[
+        {
+
+          required: true,
+          message: '请输入提醒到期手机号码',
+
+        },
+
+      ]">
+        <el-input v-model="numberValidateForm.phone" type="text" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="提醒周期(年)" :rules="[
+        {
+
+          required: true,
+          message: '请输入提醒周期(年)',
+
+        },
+
+      ]">
+        <el-input-number v-model="numberValidateForm.cycle" :precision="0" :min="1" :max="10" />
+      </el-form-item>
       <el-form-item label="上传身份证&#12288;" prop="file1" :rules="[
         {
           required: true, trigger: 'change', message: '请上传身份证正面',
@@ -294,7 +316,9 @@ const numberValidateForm: any = reactive({
   file3: "",
   cardId: "",
   license_name: "",
-  zizi: ""
+  zizi: "",
+  cycle: '',
+  phone: ''
 })
 const formInline = reactive({
   name: "",
@@ -501,6 +525,8 @@ const submitForm = (formEl: FormInstance | undefined) => {
         formData.append("type", numberValidateForm.type[0]);
         formData.append("expire_date", numberValidateForm.date);
         formData.append("tid", String(numberValidateForm.type[1]));
+        formData.append("phone", numberValidateForm.phone);
+        formData.append("cycle", numberValidateForm.cycle);
 
         console.log(numberValidateForm);
         addZS(formData).then(res => {

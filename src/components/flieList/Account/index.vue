@@ -38,7 +38,7 @@
     <br />
 
     <el-table v-if="props.status == '风控体系建设' || props.status == '应急预案(备案)'" :data="tableData" stripe
-      style="width: 100%;margin-bottom: 50px;" height="400px" v-loading="loading" element-loading-text="正在加载中..."
+      style="width: 100%;margin-bottom: 50px;" height="45vh" v-loading="loading" element-loading-text="正在加载中..."
       :element-loading-spinner="svg" element-loading-svg-view-box="-10, -10, 50, 50"
       element-loading-background="rgba(255, 255, 255)" @selection-change="handleSelectionChange">
 
@@ -55,7 +55,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-table v-else :data="tableData" stripe style="width: 100%;margin-bottom: 50px;" height="400px" v-loading="loading"
+    <el-table v-else :data="tableData" stripe style="width: 100%;margin-bottom: 50px;" height="45vh" v-loading="loading"
       element-loading-text="正在加载中..." :element-loading-spinner="svg" element-loading-svg-view-box="-10, -10, 50, 50"
       element-loading-background="rgba(255, 255, 255)">
       <el-table-column type="index" width="50" />
