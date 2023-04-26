@@ -164,13 +164,12 @@ const connect = () => {
 
 
 
-  expireDate.value = moment().diff(moment(sessionStorage.getItem('expireDate')), 'day')
-  console.log(expireDate.value);
+  expireDate.value = moment(sessionStorage.getItem('expireDate')).diff(moment(), 'day')
+  // console.log(expireDate.value);
   if (expireDate.value <= 30 && expireDate.value > 0) {
     expireDateVisible.value = true
     expireDateText.value = `您可以继续使用本平台${expireDate.value}天，到期后平台将自动关闭。请主动续费！`
   } else {
-    expireDateVisible.value = true
     expireDateText.value = `您已欠费${expireDate.value * -1}天，请缴费后使用本平台！`
   }
 
