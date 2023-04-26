@@ -1,7 +1,7 @@
 <template>
   <div id="guanggao">
 
-    <el-form label-width="100px" :model="formLabelAlign" style="max-width: 460px">
+    <el-form label-width="auto" :model="formLabelAlign" style="max-width: 460px">
       <el-form-item label="广告内容">
         <el-input v-model="formLabelAlign.name" />
       </el-form-item>
@@ -57,7 +57,7 @@ const formLabelAlign = reactive({
 <style lang="less" scoped>
 #guanggao {
   margin-top: 10px;
-  width: 1560px;
+  // width: 1560px;
   height: 400px;
   background: #FFFFFF;
   box-shadow: 0px 0px 13px 0px #EBEBEB;

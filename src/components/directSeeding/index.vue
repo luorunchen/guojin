@@ -18,7 +18,7 @@
     <h3 v-if="liveList.length == 0">暂无直播</h3>
     <Pagination :total="total" @changeList="changeList" />
     <el-dialog v-model="dialogVisible" title="我要开播" width="30%" center>
-      <el-form ref="formRef" :model="numberValidateForm" label-width="100px" class="demo-ruleForm">
+      <el-form ref="formRef" :model="numberValidateForm" label-width="auto" class="demo-ruleForm">
         <el-form-item label="直播间标题" prop="title" :rules="[
           { required: true, message: '请输入直播间标题' },
 

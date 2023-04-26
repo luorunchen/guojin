@@ -14,6 +14,9 @@
       <el-tab-pane label="新材料" name="4">
         <!-- <MyUpload :activeName="activeName" /> -->
       </el-tab-pane>
+      <el-tab-pane label="新产品" name="5">
+        <!-- <MyUpload :activeName="activeName" /> -->
+      </el-tab-pane>
 
       <el-tab-pane label="我的上传" name="6">
         <!-- <MyUpload :activeName="activeName" /> -->

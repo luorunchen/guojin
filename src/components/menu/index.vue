@@ -89,10 +89,10 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="less">
-span {
-  height: 35px;
-  line-height: 35px;
-}
+// span {
+//   height: 35px;
+//   line-height: 35px;
+// }
 
 // /deep/.el-submenu__title {
 //   display: flex;

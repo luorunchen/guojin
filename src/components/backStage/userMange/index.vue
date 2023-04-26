@@ -11,14 +11,12 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="getCompanyListFun('select')"
-          >查询</el-button
-        >
+        <el-button type="primary" @click="getCompanyListFun('select')">查询</el-button>
       </el-form-item>
     </el-form>
   </div>
   <div class="table">
-    <el-table :data="gridData" height="450px">
+    <el-table :data="gridData" height="60vh">
       <el-table-column type="index" width="50" />
       <el-table-column prop="username" label="账号名称" />
 
@@ -32,16 +30,10 @@
       <el-table-column prop="address" label="操作">
         <template #default="scope">
           <!-- {{ scope.row.state == 0 ? '封禁' : '正常' }} -->
-          <el-switch
-            v-model="value2[scope.$index]"
-            class="mb-2"
-            @change="switchChange(scope.$index, scope.row)"
-            style="
+          <el-switch v-model="value2[scope.$index]" class="mb-2" @change="switchChange(scope.$index, scope.row)" style="
               --el-switch-on-color: #13ce66;
               --el-switch-off-color: #ff4949;
-            "
-            :loading="loading"
-          />
+            " :loading="loading" />
         </template>
       </el-table-column>
     </el-table>
@@ -112,8 +104,7 @@ const switchChange = (index, row) => {
   loading.value = true;
   let flag = value2.value[index];
   ElMessageBox.confirm(
-    `是否${!flag ? "禁用" : "解封"}<span style='color:red'>${
-      row.username
+    `是否${!flag ? "禁用" : "解封"}<span style='color:red'>${row.username
     }</span>账号`,
     "提示",
     {

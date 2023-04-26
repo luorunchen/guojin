@@ -93,10 +93,10 @@
               <img src="../../assets/4.png" alt="" />
               新材料
             </div>
-            <!-- <div class="container" @click="fiveNew">
+            <div class="container" @click="fiveNew">
               <img src="../../assets/5.png" alt="" />
               新产品
-            </div> -->
+            </div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -266,7 +266,7 @@ a {
   line-height: 100px;
 
   .container {
-    width: 363px;
+    width: 280px;
     height: 110px;
     background: #eef1fb;
     text-align: center;

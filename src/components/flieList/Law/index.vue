@@ -159,7 +159,7 @@
 
     <el-dialog v-model="specialistVisible" width="40%" title="申请成为专家" center>
 
-      <el-form ref="formRef" :model="numberValidateForm" label-width="100px" class="demo-ruleForm">
+      <el-form ref="formRef" :model="numberValidateForm" label-width="auto" class="demo-ruleForm">
 
         <el-form-item label="姓名" prop="name" :rules="[
           { required: true, message: '请输入年龄' },

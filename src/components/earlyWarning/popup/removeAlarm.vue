@@ -2,7 +2,7 @@
   <el-dialog v-model="removeVisible" title="解除报警" width="50%" center>
     <div class="alarm">
       <h3>报警处理(请填写后提交处理)</h3>
-      <el-form ref="formRef" :model="numberValidateForm" label-width="100px" class="demo-ruleForm">
+      <el-form ref="formRef" :model="numberValidateForm" label-width="auto" class="demo-ruleForm">
         <el-form-item label="备注" prop="age" :rules="[{ required: true, message: '请填写备注信息' }]">
           <el-input v-model.number="numberValidateForm.age" autocomplete="off" :autosize="{ minRows: 4, maxRows: 4 }"
             type="textarea" />

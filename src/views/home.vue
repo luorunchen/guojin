@@ -17,8 +17,8 @@
             </h2>
           </div>
 
-          <el-menu text-color="#000" :default-active="activeIndex" class="el-menu-vertical-demo"
-            :default-openeds="openeds" :key="key">
+          <el-menu text-color="#fff" :default-active="activeIndex" class="el-menu-vertical-demo"
+            :default-openeds="openeds" :key="key" background-color="transparent">
             <el-sub-menu :index="item.id" v-for="(item, index) in rightMenus" :key="index">
               <template #title>
                 <img src="../assets/tz.png" alt="" v-if="item.id == 2" />
@@ -36,9 +36,8 @@
                 <img src="../assets/zxz.png" alt="" v-if="item.id == 35" />
                 <img src="../assets/pj.png" alt="" v-if="item.id == 440" />
                 <img src="../assets/ss.png" alt="" v-if="item.id == 20000 || item.id == 20001" />
-                <img src="../assets/tz.png" alt="" v-if="
-                  item.id == 20003 || item.id == 20002 || item.id == 20004
-                " />
+                <img src="../assets/tz.png" alt="" v-if="item.id == 20003 || item.id == 20002 || item.id == 20004
+                  " />
                 <img src="../assets/sj.png" alt="" v-if="item.id == 20005" />
                 <img src="../assets/hd.png" alt="" v-if="item.id == 20007" />
                 <img src="../assets/yj.png" alt="" v-if="item.id == 20006" />
@@ -107,7 +106,7 @@
             </el-col>
             <el-col :span="14">
               <marquee direction="left" onmouseover=this.stop() onmouseout=this.start() height="100%" bgcolor="#f5f5f5"
-                scrollamount="10">
+                scrollamount="4">
                 <span class="fontSpan">需要专家组现场隐患排查、安全评价、安全设计、标准化体系咨询、风控体系建设、应急预案编制等服务，请拨打****</span>
               </marquee>
             </el-col>
@@ -198,8 +197,8 @@
 
 
 
-              <Law :tid="item.id" :boxHeight="boxHeight" v-if="item.status.split('-')[0] == '资料库'" :titleChangeName="
-                item.status.split('-')[1]" />
+              <Law :tid="item.id" :boxHeight="boxHeight" v-if="item.status.split('-')[0] == '资料库'"
+                :titleChangeName="item.status.split('-')[1]" />
             </el-tab-pane>
           </el-tabs>
           <!-- <el-tabs ref="tabBox" v-model="activeName" class="demo-tabs"> -->
@@ -469,9 +468,7 @@ const bottom = ref({
     {
       name: '浙江省航空护林管理站 ', value: 'https://yjt.zj.gov.cn/art/2021/11/9/art_1229226095_40320.html'
     },
-    {
-      name: '浙江省航空护林管理站 ', value: 'http://yjt.zj.gov.cn/art/2021/11/9/art_1229226095_40314.html'
-    },
+
     {
       name: '浙江省工业企业安全在线', value: 'https://gkaqsc.yjt.zj.gov.cn/dist/#/login'
     },
@@ -1075,7 +1072,7 @@ const getStandListFun = () => {
   });
 
 };
-const handleTabsEdit = (targetName: Number, action: 'remove' | 'add') => {
+const handleTabsEdit = (targetName: any, action: 'remove' | 'add') => {
   // console.log(targetName, 'targetName')
   if (action === 'remove') {
     const tabs = editableTabs.value
@@ -1092,73 +1089,89 @@ const handleTabsEdit = (targetName: Number, action: 'remove' | 'add') => {
         type: 'warning'
       })
     }
+
+
+    // console.log(typeof (targetName), 'typeof (targetName)');
+    // console.log(typeof (JSON.parse('sss')), 'typeof (targetName)');
+
     if (typeof (targetName) === 'string') {
-      let message = JSON.parse(targetName)
-      console.log(message, '删除tab');
-      if (message.userId == sessionStorage.getItem('userId')) {
-        // ElMessageBox
-        ElMessageBox.confirm(
-          '是否确定关闭直播',
-          '关闭直播',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-          }
-        )
-          .then(() => {
+      // let message = JSON.parse(targetName)
 
-            delLive(message.roomId).then(res => {
-              if (res.data.code == 200) {
-
-                // console.log(activeName, targetName, 'sdsadsada');
-                store.state.goEasy.pubsub.publish({
-                  channel: message.roomId,//替换为您自己的channel
-                  message: JSON.stringify({ type: 'off', "nickname": sessionStorage.getItem('userName'), message: '主播已关闭直播' }),//替换为您想要发送的消息内容
-                  onSuccess: function () {
-                    console.log("消息发布成功。");
-                  },
-                  onFailed: function (error) {
-                    console.log("消息发送失败，错误编码：" + error.code + " 错误信息：" + error.content);
-                  }
-                });
-                // vedioId.value = message.roomId
-                store.commit('setVedio', message.roomId)
-                if (activeName === targetName) {
-                  tabs.forEach((tab, index) => {
-                    console.log(tab, 'tab');
-
-                    if (tab.id === targetName) {
-                      const nextTab = tabs[index + 1] || tabs[index - 1]
-                      if (nextTab) {
-                        activeName = nextTab.id
-                      }
-                    }
-                  })
-                }
-
-                editableTabsValue.value = activeName
-                editableTabs.value = tabs.filter((tab) => tab.id !== targetName)
-                ElMessage({
-                  type: 'success',
-                  message: '关闭成功',
-                })
+      try {
+        var message = JSON.parse(targetName);
+        if (typeof message == 'object' && message) {
+          if (message.userId == sessionStorage.getItem('userId')) {
+            // ElMessageBox
+            ElMessageBox.confirm(
+              '是否确定关闭直播',
+              '关闭直播',
+              {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
               }
-            })
+            )
+              .then(() => {
+
+                delLive(message.roomId).then(res => {
+                  if (res.data.code == 200) {
+
+                    // console.log(activeName, targetName, 'sdsadsada');
+                    store.state.goEasy.pubsub.publish({
+                      channel: message.roomId,//替换为您自己的channel
+                      message: JSON.stringify({ type: 'off', "nickname": sessionStorage.getItem('userName'), message: '主播已关闭直播' }),//替换为您想要发送的消息内容
+                      onSuccess: function () {
+                        console.log("消息发布成功。");
+                      },
+                      onFailed: function (error) {
+                        console.log("消息发送失败，错误编码：" + error.code + " 错误信息：" + error.content);
+                      }
+                    });
+                    // vedioId.value = message.roomId
+                    store.commit('setVedio', message.roomId)
+                    if (activeName === targetName) {
+                      tabs.forEach((tab, index) => {
+                        console.log(tab, 'tab');
+
+                        if (tab.id === targetName) {
+                          const nextTab = tabs[index + 1] || tabs[index - 1]
+                          if (nextTab) {
+                            activeName = nextTab.id
+                          }
+                        }
+                      })
+                    }
+
+                    editableTabsValue.value = activeName
+                    editableTabs.value = tabs.filter((tab) => tab.id !== targetName)
+                    ElMessage({
+                      type: 'success',
+                      message: '关闭成功',
+                    })
+                  }
+                })
 
 
-            // console.log(targetName, 'targetName直播间');
+                // console.log(targetName, 'targetName直播间');
 
 
 
 
-          })
+              })
 
-        return
-        // console.log('执行你');
+            return
+            // console.log('执行你');
+
+
+          }
+          return true;
+        }
+
+      } catch (e) {
 
 
       }
+
 
 
     }
@@ -1375,11 +1388,11 @@ defineComponent({
 
   .menus {
     overflow-y: auto;
-    height: calc(100vh - 260px);
+    height: calc(100vh - 274px);
     margin-top: -5px;
-    // background-image: url("../assets/bg.png");
-    // background-size: 100% 100%;
-    background-color: #DAE3F3;
+    background-image: url("../assets/bg.png");
+    background-size: 100% 100%;
+    // background-color: #DAE3F3;
 
     &::-webkit-scrollbar {
       display: none;
@@ -1415,11 +1428,11 @@ defineComponent({
       }
 
       span {
-        font-size: 18px;
+        font-size: 16px;
         // font-family: PingFang SC;
         font-weight: 900;
         // background: #bfa;
-        color: #000;
+        color: #fff;
         height: 35px;
         line-height: 35px;
       }
@@ -1445,11 +1458,12 @@ defineComponent({
       }
 
       /deep/.el-sub-menu__title {
-        font-size: 15px;
+        font-size: 16px;
         font-family: PingFang SC;
         // font-weight: bold;
-        background-color: #DAE3F3;
+        background-color: #409eff;
         height: 35px;
+        color: fff;
 
         span {
           width: 75%;
@@ -1466,8 +1480,8 @@ defineComponent({
         // }
 
         .el-menu-item.is-active {
-          background: #319bff;
-          color: #fff;
+          background: #fff;
+          color: #409eff;
           height: 35px;
         }
       }
@@ -1476,10 +1490,10 @@ defineComponent({
         font-size: 16px;
         font-family: PingFang SC;
         // font-weight: bold;
-        color: #000;
+        color: #fff;
         height: 35px;
         // padding: 0;
-        background: #DAE3F3; // background: #0165D0;
+        // background: #319bff; // background: #0165D0;
 
         span {
           width: 75%;
@@ -1523,7 +1537,7 @@ defineComponent({
     .fontSpan {
       vertical-align: sub;
       font-weight: 900;
-      font-size: 18px;
+      font-size: 20px;
     }
 
     .info {
@@ -1591,7 +1605,7 @@ defineComponent({
   }
 
   .bottom {
-    height: 180px;
+    // height: 180px;
     background: #125589;
     color: #b1cde3;
     font-size: 14px;

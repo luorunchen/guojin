@@ -217,6 +217,7 @@ const changeList = (pageSize, currentPage) => {
   pageSize4.value = pageSize;
   currentPage4.value = currentPage;
   // hiddenListFun()
+  getHiddenCheckListFun()
 };
 </script>
 

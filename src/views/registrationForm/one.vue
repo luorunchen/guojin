@@ -6,7 +6,7 @@
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label="市场监督管理注册信息" name="first">
           <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef" :model="ruleForm" :rules="rules"
-            label-width="120px">
+            label-width="auto">
             <el-form-item label="企业名称" prop="qiye">
               <el-input v-model="ruleForm.qiye" placeholder="企业名称">
                 <template #append>
@@ -28,12 +28,13 @@
             <el-form-item label="成立日期">
               <el-input v-model="ruleForm.time" placeholder="自动生成" disabled />
             </el-form-item>
-            <el-form-item label="营业期限">
-              <el-input v-model="ruleForm.qixian" placeholder="自动生成" disabled />
-            </el-form-item>
             <el-form-item label="社会信用代码">
               <el-input v-model="ruleForm.daima" placeholder="自动生成" disabled />
             </el-form-item>
+            <el-form-item label="营业期限">
+              <el-input v-model="ruleForm.qixian" placeholder="自动生成" disabled />
+            </el-form-item>
+
             <el-form-item label="注册地址">
               <el-input v-model="ruleForm.address" placeholder="自动生成" disabled>
                 <template #append>
@@ -57,10 +58,11 @@
       </el-tabs>
       <!-- 其他信息 -->
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+        <!-- 慎重提示:a's'd'sa -->
         <el-tab-pane label="其他信息" name="first">
 
           <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef" :model="ruleForm" :rules="rules"
-            label-width="100px">
+            label-width="auto">
             <el-form-item label="上年产值" prop="chanzhi">
               <el-input v-model="ruleForm.chanzhi" placeholder="上年产值">
                 <template #append> 万元 </template>
@@ -80,7 +82,9 @@
             <el-form-item label="经营面积" prop="jymianji">
               <el-input v-model="ruleForm.jymianji" placeholder="请输入"><template #append> 平方 </template></el-input>
             </el-form-item>
+
             <el-form-item label="行业类别" prop="industry">
+              <h6>提示:请点击"在线咨询"在选择有业类别时，不清楚该怎么选择，或者咨询当地的应急管理部门、应急管理专家</h6>
               <el-cascader :props="{ value: 'id', label: 'name' }" :options="hyTreeList" v-model="ruleForm.industry"
                 @change="industryChang" placeholder="请选择" @focus="indeustryFocus" />
             </el-form-item>
@@ -90,6 +94,7 @@
               </el-input>
             </el-form-item>
             <el-form-item label="评定标准">
+              <h6>慎重提示:确定评定标准前，请电话咨询当地应急管理部门应急管理专家。严格按当地政府要求选定评定标准</h6>
               <el-input v-model="ruleForm.biaozhun" placeholder="自动生成" disabled />
             </el-form-item>
             <el-form-item label="行业">
@@ -112,7 +117,7 @@
       <!-- 相关人员联系方式 -->
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label="相关人员联系方式" name="first">
-          <el-form :inline="true" class="demo-form-inline" :model="ruleForm" :rules="rules" label-width="160px"
+          <el-form :inline="true" class="demo-form-inline" :model="ruleForm" :rules="rules" label-width="auto"
             label-position="right">
             <el-form-item label="主要负责人" prop="people">
               <template v-for="(i, j) in ruleForm.people" :key="j">
@@ -147,7 +152,7 @@
                 </el-input>
               </template>
             </el-form-item>
-            <el-form-item label="消防生产管理人员" prop="name">
+            <el-form-item label="消防安全管理人员" prop="name">
               <template v-for="(i, j) in ruleForm.xiaofang" :key="j">
                 <el-input v-model="ruleForm.xiaofang[j].name" placeholder="请输入" @focus="inputFocus(3, j, i.id)"
                   style="margin-bottom: 10px">
@@ -203,16 +208,20 @@
       <!-- 本单位涉及的场所(可多选) -->
       <el-tabs v-model="activeName" class="demo-tabs1" @tab-click="handleClick">
         <el-tab-pane label="本单位涉及的场所(可多选)" name="first">
-          <el-form class="demo-form-inline" :model="ruleForm" :rules="rules" label-width="120px">
+
+
+          <el-form class="demo-form-inline" :model="ruleForm" :rules="rules" label-width="auto">
+
             <el-form-item :label="item.name" prop="resource" v-for="(item, index) in formTreeList" :key="index">
+              <!-- <h5> 慎重提示：请认真选择本单位涉及到的{{ item.name }}，并在相对应的表框打“√”。如果选择与贵公司实际不一致，那将导致台账错误、隐患排查错误。</h5> -->
               <el-checkbox-group v-model="ruleForm.resource" v-for="(item2, index2) in item.children" :key="index2">
-                <el-checkbox :label="item2.id">{{ item2.name }}</el-checkbox>
+                <el-checkbox :label="item2.id" @change="sdr($event, item2.id, item2.name)">{{ item2.name }}</el-checkbox>
               </el-checkbox-group>
 
             </el-form-item>
-            <el-form-item label="(自行建立专用设备设施)" label-width="170px">
+            <el-form-item label="(自行建立专用设备设施)" label-width="auto">
               <template v-for="(i, j) in ruleForm.zijian" :key="j">
-                <el-input v-model="ruleForm.zijian[j]" style="margin-bottom: 10px;width: 300px;">
+                <el-input v-model="ruleForm.zijian[j]" style="margin-bottom: 10px;">
                   <template #append>
                     <el-link type="primary" @click="add(ruleForm.zijian)">
                       新增
@@ -226,9 +235,9 @@
 
             </el-form-item>
 
-            <el-form-item label="通用设备" label-width="170px">
+            <el-form-item label="通用设备" label-width="auto">
               <template v-for="(i, j) in ruleForm.tongyong" :key="j">
-                <el-input v-model="ruleForm.tongyong[j]" style="margin-bottom: 10px;width: 300px;">
+                <el-input v-model="ruleForm.tongyong[j]" style="margin-bottom: 10px;">
                   <template #append>
                     <el-link type="primary" @click="add(ruleForm.tongyong)">
                       新增
@@ -261,8 +270,17 @@
       </div>
       <el-button type="primary" @click="submitForm(ruleFormRef)">提交</el-button>
     </div>
+    <el-badge :value="unreadTotal" class="cs" @click="zixun">
+      <!-- <div> -->
+
+      <span>在线咨询</span>
+
+      <!-- <p>有消息</p> -->
+      <!-- </div> -->
+
+    </el-badge>
     <el-dialog v-model="centerDialogVisible" title="添加人员" width="30%" center>
-      <el-form ref="formRef" :model="numberValidateForm" label-width="100px" label-position="top" class="demo-ruleForm">
+      <el-form ref="formRef" :model="numberValidateForm" label-width="auto" label-position="top" class="demo-ruleForm">
         <el-form-item label="姓名" prop="username" :rules="[{ required: true, message: '请输入姓名' }]">
           <el-input v-model.number="numberValidateForm.username" type="text" autocomplete="off" />
         </el-form-item>
@@ -289,6 +307,20 @@
     <el-dialog v-model="mapDialogVisible" title="地图" width="60%" center>
       <div id="map"></div>
     </el-dialog>
+    <el-dialog v-model="visible" :show-close="false" width="75%">
+      <template #header="{ close, titleId, titleClass }">
+        <div class="my-header">
+          <h4 :id="titleId" :class="titleClass">在线咨询</h4>
+          <el-button type="danger" @click="close">
+            <!-- <el-icon class="el-icon--left">
+              <CircleCloseFilled />
+            </el-icon> -->
+            关闭
+          </el-button>
+        </div>
+      </template>
+      <Online />
+    </el-dialog>
   </div>
 </template>
 
@@ -307,10 +339,12 @@ import {
   login,
   setRegion,
   delPerson,
-  setIsExit
+  setIsExit,
+  addFormBank
 } from "@/api/index";
 import { ref, reactive, onMounted, watch, nextTick } from "vue";
 import router from "@/router";
+import Online from "../../components/online/index.vue";
 import { ElMessage, TabsPaneContext, ElMessageBox } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import { MapLocation } from "@element-plus/icons-vue";
@@ -323,6 +357,7 @@ const addressLatlng: any = ref();
 const adcode: any = ref();
 const addList = ref([""]);
 const centerDialogVisible = ref(false);
+const visible = ref(false);
 const mapDialogVisible = ref(false);
 const dialogVisible = ref(false);
 let id = 0;
@@ -359,12 +394,14 @@ const ruleForm: any = reactive({
   xiaofang: [""],
   diangong: [""],
   shebei: [""],
+  biaozhunID: ''
 });
 
 const numberValidateForm = reactive({
   username: "",
   phone: "",
 });
+const formbank = ref([])
 const rules = reactive<FormRules>({
   qiye: [{ required: true, message: "请输入完整的公司名称", trigger: "blur" }],
   chanzhi: [{ required: true, message: "请输入上年产值", trigger: "blur" }],
@@ -416,6 +453,50 @@ const again = () => {
   ruleForm.fanwei = ""
   dialogVisible.value = false
 }
+const sdr = (e, id, name) => {
+  console.log(e, id, name);
+
+
+  if (e) {
+    formbank.value.push(
+      {
+        "companyId": ruleForm.qiyeId,
+        "tid": id,
+        "name": name,
+        "count": 0
+      }
+    )
+
+  } else {
+
+    formbank.value.map((item, index) => {
+      // console.log(item, 'item');
+
+      if (item.tid == id) {
+        // uniqueTids.push(item.tid);
+
+        formbank.value.splice(index, 1)
+
+      }
+
+    });
+    // console.log(uniqueTids);
+    console.log(formbank.value, 'formbank');
+
+  }
+
+}
+
+const zixun = () => {
+  // if (sessionStorage.getItem("userName") == null) {
+  //   return ElMessage({
+  //     showClose: true,
+  //     message: "您未登录,请先登录",
+  //     type: "warning",
+  //   });
+  // }
+  visible.value = true
+}
 const next = () => {
 
   let arr = document.cookie.split(";");
@@ -434,10 +515,16 @@ const next = () => {
       password = arr2[1];
     }
   }
-  // console.log(arr2, userName, password);
-  login(userName, password, sessionStorage.getItem('loginType')).then(res => {
-    sessionStorage.setItem("companyId", res.data.data.companyId);
 
+  // sessionStorage.setItem(
+  //   "evaluation",
+  //   res.data.data.evaluation_standard
+  // );
+  // console.log(arr2, userName, password);
+  sessionStorage.setItem('satoken', '')
+  login(sessionStorage.getItem('userName'), sessionStorage.getItem('password'), sessionStorage.getItem('loginType')).then(res => {
+    sessionStorage.setItem("companyId", res.data.data.companyId);
+    sessionStorage.setItem('satoken', res.data.data.token.tokenValue)
     sessionStorage.setItem(
       "evaluation",
       res.data.data.evaluation_standard
@@ -493,20 +580,21 @@ const industryChang = (value) => {
   setCompHy(value[value.length - 1], ruleForm.qiyeId, ruleForm.chanzhi).then(
     (res) => {
       if (res.data.code == 200) {
-        ElMessageBox.alert('行业已选定,如有疑问请拨打*******咨询专家', '提示', {
-          // if you want to disable its autofocus
-          // autofocus: false,
-          confirmButtonText: '确定',
-          // callback: (action: Action) => {
-          //   ElMessage({
-          //     type: 'info',
-          //     message: `action: ${action}`,
-          //   })
-          // },
-        })
+        // ElMessageBox.alert('慎重提示:确定评定标准前，请电话盗询当地应急管理部门应急管理专家。严格按当地政府要求选定评定标准', '提示', {
+        //   // if you want to disable its autofocus
+        //   // autofocus: false,
+        //   confirmButtonText: '确定',
+        //   // callback: (action: Action) => {
+        //   //   ElMessage({
+        //   //     type: 'info',
+        //   //     message: `action: ${action}`,
+        //   //   })
+        //   // },
+        // })
 
         ruleForm.hangye = res.data.data.industry;
         ruleForm.biaozhun = res.data.data.evaluation_standard;
+        ruleForm.biaozhunID = res.data.data.evaluationId;
         ruleForm.touru = res.data.data.safe_input;
       }
     }
@@ -598,7 +686,7 @@ const submitForm1 = (formEl: FormInstance | undefined) => {
         numberValidateForm.username,
         numberValidateForm.phone,
         inputType.value.type,
-        10013
+        ruleForm.qiyeId
       ).then((res) => {
         if (res.data.code == 200) {
           centerDialogVisible.value = false;
@@ -613,7 +701,7 @@ const submitForm1 = (formEl: FormInstance | undefined) => {
               ruleForm.people[
                 inputType.value.index
               ] = {
-                name: `${numberValidateForm.username},${numberValidateForm.phone}`, id: res.data.data
+                name: `${numberValidateForm.username}${numberValidateForm.phone}`, id: res.data.data
               }
               console.log(ruleForm.people, 'pp');
 
@@ -621,22 +709,22 @@ const submitForm1 = (formEl: FormInstance | undefined) => {
             case 2:
               ruleForm.anquan[
                 inputType.value.index
-              ] = { name: `${numberValidateForm.username},${numberValidateForm.phone}`, id: res.data.data };
+              ] = { name: `${numberValidateForm.username}${numberValidateForm.phone}`, id: res.data.data };
               break;
             case 3:
               ruleForm.xiaofang[
                 inputType.value.index
-              ] = { name: `${numberValidateForm.username},${numberValidateForm.phone}`, id: res.data.data };
+              ] = { name: `${numberValidateForm.username}${numberValidateForm.phone}`, id: res.data.data };
               break;
             case 4:
               ruleForm.diangong[
                 inputType.value.index
-              ] = { name: `${numberValidateForm.username},${numberValidateForm.phone}`, id: res.data.data };
+              ] = { name: `${numberValidateForm.username}${numberValidateForm.phone}`, id: res.data.data };
               break;
             case 5:
               ruleForm.shebei[
                 inputType.value.index
-              ] = { name: `${numberValidateForm.username},${numberValidateForm.phone}`, id: res.data.data };
+              ] = { name: `${numberValidateForm.username}${numberValidateForm.phone}`, id: res.data.data };
               break;
           }
           numberValidateForm.username = "";
@@ -705,18 +793,29 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
       if (ruleForm.zijian.length >= 1 && ruleForm.zijian[0] != "") {
         ruleForm.zijian.forEach(element => {
-          addFormTree(element, 257, 1).then((res) => { });
+          addFormTree(element, 257, 1, ruleForm.qiyeId).then((res) => { });
         });
 
       }
       if (ruleForm.tongyong.length >= 1 && ruleForm.tongyong[0] != "") {
         ruleForm.tongyong.forEach(element => {
-          addFormTree(element, 17, 1).then((res) => { });
+          addFormTree(element, 17, 1, ruleForm.qiyeId).then((res) => { });
         });
 
       }
       setRegion(ruleForm.qiyeId, ruleForm.jiedao, addressLatlng.value).then(res => {
 
+      })
+      addFormBank(JSON.stringify(formbank.value)).then(res => {
+        // if (res.data.code == 200) {
+        //   ElMessage({
+        //     showClose: true,
+        //     message: '修改成功',
+        //     type: 'success'
+        //   })
+        //   threeInfo.value = true
+        //   getCompanyInfoByIdsFun()
+        // }
       })
       setIsExit(ruleForm.qiyeId)
       addFormContent(
@@ -752,9 +851,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             }
           }
           // console.log(arr2, userName, password);
-          login(userName, password, sessionStorage.getItem('loginType')).then(res => {
+          login(sessionStorage.getItem('userName'), sessionStorage.getItem('password'), sessionStorage.getItem('loginType')).then(res => {
             sessionStorage.setItem("companyId", res.data.data.companyId);
-
+            sessionStorage.setItem('satoken', res.data.data.token.tokenValue)
             sessionStorage.setItem(
               "evaluation",
               res.data.data.evaluation_standard
@@ -799,11 +898,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
 
     /deep/.el-form-item {
-      width: 46%;
+      width: 100%;
 
       .el-cascader {
         width: 100%;
       }
+    }
+
+    /deep/.el-checkbox-group {
+      width: 100%;
     }
 
     .demo-tabs1 {
@@ -814,6 +917,38 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       /deep/.el-checkbox {
         margin-right: 10px;
       }
+    }
+  }
+
+  .my-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .cs {
+    width: 80px;
+    height: 80px;
+    position: fixed;
+    bottom: 50px;
+    right: 51px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    cursor: pointer;
+    border-radius: 100%;
+    transition: all 0.2s;
+    background: url('../../assets/iz.png') no-repeat center center #3d96eeb3;
+    background-size: 80% 80%;
+
+    span {
+      margin-top: 84px;
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 22px;
+      text-align: center;
+      color: #fff;
     }
   }
 

@@ -11,7 +11,7 @@
         <el-col :span="12">
           <div class="leftBox">
             <h1>欢迎登陆</h1>
-            <el-form ref="formRef" :model="numberValidateForm" label-width="100px" class="demo-ruleForm"
+            <el-form ref="formRef" :model="numberValidateForm" label-width="auto" class="demo-ruleForm"
               label-position="top">
               <el-form-item prop="userName" :rules="[{ required: true, message: '请输入账号' }]">
                 <el-input placeholder="请输入账号" v-model="numberValidateForm.userName" type="text" autocomplete="off"
@@ -73,7 +73,8 @@ const numberValidateForm = reactive({
   type: ["记住密码"],
 });
 onMounted(() => {
-  console.log(store.state.goEasy.getConnectionStatus());
+  // console.log(store.state.goEasy.getConnectionStatus());
+  sessionStorage.clear()
 
   if (store.state.goEasy.getConnectionStatus() != 'disconnected') {
     store.state.goEasy.disconnect({
@@ -102,14 +103,16 @@ onMounted(() => {
   for (let i = 0; i < arr.length; i++) {
     // 再次切割，arr2[0]为key值，arr2[1]为对应的value
     let arr2 = arr[i].split("=");
-    if (arr2[0] === "userNameBack") {
+    if (arr2[0] === "userBackName") {
       numberValidateForm.userName = arr2[1];
-    } else if (arr2[0] === "passwordBack") {
+    } else if (arr2[0] === "userBackName") {
       numberValidateForm.password = arr2[1];
     }
   }
 });
 const submitForm = (formEl: FormInstance | undefined) => {
+
+
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
@@ -125,13 +128,13 @@ const submitForm = (formEl: FormInstance | undefined) => {
             sessionStorage.setItem("userName", numberValidateForm.userName);
             sessionStorage.setItem("userId", res.data.data.id);
             sessionStorage.setItem('satoken', res.data.data.token.tokenValue)
-            sessionStorage.setItem('loginType', 3)
+            sessionStorage.setItem('loginType', '3')
             if (numberValidateForm.type.length > 0) {
               window.document.cookie =
-                "userNameBack" + "=" + numberValidateForm.userName;
+                "userBackName" + "=" + numberValidateForm.userName;
 
               window.document.cookie =
-                "passwordBack" + "=" + numberValidateForm.password;
+                "passBackword" + "=" + numberValidateForm.password;
             }
           } else {
             ElMessage({

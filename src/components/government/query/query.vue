@@ -59,6 +59,7 @@
       <FilingInformationOne :status="'government'" :seeRowId="seeRowId" v-if="store.state.menuName == '企业备案查询'" />
       <FilingInformationTwo :status="'government'" :seeRowId="seeRowId" v-if="store.state.menuName == '机构备案查询'" />
       <FilingInformationThree :status="'government'" :companyId="seeRowId" v-if="store.state.menuName == '企业台账查询'" />
+      <VideoOnline :status="'government'" :companyId="seeRowId" v-if="store.state.menuName == '企业现场查询'" />
 
 
     </el-dialog>
@@ -75,6 +76,7 @@ import Pagination from "../../pagination/index.vue";
 import FilingInformationOne from "@/components/filingInformation/one.vue";
 import FilingInformationTwo from "@/components/filingInformation/two.vue";
 import FilingInformationThree from "@/components/filingInformation/three.vue";
+import VideoOnline from "@/components/videoOnline/index.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 import { useStore } from "vuex";

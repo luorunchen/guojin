@@ -6,7 +6,7 @@
       <el-tabs v-model="activeName" class="demo-radio">
         <el-tab-pane label="机构服务类型" name="first">
           <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef1" :model="ruleForm" :rules="rules"
-            label-width="100px">
+            label-width="auto">
             <el-form-item label="请选择" prop="resource">
               <el-radio-group v-model="ruleForm.resource" v-for="(item, index) in getInsTypeList" :key="index">
                 <el-radio :label="item.id">{{ item.name }}</el-radio>
@@ -19,7 +19,7 @@
       <el-tabs v-model="activeName" class="demo-tabs">
         <el-tab-pane label="市场监督管理注册信息" name="first">
           <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef2" :model="ruleForm" :rules="rules"
-            label-width="120px">
+            label-width="auto">
             <el-form-item label="机构名称" prop="qiye">
               <el-input v-model="ruleForm.qiye" placeholder="请输入">
                 <template #append>
@@ -64,7 +64,7 @@
       <el-tabs v-model="activeName" class="demo-tabs">
         <el-tab-pane label="其他信息" name="first">
           <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef3" :model="ruleForm" :rules="rules"
-            label-width="150px">
+            label-width="auto">
             <el-form-item label="资质证书名称" prop="zs_name">
               <el-input v-model="ruleForm.zs_name" placeholder="上年营业额" />
             </el-form-item>
@@ -106,7 +106,7 @@
             <el-form-item label="经营面积" prop="operation_space">
               <el-input v-model="ruleForm.operation_space" placeholder="请输入" />
             </el-form-item>
-            <el-form-item label="工作场所及档案室面积证明资料" label-width="230px" prop="file1">
+            <el-form-item label="工作场所及档案室面积证明资料" label-width="auto" prop="file1">
               <el-upload ref="uploadRef" class="upload-demo" :auto-upload="false" name="file1" :on-change="handleChange"
                 :on-remove="handleChange" :http-request="handleHttpRequest">
                 <el-button type="primary">文件上传</el-button>
@@ -217,7 +217,7 @@
             <el-link type="danger" @click="addPeople('del')">删除</el-link>
 
             <div class="people">
-              <el-form :inline="true" class="demo-form-inline" label-width="100px">
+              <el-form :inline="true" class="demo-form-inline" label-width="auto">
                 <el-form-item label="姓名">
                   <el-input v-model="item.peopleName" placeholder="请输入" />
                 </el-form-item>

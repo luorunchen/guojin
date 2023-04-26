@@ -103,12 +103,12 @@ export function district (keywords, subdistrict, extensions) {
   })
 }
 //
-export function addFormTree (name, id, type) {
+export function addFormTree (name, id, type, companyId) {
   return service({
     url: `/form/addFormTree`,
     method: 'GET',
     params: {
-      name, id, type
+      name, id, type, companyId
     }
   })
 }
@@ -164,6 +164,15 @@ export function getVideoAppkey () {
 export function addFormBank (formbank) {
   return map({
     url: `/gjsafe/form/addFormBank`,
+    method: 'POST',
+    data: {
+      formbank
+    }
+  })
+}
+export function editFormTreeByComp (formbank) {
+  return map({
+    url: `/gjsafe/company/editFormTreeByComp`,
     method: 'POST',
     data: {
       formbank
@@ -252,12 +261,12 @@ export function remoteControlDev (productNumber, type, state, style) {
     }
   })
 }
-export function setParam (deviceid, APhasecur, BPhasecur, CPhasecur, APhaseVolt, BPhaseVolt, CPhaseVolt, ATemp, BTemp, CTemp, NTemp, Residualvalue, U_voltage) {
+export function setParam (deviceid, APhasecur, BPhasecur, CPhasecur, APhaseVolt, BPhaseVolt, CPhaseVolt, ATemp, BTemp, CTemp, NTemp, Residualvalue, U_voltage, noise) {
   return service({
     url: `/device/setParam`,
     method: 'GET',
     params: {
-      deviceid, APhasecur, BPhasecur, CPhasecur, APhaseVolt, BPhaseVolt, CPhaseVolt, ATemp, BTemp, CTemp, NTemp, Residualvalue, U_voltage
+      deviceid, APhasecur, BPhasecur, CPhasecur, APhaseVolt, BPhaseVolt, CPhaseVolt, ATemp, BTemp, CTemp, NTemp, Residualvalue, U_voltage, noise
     }
   })
 }
@@ -941,12 +950,12 @@ export function upWxProduct (obj) {
   })
 }
 //机构列表获取
-export function getInstBankInfo (tid, title, inst_comp, pageNum, pageSize) {
+export function getInstBankInfo (tid, title, inst_comp, pageNum, pageSize, style) {
   return service({
     url: `/inst/getInstBankInfo`,
     method: 'GET',
     params: {
-      tid, title, inst_comp, pageNum, pageSize
+      tid, title, inst_comp, pageNum, pageSize, style
     }
 
 
@@ -1040,6 +1049,15 @@ export function getVideosById (companyId, pageNum, pageSize) {
     method: 'GET',
     params: {
       companyId, pageNum, pageSize
+    }
+  })
+}
+export function addCount (wid) {
+  return service({
+    url: `/wx/addCount`,
+    method: 'GET',
+    params: {
+      wid
     }
   })
 }

@@ -32,7 +32,7 @@
 
   <el-tabs v-model="activeName2" class="demo-tabs" @tab-click="handleClick">
     <el-tab-pane label="五新商店" name="fiveNew">
-      <div class="fiveNew">
+      <div class="fiveNew" @click="fiveNew">
         <div class="container">
           <img src="../../assets/1.png" alt="" />
           新技术
@@ -49,10 +49,10 @@
           <img src="../../assets/4.png" alt="" />
           新材料
         </div>
-        <!-- <div class="container">
+        <div class="container">
           <img src="../../assets/5.png" alt="" />
           新产品
-        </div> -->
+        </div>
       </div>
     </el-tab-pane>
   </el-tabs>
@@ -139,6 +139,8 @@ import { medical } from "@/api/index.js";
 import type { TabsPaneContext, ElButton, ElDialog } from "element-plus";
 import { CircleCloseFilled } from "@element-plus/icons-vue";
 import SeeFlie from "../seeFlie/index.vue";
+import { useStore } from "vuex";
+const emit = defineEmits(["fiveNewChang"]);
 const activeName = ref("first");
 const visible = ref(false);
 const indeterminate = ref(true);
@@ -149,6 +151,7 @@ const sum = ref(100);
 const score = ref(100);
 const sI: any = ref();
 const sumSI: any = ref();
+const store = useStore();
 const seeFile: any = ref();
 onMounted(() => {
   // medicalFun();
@@ -204,6 +207,23 @@ const onlineEditing = (row: any) => {
   //     window.open(res.data.data.wpsUrl);
   //   }
   // );
+};
+const fiveNew = () => {
+  if (sessionStorage.getItem("userName") == null) {
+    // return ElMessage({
+    //   showClose: true,
+    //   message: "您未登录,请先登录",
+    //   type: "warning",
+    // });
+  }
+  emit("fiveNewChang", true);
+  let arr = {
+    title: '五新商店',
+    status: '五新商店',
+    id: 10088
+    // content: '<EarlyWarning/>'
+  }
+  store.commit("setMenus", arr);
 };
 const medicalFun = () => {
   medical(sessionStorage.getItem("evaluation")).then((res) => {
@@ -366,7 +386,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
   line-height: 100px;
 
   .container {
-    width: 363px;
+    width: 280px;
     height: 110px;
     background: #eef1fb;
     text-align: center;

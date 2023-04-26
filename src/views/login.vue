@@ -4,7 +4,7 @@
       <el-row>
         <el-col :span="12">
           <div class="rightBox">
-            <h1>智慧安全管理平台</h1>
+            <h1>企安互联管理系统</h1>
           </div>
         </el-col>
         <el-col :span="12">
@@ -14,7 +14,7 @@
               <el-tab-pane label="机构登录" name="2"></el-tab-pane>
               <el-tab-pane label="政府登录" name="3"></el-tab-pane>
             </el-tabs>
-            <el-form ref="formRef" :model="numberValidateForm" label-width="100px" class="demo-ruleForm"
+            <el-form ref="formRef" :model="numberValidateForm" label-width="auto" class="demo-ruleForm"
               label-position="top">
               <el-form-item prop="userName" :rules="[{ required: true, message: '请输入账号' }]">
                 <el-input placeholder="请输入账号" v-model="numberValidateForm.userName" type="text" autocomplete="off"
@@ -22,7 +22,7 @@
               </el-form-item>
               <el-form-item prop="password" :rules="[{ required: true, message: '请输入密码' }]">
                 <el-input placeholder="请输入密码" v-model="numberValidateForm.password" type="password" autocomplete="off"
-                  :prefix-icon="Lock" />
+                  :prefix-icon="Lock" show-password />
               </el-form-item>
 
               <el-checkbox-group v-model="numberValidateForm.type">
@@ -52,10 +52,12 @@
                 <el-link type="primary" @click="goToRegister">去注册</el-link>
               </el-col>
             </el-row>
-            <div class="tips">
+            <!-- <div class="tips">
               点击登录即同意
               <el-link type="primary" @click="dialogVisible = true">《平台使用须知》</el-link>
-            </div>
+            </div> -->
+
+
             <div class="chrome">
               推荐使用 <img src="../assets/chrome.png" alt="" /> 谷歌浏览器
               <el-link type="primary" @click="chromeDowload">点击下载</el-link>
@@ -69,28 +71,7 @@
       </el-row>
     </div>
     <p class="text">浙ICP备2023004010号</p>
-    <el-dialog v-model="dialogVisible" title="平台协议" width="40%" center>
-      <div class="agreement">
-        <p>平台使用须知：</p>
-        <p>1.用户通过法人手机号注册本平台后，均用该账号和密码登录、使用。</p>
-        <p>
-          2.严禁用户在本平台发布涉黄、涉赌、反共、游戏等内容，否则应承担违规使用
-          的所有后果（含法律责任和经济赔偿责任）。
-        </p>
-        <p>
-          3.平台提供的制度、职责、岗位操作规程、应急预案、风险告知牌等资料均为范
-          本，用户应根据自身特点予以修改、增减、补充、完善，并建立符合相关要求的
-          台账。
-        </p>
-        <p>
-          4.用户法人及使用该平台的本单位其他人员误动作引起的资料消失、内容错误等，
-          平台概不负责。
-        </p>
-        <p>
-          5.非法人手机号或未经法人授权注册的账号在平台开展任何活动,平台一律概不负责
-        </p>
-      </div>
-    </el-dialog>
+
   </div>
 </template>
 
@@ -105,7 +86,7 @@ import jsCookie from "js-cookie";
 import { Avatar, Lock } from "@element-plus/icons-vue";
 const formRef = ref<FormInstance>();
 const activeName = ref("1");
-const remember = ref();
+const checked1 = ref();
 const dialogVisible = ref(false);
 const numberValidateForm = reactive({
   userName: "",
@@ -145,6 +126,7 @@ onMounted(() => {
 //   }
 // };
 const submitForm = (formEl: FormInstance | undefined) => {
+
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
@@ -167,6 +149,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
               message: "登录成功",
               type: "success",
             });
+
 
             // if(numberValidateForm)
             console.log(numberValidateForm.type, "type");
@@ -191,7 +174,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
               router.push("/");
             }
           }
-
+          sessionStorage.setItem('password', numberValidateForm.password)
           sessionStorage.setItem("userName", numberValidateForm.userName);
           sessionStorage.setItem("userId", res.data.data.id);
           sessionStorage.setItem("companyId", res.data.data.companyId);
@@ -243,7 +226,7 @@ const goToRegister = () => {
   .wraper {
     position: absolute;
     width: 65%;
-    height: calc(80vh);
+    // height: calc(80vh);
     // background: rgb(80, 19, 212);
     margin: auto;
     left: 0;
@@ -286,14 +269,14 @@ const goToRegister = () => {
       }
 
       /deep/.el-input__wrapper {
-        height: 70px;
+        height: 60px;
         border-radius: 37px;
         font-size: 18px;
       }
 
       /deep/.el-button--primary {
         border-radius: 37px;
-        height: 70px;
+        height: 60px;
         font-size: 18px;
       }
 
@@ -315,7 +298,8 @@ const goToRegister = () => {
         text-align: center;
         // margin: 0 auto;
         width: 100%;
-        padding-top: 100px;
+        // padding-top: 100px;
+        margin-top: 20px;
         // margin-top: 100px;
         // position: relative;
         // bottom: 20px;
@@ -348,6 +332,7 @@ const goToRegister = () => {
     }
   }
 
+
   .text {
     // text-align: center;
     // margin: 0 auto;
@@ -360,21 +345,7 @@ const goToRegister = () => {
 
   }
 
-  .agreement {
-    padding: 30px;
-    font-size: 18px;
 
-    p {
-      margin-bottom: 10px;
-      font-weight: 700;
-      // color: #666E76;
-      text-indent: 2em;
-
-      &:nth-child(1) {
-        text-indent: 0em;
-      }
-    }
-  }
 }
 </style>
 

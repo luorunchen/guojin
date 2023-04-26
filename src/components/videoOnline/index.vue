@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getCompDeviceList } from '@/api/index.js'
+import { getCompDeviceList, getVideosById } from '@/api/index.js'
 import { ref, reactive, onMounted } from "vue";
 import Shipin from "../earlyWarning/popup/info/shipin.vue"
 const formInline = reactive({
@@ -53,23 +53,33 @@ const pageSize4 = ref(10)
 const shipin: any = ref(null);
 const dialogVisible = ref(false);
 const videoVisible = ref(false);
-
+const props = defineProps({
+  status: String,
+  companyId: String,
+})
 
 onMounted(() => {
   getCompDeviceListFun()
 })
 const getCompDeviceListFun = () => {
-  getCompDeviceList(44, "", currentPage4.value, pageSize4.value).then((res) => {
-    tableData.value = res.data.data;
-    // total.value = res.data.dataCount;
-  });
+  if (props.status == 'government') {
+    getVideosById(props.companyId, 1, 100).then(res => {
+      tableData.value = res.data.data;
+    })
 
-};
+  } else {
+    getCompDeviceList(44, "", currentPage4.value, pageSize4.value).then((res) => {
+      tableData.value = res.data.data;
+      // total.value = res.data.dataCount;
+    });
+  }
+}
+
 const details = () => {
   dialogVisible.value = true;
 };
 const see = (item) => {
-  shipin.value.show(item)
+  shipin.value.show(item, item.type_name);
   // videoVisible.value = true;
 };
 </script>

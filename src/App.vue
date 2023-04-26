@@ -150,7 +150,7 @@ const connect = () => {
 
   // console.log(userID.value, 'sss123123s');
   if (userID.value == null) return
-  if (companyId.value == null) return
+
   goEasy.value.connect({
     id: userID.value,
     data: { "type": "front", "nickname": sessionStorage.getItem('userName') },
@@ -175,7 +175,7 @@ const connect = () => {
 
   console.log(companyId.value, 'companyId.value');
 
-
+  if (companyId.value == null) return
   goEasy.value.pubsub.subscribe({
 
     channel: companyId.value, //替换为您自己的channel

@@ -3,7 +3,7 @@
     <!-- 市场监督管理注册信息 -->
     <el-tabs v-model="activeName" class="demo-tabs">
       <el-tab-pane label="机构服务类型" name="first">
-        <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef1" label-width="100px">
+        <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef1" label-width="auto">
           <el-form-item label="类型" prop="resource">
             <el-input v-model="ruleForm.resource" disabled> </el-input>
           </el-form-item>
@@ -13,7 +13,7 @@
     <!-- 市场监督管理注册信息 -->
     <el-tabs v-model="activeName" class="demo-tabs">
       <el-tab-pane label="市场监督管理注册信息" name="first">
-        <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef2" label-width="120px">
+        <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef2" label-width="auto">
           <el-form-item label="机构名称" prop="qiye">
             <el-input v-model="ruleForm.company" placeholder="请输入" disabled>
             </el-input>
@@ -54,7 +54,7 @@
     <!-- 其他信息 -->
     <el-tabs v-model="activeName" class="demo-tabs">
       <el-tab-pane label="其他信息" name="first">
-        <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef3" :model="ruleForm" label-width="150px">
+        <el-form :inline="true" class="demo-form-inline" ref="ruleFormRef3" :model="ruleForm" label-width="auto">
           <el-form-item label="资质证书名称" prop="zs_name">
             <el-input v-model="ruleForm.zs_name" disabled />
           </el-form-item>
@@ -97,7 +97,7 @@
           <el-form-item label="经营面积" prop="operation_space">
             <el-input disabled v-model="ruleForm.operation_space" placeholder="请输入" />
           </el-form-item>
-          <el-form-item label="工作场所及档案室面积证明资料" label-width="230px" prop="file1">
+          <el-form-item label="工作场所及档案室面积证明资料" label-width="auto" prop="file1">
             <!-- <el-upload
               ref="uploadRef"
               class="upload-demo"

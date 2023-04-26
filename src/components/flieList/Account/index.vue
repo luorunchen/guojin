@@ -36,7 +36,7 @@
       </el-col>
     </el-row>
     <br />
-
+    <!-- {{ props.status }} -->
     <el-table v-if="props.status == '风控体系建设' || props.status == '应急预案(备案)'" :data="tableData" stripe
       style="width: 100%;margin-bottom: 50px;" height="45vh" v-loading="loading" element-loading-text="正在加载中..."
       :element-loading-spinner="svg" element-loading-svg-view-box="-10, -10, 50, 50"
@@ -44,11 +44,11 @@
 
       <el-table-column type="index" />
       <el-table-column property="title" label="标题" />
-      <el-table-column property="name" label="板块" />
+      <el-table-column property="name" label="板块" v-if="style == '1'" />
       <el-table-column prop="address" label="操作">
         <template #default="scope">
-          <el-button size="small" type="primary" @click="see(scope.row)">查看</el-button>
-
+          <el-button size="small" type="primary" @click="see(scope.row)">查看 </el-button>
+          <el-button size="small" type="danger" @click="delFileInfoFun(scope.row)" v-if="style == '3'">删除</el-button>
           <el-button v-if="style == '1'" size="small" type="success"
             @click="syncDataBaseBankFun(scope.row)">生成台账</el-button>
 
@@ -174,7 +174,7 @@ watch(
     }
 
 
-    fileInfoFun();
+    // fileInfoFun();
   }
 );
 onMounted(() => {
@@ -189,6 +189,10 @@ const getDataBaseBankFun = () => {
   getDataBaseBank(props.tid, currentPage4.value, pageSize4.value).then((res) => {
     tableData.value = res.data.data;
     total.value = res.data.dataCount
+    if (props.status == '应急预案(备案)') return
+    tableData.value = tableData.value.filter(item => {
+      return item.name == props.title
+    })
   });
 
 }

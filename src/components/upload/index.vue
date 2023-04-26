@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="dialogVisible" title="文件上传" width="30%">
     <!-- {{ props.status }} -->
-    <el-form label-position="top" ref="formRef" :model="numberValidateForm" label-width="100px" class="demo-ruleForm">
+    <el-form label-position="top" ref="formRef" :model="numberValidateForm" label-width="auto" class="demo-ruleForm">
       <el-form-item label="标题" prop="title" :rules="[{ required: true, message: '请输入标题' }]"
         v-if="props.status != 'marker'">
         <el-input v-model="numberValidateForm.title" type="text" autocomplete="off" />

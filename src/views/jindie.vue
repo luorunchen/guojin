@@ -1,7 +1,7 @@
 <template>
   <div class="info">
     <h1>来料检验单</h1>
-    <el-form :model="formInline" class="demo-form-inline" label-position="left" label-width="100px" size="small">
+    <el-form :model="formInline" class="demo-form-inline" label-position="left" label-width="auto" size="small">
       <el-row :gutter="50">
         <el-col :span="8">
           <el-form-item label="业务类型">
@@ -77,7 +77,7 @@
 
     <el-tabs type="border-card">
       <el-tab-pane label="检验信息">
-        <el-form :model="formInline" label-position="left" label-width="100px" size="small">
+        <el-form :model="formInline" label-position="left" label-width="auto" size="small">
           <el-row :gutter="50">
             <el-col :span="8">
               <el-form-item label="批号">

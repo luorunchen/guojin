@@ -224,8 +224,12 @@ const rightMenus = ref([
   },
   {
     id: "7",
-    name: "广告图",
-    children: [{ id: "7-1", name: "广告图", children: [] }],
+    name: "广告",
+    children: [
+      { id: "7-1", name: "广告图", children: [] },
+      { id: "7-2", name: "广告视频", children: [] },
+      { id: "7-3", name: "滚动条", children: [] },
+    ],
   },
 
   {
@@ -272,6 +276,11 @@ const rightMenus = ref([
     name: "在线咨询记录",
     children: [{ id: "11-1", name: "在线咨询记录", children: [] }],
   },
+  // {
+  //   id: "12",
+  //   name: "发票管理",
+  //   children: [{ id: "12-1", name: "发票开具记录", children: [] }],
+  // },
 ]);
 
 onMounted(() => {
@@ -433,6 +442,8 @@ const out = () => {
 
     .el-menu-item {
       color: #fff;
+      // padding-left: 20px;
+      padding-left: 60px;
     }
 
     /deep/.el-sub-menu__title {
@@ -459,9 +470,8 @@ const out = () => {
         // font-weight: bold;
         color: #fff;
         background: #0165d0; // background: #0165D0;
-        // p {
-        //   padding-left: 20px;
-        // }
+
+
       }
     }
   }

@@ -11,19 +11,11 @@
         </el-select>
       </el-form-item>
       <el-form-item orm-item label="年费类型:">
-        <el-date-picker
-          v-model="selectTime"
-          type="datetimerange"
-          range-separator="至"
-          start-placeholder="Start date"
-          end-placeholder="End date"
-          value-format="YYYY-MM-DD HH:mm:ss"
-        />
+        <el-date-picker v-model="selectTime" type="datetimerange" range-separator="至" start-placeholder="Start date"
+          end-placeholder="End date" value-format="YYYY-MM-DD HH:mm:ss" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="getExpireUserFun('select')"
-          >查询</el-button
-        >
+        <el-button type="primary" @click="getExpireUserFun('select')">查询</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -47,9 +39,7 @@
 
       <el-table-column prop="address" label="操作">
         <template #default="scope">
-          <el-button size="small" type="primary" @click="drawerOpen(scope.row)"
-            >详情</el-button
-          >
+          <el-button size="small" type="primary" @click="drawerOpen(scope.row)">详情</el-button>
           <!-- <el-button size="small" type="primary" @click="drawerOpen(scope.row)"
             >删除</el-button
           > -->
@@ -179,6 +169,7 @@ const changeList = (pageSize, currentPage, type) => {
   pageSize3.value = pageSize;
   currentPage3.value = currentPage;
   // getAuditFilesFun()
+  getPriceListFun('1')
 };
 </script>
 

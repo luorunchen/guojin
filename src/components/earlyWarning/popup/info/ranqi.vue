@@ -3,7 +3,7 @@
     <el-dialog v-model="dialogVisible" :title="typeName" width="50%" center>
       <div v-loading="loading" element-loading-text="Loading..." :element-loading-spinner="svg"
         element-loading-svg-view-box="-10, -10, 50, 50" element-loading-background="rgba(4, 19, 54)">
-        <!-- <el-button style="margin-bottom: 10px" @click="setTimeBtn" type="primary">数据时间设置</el-button> -->
+        <el-button style="margin-bottom: 10px" @click="setTimeBtn" v-if="dSid == '26'" type="primary">分贝阀值设置</el-button>
         <el-row :gutter="10">
           <el-col :span="8">
             <div class="one">
@@ -54,12 +54,17 @@
             <el-table-column type="index" width="50"> </el-table-column>
             <el-table-column prop="alarm_name" label="当前报警类型">
             </el-table-column>
+            <el-table-column prop="alarm_value" label="报警阀值" v-if="dSid == 26">
+            </el-table-column>
             <el-table-column prop="alarm_date" label="当前报警时间" sortable>
             </el-table-column>
           </el-table>
 
         </div>
-
+        <div class="one_echarts" v-if="dSid == '26'">
+          <p class="titleP">分贝统计图</p>
+          <div id="echarts_wapper_one_search"></div>
+        </div>
         <div style="width: 100%">
           <div v-if="getGasInfoWapper.length >= 1" class="two">
             <p>实时值</p>
@@ -83,23 +88,7 @@
           </div>
         </div>
 
-        <!-- <div class="two" v-if="HeartBeatList.length >= 1">
-          <p>心跳时间</p>
 
-          <el-table :data="HeartBeatList" style="width: 100%" height="320px" :default-sort="{
-            prop: 'heartBeat',
-            order: 'descending',
-          }">
-            <el-table-column type="index" label="序号" align="center" width="100px">
-            </el-table-column>
-            <el-table-column prop="heartBeat" sortable label="时间" align="center">
-            </el-table-column>
-            <el-table-column prop="gasvol" label="浓度(%LEL)" align="center">
-            </el-table-column>
-            <el-table-column prop="rssi" label="信号值" align="center">
-            </el-table-column>
-          </el-table>
-        </div> -->
 
         <div class="two">
           <p>历史报警</p>
@@ -135,8 +124,12 @@
 <script lang="ts" setup>
 import {
   getDevInfoByDevId,
-  getHistoryAlarm
+  getHistoryAlarm,
+  viewDeviceGraphs,
+  setParam
 } from "@/api/index";
+import moment from 'moment'
+import * as echarts from "echarts";
 import { ref, defineExpose, reactive } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import Pagination from "../../../pagination/index.vue";
@@ -190,8 +183,92 @@ const show = (devId: any, imei: Number, type_name: String) => {
       })
     }
   })
-};
+  viewDeviceGraphs(imei, moment().subtract(1, 'day').format('YYYY/MM/DD HH:mm:ss'), moment().format('YYYY/MM/DD HH:mm:ss')).then(res => {
+    type EChartsOption = echarts.EChartsOption;
+    var chartDom = document.getElementById("echarts_wapper_one_search")!;
+    var myChart = echarts.init(chartDom);
 
+    let info = []
+    let time = []
+    res.data.data.forEach((element: any) => {
+      info.push(element.noise)
+      time.push(element.heartbeatTime)
+    })
+    // option3 = ;
+    myChart.setOption({
+      tooltip: {
+        trigger: "axis",
+      },
+      legend: {
+        data: ["A电压(V)", "B电压(V)", "C电压(V)"],
+      },
+      grid: {
+        left: "3%",
+        right: "4%",
+        bottom: "3%",
+        containLabel: true,
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {},
+        },
+      },
+      xAxis: {
+        type: "category",
+        boundaryGap: false,
+        data: time.reverse(),
+      },
+      yAxis: {
+        type: "value",
+      },
+      series: [
+        {
+          name: "分贝(db)",
+          type: "line",
+          // stack: "总量",
+          data: info.reverse(),
+        },
+
+      ],
+    });
+  })
+};
+const setTimeBtn = () => {
+  ElMessageBox.prompt('请输入要设置的分贝', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+
+  })
+    .then(({ value }) => {
+      setParam(
+        productNumber.value,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        value
+      ).then(res => {
+        if (res.data.code == 200) {
+          ElMessage({
+            type: 'success',
+            message: `设置成功`,
+            showClose: true
+          })
+        }
+      })
+
+    })
+
+
+}
 const historySearch = () => {
   getHistoryAlarm(productNumber.value, formInline.time[0], formInline.time[1], currentPage4.value, pageSize4.value).then(res => {
     historyData.value = res.data.data
@@ -343,6 +420,35 @@ defineExpose({
           }
         }
       }
+    }
+
+    .one_echarts {
+      box-shadow: 0px 0px 10px 0px rgba(3, 27, 29, 0.11);
+      height: 340px;
+      margin-top: 10px;
+
+      .titleP {
+        padding-left: 20px;
+        line-height: 40px;
+        // text-align: center;
+        font-weight: bold;
+        border-bottom: 1px solid #f3f6fa;
+      }
+
+      #echarts_wapper_one_search {
+        height: 300px;
+        // background: #4b6082;
+      }
+
+      // #echarts_wapper_two_search {
+      //   height: 300px;
+      //   // background: #4b6082;
+      // }
+
+      // #echarts_wapper_three_search {
+      //   height: 300px;
+      //   // background: #4b6082;
+      // }
     }
   }
 }

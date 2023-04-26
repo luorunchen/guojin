@@ -62,7 +62,7 @@
     <Pagination :total="total" :type="1" @changeList="changeList" />
 
     <el-dialog v-model="dialogVisible" title="整改" width="40%" center>
-      <el-form ref="formRef" :model="numberValidateForm" label-width="120px" class="demo-ruleForm">
+      <el-form ref="formRef" :model="numberValidateForm" label-width="auto" class="demo-ruleForm">
         <!-- <el-form-item label="整改情况" prop="zg_name" :rules="[
           {
             required: true,
@@ -76,28 +76,28 @@
           </el-select>
         </el-form-item> -->
         <el-form-item label="整改完成日期" prop="zg_date" :rules="[
-          {
-            type: 'date',
-            required: true,
-            message: '请选择整改日期',
-            trigger: 'change',
-          }
+            {
+              type: 'date',
+              required: true,
+              message: '请选择整改日期',
+              trigger: 'change',
+            }
 
-        ]">
+          ]">
           <el-date-picker v-model="numberValidateForm.zg_date" type="datetime" label="Pick a date" placeholder="请选择时间"
             value-format="YYYY/MM/DD HH:mm:ss" style="width: 100%" />
 
         </el-form-item>
         <el-form-item label="整改责任人" prop="zg_name" :rules="[
-          { required: true, message: '请输入整改责任人' },
+            { required: true, message: '请输入整改责任人' },
 
-        ]">
+          ]">
           <el-input v-model="numberValidateForm.zg_name" type="text" />
         </el-form-item>
         <el-form-item label="整改措施" prop="zg_measure" :rules="[
-          { required: true, message: '请输入整改责任人' },
+            { required: true, message: '请输入整改责任人' },
 
-        ]">
+          ]">
           <el-input v-model="numberValidateForm.zg_measure" type="text" />
         </el-form-item>
         <el-form-item label="整改后图片" prop="zg_name">
@@ -281,6 +281,7 @@ const changeList = (pageSize, currentPage) => {
   pageSize4.value = pageSize;
   currentPage4.value = currentPage;
   // hiddenListFun()
+  getHiddenRegisterFun()
 };
 const see = (row) => {
   seeInfoRow.value = row

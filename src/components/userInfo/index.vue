@@ -164,7 +164,7 @@
     <!-- <Pagination :total="total" @changeList="changeList" /> -->
 
     <el-dialog v-model="addVisible" title="新增" width="30%" center>
-      <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm" label-width="100px">
+      <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm" label-width="auto">
         <el-form-item label="姓名:" prop="userName" :rules="[{ required: true, message: '请输入姓名' }]">
           <el-input v-model="numberValidateForm.userName" type="text" autocomplete="off" />
         </el-form-item>
@@ -203,7 +203,7 @@
       </template>
     </el-dialog>
     <el-dialog v-model="emailVisible" title="新增" width="30%" center>
-      <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm" label-width="100px">
+      <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm" label-width="auto">
         <el-form-item label="邮箱:" prop="email" :rules="[{ required: true, message: '请输入邮箱' }]">
           <el-input v-model="numberValidateForm.email" type="text" autocomplete="off" />
         </el-form-item>
@@ -219,7 +219,7 @@
       </template>
     </el-dialog>
     <el-dialog v-model="invoiceVisible" title="开票" width="30%" center>
-      <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm" label-width="100px">
+      <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm" label-width="auto">
         <el-form-item label="订单编号:" prop="orderId" :rules="[{ required: true, message: '请输入订单编号' }]">
           <el-input v-model="numberValidateForm.orderId" type="text" disabled autocomplete="off" />
         </el-form-item>

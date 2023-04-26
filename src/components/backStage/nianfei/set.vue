@@ -15,12 +15,8 @@
         </el-select>
       </el-form-item> -->
       <el-form-item>
-        <el-button type="primary" @click="getPriceListFun('select')"
-          >查询</el-button
-        >
-        <el-button type="primary" @click="(dialogVisible = true), (key = 'add')"
-          >新增</el-button
-        >
+        <el-button type="primary" @click="getPriceListFun('select')">查询</el-button>
+        <el-button type="primary" @click="(dialogVisible = true), (key = 'add')">新增</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -44,15 +40,8 @@
 
       <el-table-column prop="address" label="操作">
         <template #default="scope">
-          <el-button
-            size="small"
-            type="primary"
-            @click="editPriceFun(scope.row, 'edit')"
-            >详情</el-button
-          >
-          <el-button size="small" type="danger" @click="delPriceFun(scope.row)"
-            >删除</el-button
-          >
+          <el-button size="small" type="primary" @click="editPriceFun(scope.row, 'edit')">详情</el-button>
+          <el-button size="small" type="danger" @click="delPriceFun(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -69,39 +58,23 @@
   </div>
   <el-dialog v-model="dialogVisible" title="年费设置" width="30%" center>
     <el-form :model="formInline" class="demo-form-inline" ref="formRef">
-      <el-form-item
-        label="套餐名称:"
-        prop="name"
-        :rules="[{ required: true, message: '请输入套餐名称' }]"
-      >
+      <el-form-item label="套餐名称:" prop="name" :rules="[{ required: true, message: '请输入套餐名称' }]">
         <el-input v-model="formInline.name" placeholder="请输入" />
       </el-form-item>
-      <el-form-item
-        label="套餐类型"
-        prop="resource"
-        :rules="[
+      <el-form-item label="套餐类型" prop="resource" :rules="[
           { required: true, message: '请选择套餐类型', trigger: 'change' },
-        ]"
-      >
+        ]">
         <el-radio-group v-model="formInline.resource">
           <el-radio label="2" value="2">五新商店</el-radio>
           <el-radio label="1" value="1">平台年费</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item
-        label="套餐金额:"
-        prop="money"
-        :rules="[{ required: true, message: '请输入套餐名称' }]"
-      >
+      <el-form-item label="套餐金额:" prop="money" :rules="[{ required: true, message: '请输入套餐名称' }]">
         <el-input v-model="formInline.money" placeholder="请输入">
           <template #append> 元 </template>
         </el-input>
       </el-form-item>
-      <el-form-item
-        label="套餐时间:"
-        :rules="[{ required: true, message: '请输入套餐名称' }]"
-        prop="time"
-      >
+      <el-form-item label="套餐时间:" :rules="[{ required: true, message: '请输入套餐名称' }]" prop="time">
         <el-input v-model="formInline.time" placeholder="请输入">
           <template #append> 年 </template>
         </el-input>
@@ -264,6 +237,7 @@ const changeList = (pageSize, currentPage, type) => {
   pageSize3.value = pageSize;
   currentPage3.value = currentPage;
   // getAuditFilesFun()
+  getPriceListFun()
 };
 </script>
 

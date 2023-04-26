@@ -15,7 +15,7 @@
 
     </el-row>
     <br />
-    <el-table :data="tableData" stripe style="width: 100%;margin-bottom:50px" height="400px">
+    <el-table :data="tableData" stripe style="width: 100%;margin-bottom:50px" height="45vh">
       <el-table-column type="index" width="50" />
       <el-table-column prop="checkDate" label="检查日期" />
       <el-table-column prop="checkName" label="检查人员" />
@@ -41,21 +41,21 @@
     <el-dialog v-model="dialogFormVisible" title="安全检查" center :before-close="handleClose">
       <el-form ref="formRef" :model="numberValidateForm2" class="demo-ruleForm">
         <el-form-item label="检查日期" prop="checkDate" :rules="[
-          { required: true, message: '请输入检查日期' },
+            { required: true, message: '请输入检查日期' },
 
-        ]">
+          ]">
           <el-input disabled v-model="numberValidateForm2.checkDate" type="text" autocomplete="off" />
         </el-form-item>
         <el-form-item label="检查人员" prop="checkName" :rules="[
-          { required: true, message: '请输入检查人员' },
+            { required: true, message: '请输入检查人员' },
 
-        ]">
+          ]">
           <el-input disabled v-model="numberValidateForm2.checkName" type="text" autocomplete="off" />
         </el-form-item>
         <el-form-item label="检查类型" prop="checkType" :rules="[
-          { required: true, message: '请选择检查周期', trigger: 'change', },
+            { required: true, message: '请选择检查周期', trigger: 'change', },
 
-        ]">
+          ]">
           <el-cascader v-model="numberValidateForm2.checkType" :props="{ value: 'id', label: 'name' }"
             :options="checkList" @change="cascaderChange" />
           <!-- <el-select v-model="numberValidateForm2.checkType" class="m-2">
@@ -71,7 +71,7 @@
 
 
         <el-form-item label="企业选择&nbsp;&nbsp;" prop="checkSituation" v-if="loginType == '2' || loginType == '3'">
-          <el-select v-model="numberValidateForm2.regionCompChange" class="m-2" placeholder="Select">
+          <el-select v-model="numberValidateForm2.regionCompChange" class="m-2">
             <el-option v-for="item in getRegionCompList" :key="item.value" :label="item.company"
               :value="item.companyId" />
           </el-select>
@@ -110,17 +110,17 @@
       <el-button type="primary" class="add" @click="openHiddenLibrary">从隐患库中添加</el-button>
       <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm">
         <el-form-item label="隐患描述&#12288;" prop="review" :rules="[
-          { required: true, message: '请输入隐患描述' },
+            { required: true, message: '请输入隐患描述' },
 
-        ]">
+          ]">
           <el-input v-model="numberValidateForm.review" type="textarea" :rows="5" />
         </el-form-item>
 
         <el-row>
           <el-col :span="12"> <el-form-item label="关联风险点" prop="risk" :rules="[
-            { required: true, message: '请输入关联风险点' },
+              { required: true, message: '请输入关联风险点' },
 
-          ]">
+            ]">
               <el-input v-model="numberValidateForm.risk" multiple filterable allow-create default-first-option
                 :reserve-keyword="false" placeholder="请选择" @focus="riskFun">
 
@@ -128,9 +128,9 @@
 
             </el-form-item></el-col>
           <el-col :span="12"> <el-form-item label="隐患地点" prop="place" :rules="[
-            { required: true, message: '请输入隐患地点' },
+              { required: true, message: '请输入隐患地点' },
 
-          ]">
+            ]">
               <el-input v-model="numberValidateForm.place" type="text" autocomplete="off" />
             </el-form-item></el-col>
         </el-row>
@@ -138,17 +138,17 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="隐患等级&#12288;" prop="level" :rules="[
-              { required: true, message: '请输入隐患等级' },
+                { required: true, message: '请输入隐患等级' },
 
-            ]">
+              ]">
               <el-input v-model="numberValidateForm.level" disabled type="text" autocomplete="off" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="隐患类别	" prop="type" :rules="[
-              { required: true, message: '请输入隐患类别' },
+                { required: true, message: '请输入隐患类别' },
 
-            ]">
+              ]">
               <el-input v-model="numberValidateForm.type" disabled type="text" autocomplete="off" />
             </el-form-item>
           </el-col>
@@ -157,17 +157,17 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="排查日期&#12288;" prop="date" :rules="[
-              { required: true, message: '请输入排查日期' },
+                { required: true, message: '请输入排查日期' },
 
-            ]">
+              ]">
               <el-input v-model="numberValidateForm.date" disabled type="text" autocomplete="off" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="排查人&#12288;" prop="people" :rules="[
-              { required: true, message: '请输入排查人' },
+                { required: true, message: '请输入排查人' },
 
-            ]">
+              ]">
               <el-input v-model="numberValidateForm.people" disabled type="text" autocomplete="off" />
             </el-form-item>
           </el-col>
@@ -176,18 +176,18 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="整改类型&#12288;" prop="type2" :rules="[
-              { required: true, message: '请输入整改类型' },
+                { required: true, message: '请输入整改类型' },
 
-            ]">
+              ]">
               <el-input v-model="numberValidateForm.type2" disabled type="text" autocomplete="off" />
 
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="整改期限" prop="date2" :rules="[
-              { required: true, message: '请输入整改期限	' },
+                { required: true, message: '请输入整改期限	' },
 
-            ]">
+              ]">
               <el-input v-model="numberValidateForm.date2" disabled type="text" autocomplete="off" />
 
             </el-form-item>
@@ -209,9 +209,9 @@
 
         </el-row>
         <el-form-item label="隐患图片&#12288;" prop="file" :rules="[
-          { required: true, message: '请上传隐患图片' },
+            { required: true, message: '请上传隐患图片' },
 
-        ]">
+          ]">
           <el-upload ref="uploadRef" :auto-upload="false" class="upload-demo"
             action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :on-change="handleChange2"
             :on-remove="handleChange2" :limit="1" list-type="picture" :http-request="handleHttpRequest">
@@ -349,45 +349,45 @@
     </el-dialog>
     <el-dialog v-model="addRiskVisible" title="风险点添加" center width="30%">
 
-      <el-form ref="formRef" :model="numberValidateForm1" class="demo-ruleForm" label-width="100px">
+      <el-form ref="formRef" :model="numberValidateForm1" class="demo-ruleForm" label-width="auto">
         <el-form-item label="风险点名称" prop="risk_name" :rules="[
-          { required: true, message: '请输入风险点名称' },
+            { required: true, message: '请输入风险点名称' },
 
-        ]">
+          ]">
           <el-input v-model="numberValidateForm1.risk_name" type="text" autocomplete="off" />
         </el-form-item>
         <el-form-item label="场所/位置" prop="risk_place" :rules="[
-          { required: true, message: '请输入场所/位置' },
+            { required: true, message: '请输入场所/位置' },
 
-        ]">
+          ]">
           <el-input v-model="numberValidateForm1.risk_place" type="text" autocomplete="off" />
         </el-form-item>
         <el-form-item label="工艺/用途" prop="risk_use" :rules="[
-          {
-            required: true, message: '请输入工艺/用途'
-          },
+            {
+              required: true, message: '请输入工艺/用途'
+            },
 
-        ]">
+          ]">
           <el-input v-model="numberValidateForm1.risk_use" type="text" autocomplete="off" />
         </el-form-item>
         <el-form-item label="风险等级" prop="risk_level" :rules="[
-          {
-            required: true, message: '请输入风险等级'
-          },
+            {
+              required: true, message: '请输入风险等级'
+            },
 
-        ]">
+          ]">
           <el-input v-model="numberValidateForm1.risk_level" type="text" autocomplete="off" />
         </el-form-item>
         <el-form-item label="管控责任人" prop="risk_response" :rules="[
-          {
-            required: true, message: '请输入管控责任人'
-          },
+            {
+              required: true, message: '请输入管控责任人'
+            },
 
-        ]">
+          ]">
           <el-input v-model="numberValidateForm1.risk_response" type="text" autocomplete="off" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="addRiskSubmit(formRef)">Submit</el-button>
+          <el-button type="primary" @click="addRiskSubmit(formRef)">确定</el-button>
 
         </el-form-item>
       </el-form>
@@ -551,7 +551,8 @@ import {
   delHiddenInfo,
   getHiddenZg,
   getRegionComp,
-  getList
+  getList,
+  viewCompanyList
 } from "@/api/index";
 import { onMounted, reactive, ref, defineProps, watch } from "vue";
 
@@ -676,7 +677,7 @@ const addFormFun = () => {
 
   numberValidateForm2.checkDate = moment().format('YYYY/MM/DD HH:mm:ss')
   numberValidateForm2.checkName = sessionStorage.getItem('userName')
-  getRegionComp().then((res) => {
+  viewCompanyList(1, 100).then((res) => {
     getRegionCompList.value = res.data.data;
   });
   getList(3).then(res => {
