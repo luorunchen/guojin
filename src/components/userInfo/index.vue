@@ -1,6 +1,6 @@
 <template>
   <div id="userInfo" ref="userInfo">
-    <div class="box">我的身份: <span>企业VIP</span> (到期时间:2025-05-05)</div>
+    <div class="box">我的身份: <span>企业VIP</span> (到期时间:{{ expireDate }})</div>
 
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane label="备案信息" name="first">
@@ -132,11 +132,10 @@
         </el-form-item>
 
         <template v-if="numberValidateForm.resource != '1'">
-          <el-form-item label="统一社会信用代码:" prop="creditCode" :rules="
-            numberValidateForm.resource == '2'
+          <el-form-item label="统一社会信用代码:" prop="creditCode" :rules="numberValidateForm.resource == '2'
               ? [{ required: true, message: '请输入统一社会信用代码' }]
               : []
-          ">
+            ">
             <el-input v-model="numberValidateForm.creditCode" type="text" autocomplete="off" />
           </el-form-item>
           <el-form-item label="开户银行名称:" prop="bankName">
@@ -293,6 +292,7 @@ const editMailID = ref(0);
 const userInfo = ref(null);
 
 const loginType = ref(sessionStorage.getItem("loginType"));
+const expireDate = ref(sessionStorage.getItem('expireDate'));
 const companyId = ref(sessionStorage.getItem("companyId"));
 const getInVoiceInfoLists = ref([]);
 const getMailAddressLists = ref([]);

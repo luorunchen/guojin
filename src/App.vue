@@ -1,6 +1,7 @@
 <template>
   <div id="baoj">
-    <el-dialog v-model="alarmVisible" title="报警详情" width="25%">
+    <el-dialog v-model="alarmVisible" title="报警详情" width="25%" :close-on-click-modal="false"
+      :close-on-press-escape="false">
       <audio controls ref="audio" id="audio" v-show="false" loop>
         <source src="./assets/6709.mp3" />
       </audio>
@@ -9,6 +10,13 @@
       <p>报警名称:{{ content.alarmName }}</p>
       <p>安装位置:{{ content.installLocation }}</p>
       <el-button type="danger" @click="seeInfo">查看设备详情</el-button>
+    </el-dialog>
+    <el-dialog v-model="expireDateVisible" title="到期提示" width="35%" :close-on-click-modal="false"
+      :close-on-press-escape="false">
+      <!-- <p></p> -->
+      <p>{{ expireDateText }}</p>
+
+      <el-button type="danger" @click="expireDateVisible = false">确定</el-button>
     </el-dialog>
   </div>
   <Ranqi ref="ranqi" />
@@ -25,6 +33,7 @@
 import { onMounted, ref, watch, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import moment from 'moment'
 import IntegratedMachine from './components/earlyWarning/popup/IntegratedMachine.vue'
 import Dianli from "./components/earlyWarning/popup/info/dianli.vue";
 import Yangan from "./components/earlyWarning/popup/info/yangan.vue";
@@ -35,8 +44,11 @@ import Ranqi from "./components/earlyWarning/popup/info/ranqi.vue";
 import Shipin from "./components/earlyWarning/popup/info/shipin.vue";
 
 const alarmVisible = ref(false)
+const expireDateVisible = ref(false)
 const content: any = ref({})
 const audo: any = ref({})
+const expireDate: any = ref()
+const expireDateText: any = ref()
 const userID: any = ref(sessionStorage.getItem("userId"))
 const companyId: any = ref(sessionStorage.getItem("companyId"))
 const store = useStore();
@@ -149,6 +161,20 @@ const seeInfo = () => {
 const connect = () => {
 
   // console.log(userID.value, 'sss123123s');
+
+
+
+  expireDate.value = moment().diff(moment(sessionStorage.getItem('expireDate')), 'day')
+  console.log(expireDate.value);
+  if (expireDate.value <= 30 && expireDate.value > 0) {
+    expireDateVisible.value = true
+    expireDateText.value = `您可以继续使用本平台${expireDate.value}天，到期后平台将自动关闭。请主动续费！`
+  } else {
+    expireDateVisible.value = true
+    expireDateText.value = `您已欠费${expireDate.value * -1}天，请缴费后使用本平台！`
+  }
+
+
   if (userID.value == null) return
 
   goEasy.value.connect({

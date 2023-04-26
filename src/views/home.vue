@@ -236,34 +236,45 @@
     </el-row>
 
     <div class="bottom">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <div class="inputBox">
+        <!-- <el-select v-model="value" class="m-2" placeholder="Select" size="large">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select> -->
+        <el-select placeholder="全国应急管理系统" @change="skipFun" teleported="false" placement="top">
+          <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.one" :key="index"
+            teleported="false" placement="top" />
+        </el-select>
+        <el-select placeholder="应急管理厅直属单位" @change="skipFun">
+          <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.two" :key="index">
+          </el-option>
+        </el-select>
+        <el-select placeholder="市级应急管理部门" @change="skipFun">
+          <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.three" :key="index" />
+        </el-select>
+        <el-select placeholder="其他链接" @change="skipFun">
+          <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.four" :key="index" />
+        </el-select>
+        <el-select placeholder="相关系统" @change="skipFun" placement="top">
+          <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.five" :key="index" />
+        </el-select>
+      </div>
+      <!-- <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
-          <el-select placeholder="全国应急管理系统" @change="skipFun">
-            <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.one" :key="index" />
-          </el-select>
+          
         </el-form-item>
         <el-form-item>
-          <el-select placeholder="应急管理厅直属单位" @change="skipFun">
-            <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.two" :key="index">
-            </el-option>
-          </el-select>
+         
         </el-form-item>
         <el-form-item>
-          <el-select placeholder="市级应急管理部门" @change="skipFun">
-            <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.three" :key="index" />
-          </el-select>
+         
         </el-form-item>
         <el-form-item>
-          <el-select placeholder="其他链接" @change="skipFun">
-            <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.four" :key="index" />
-          </el-select>
+          
         </el-form-item>
         <el-form-item>
-          <el-select placeholder="相关系统" @change="skipFun">
-            <el-option :label="item.name" :value="item.value" v-for="item, index in bottom.five" :key="index" />
-          </el-select>
+         
         </el-form-item>
-      </el-form>
+      </el-form> -->
 
       <el-row :gutter="10">
         <el-col :span="4">
@@ -275,13 +286,15 @@
         </el-col>
         <el-col :span="6">
           <p>网站标识</p>
-
+          <p>主办：浙江省应急管理厅</p>
           <p>备案：浙ICP备2023004010号</p>
 
         </el-col>
         <el-col :span="7">
           <p>联系我们</p>
-
+          <p>邮箱：syjglt@zj.gov.cn</p>
+          <p>(仅受理本网站相关事宜)</p>
+          <p>地址：温州市体育场路47号</p>
         </el-col>
         <el-col :span="5">
 
@@ -1371,6 +1384,7 @@ defineComponent({
         font-weight: 700;
         line-height: 80px;
         font-size: 16px;
+        min-width: 60px;
 
         &:hover {
           background: none;
@@ -1613,15 +1627,14 @@ defineComponent({
     position: absolute;
     bottom: 0;
     width: 100%;
+
     // padding-top: 20px;
+    .inputBox {
+      display: flex;
+      justify-content: space-around;
+      margin: 10px 0;
 
-    /deep/.el-form-item {
-      width: 20%;
-      margin-right: 0;
-      margin-top: 10px;
-      margin-bottom: 5px;
-
-      .el-select {
+      /deep/.el-select {
         .el-input__wrapper {
           background: #276596;
           box-shadow: none;
@@ -1631,8 +1644,17 @@ defineComponent({
           }
         }
 
-        width: 98%;
+        width:19.4%;
       }
+    }
+
+    /deep/.el-form-item {
+      width: 20%;
+      margin-right: 0;
+      margin-top: 10px;
+      margin-bottom: 5px;
+
+
     }
 
     .el-row {

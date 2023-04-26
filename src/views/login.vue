@@ -82,6 +82,7 @@ import { reactive, ref, onMounted } from "vue";
 import type { FormInstance } from "element-plus";
 import { ElMessage } from "element-plus";
 import router from "@/router/index";
+
 import jsCookie from "js-cookie";
 import { Avatar, Lock } from "@element-plus/icons-vue";
 const formRef = ref<FormInstance>();
@@ -174,6 +175,10 @@ const submitForm = (formEl: FormInstance | undefined) => {
               router.push("/");
             }
           }
+
+          // console.log(moment(res.data.data.expire_date).diff(moment(), 'day'), "   moment().diff(moment(res.data.data.expire_date), 'day')");
+
+          sessionStorage.setItem('expireDate', res.data.data.expire_date)
           sessionStorage.setItem('password', numberValidateForm.password)
           sessionStorage.setItem("userName", numberValidateForm.userName);
           sessionStorage.setItem("userId", res.data.data.id);

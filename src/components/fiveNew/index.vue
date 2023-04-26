@@ -2,13 +2,14 @@
   <div id="userInfo">
     <el-tabs v-model="activeName" class="demo-tabs">
       <el-tab-pane label="全部" name=""> </el-tab-pane>
-      <el-tab-pane label="新技术" name="1">
+      <el-tab-pane label="新设备" name="3">
         <!-- <MyUpload :activeName="activeName" /> -->
       </el-tab-pane>
+
       <el-tab-pane label="新工艺" name="2">
         <!-- <MyUpload :activeName="activeName" /> -->
       </el-tab-pane>
-      <el-tab-pane label="新设备" name="3">
+      <el-tab-pane label="新技术" name="1">
         <!-- <MyUpload :activeName="activeName" /> -->
       </el-tab-pane>
       <el-tab-pane label="新材料" name="4">

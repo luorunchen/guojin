@@ -34,16 +34,17 @@
     <el-tab-pane label="五新商店" name="fiveNew">
       <div class="fiveNew" @click="fiveNew">
         <div class="container">
-          <img src="../../assets/1.png" alt="" />
-          新技术
+          <img src="../../assets/3.png" alt="" />
+          新设备
         </div>
         <div class="container">
           <img src="../../assets/2.png" alt="" />
           新工艺
         </div>
+
         <div class="container">
-          <img src="../../assets/3.png" alt="" />
-          新设备
+          <img src="../../assets/1.png" alt="" />
+          新技术
         </div>
         <div class="container">
           <img src="../../assets/4.png" alt="" />
