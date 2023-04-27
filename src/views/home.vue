@@ -60,6 +60,7 @@
             </el-sub-menu>
           </el-menu>
         </div>
+        <!-- <div>在线人数:1</div> -->
       </el-col>
       <el-col :span="20">
         <div class="title">
@@ -93,6 +94,7 @@
             </el-col>
           </el-row>
         </div>
+
         <div class="content" ref="content">
 
 
@@ -104,11 +106,15 @@
                 </template>
               </el-input>
             </el-col>
-            <el-col :span="14">
+            <el-col :span="12">
               <marquee direction="left" onmouseover=this.stop() onmouseout=this.start() height="100%" bgcolor="#f5f5f5"
                 scrollamount="4">
                 <span class="fontSpan">需要专家组现场隐患排查、安全评价、安全设计、标准化体系咨询、风控体系建设、应急预案编制等服务，请拨打****</span>
               </marquee>
+            </el-col>
+            <el-col :span="2">
+              <el-button text style="font-size:16px;color:#000"> 在线人数:{{ peopleNumber }}</el-button>
+
             </el-col>
             <el-col :span="2">
               <el-button type="primary" @click="backstage">系统设置</el-button>
@@ -149,7 +155,12 @@
                 </template>
               </el-dropdown>
             </el-col>
+            <!-- <el-col :span="2">
+              在线人数:1
+            </el-col> -->
           </el-row>
+
+          <div class="tips" v-if="expireDate <= 30">{{ expireDateText }}</div>
           <el-tabs ref="tabBox" class="demo-tabs" v-model="editableTabsValue" type="border-card" closable
             @edit="handleTabsEdit">
             <el-tab-pane v-for="item in editableTabs" :key="item.id" :label="item.title" :name="item.id">
@@ -413,6 +424,7 @@ const activeName = ref("first");
 const itemName = ref();
 // const vedioId = ref();
 const boxHeight = ref();
+const expireDateText = ref();
 const tabBox = ref(null);
 const content = ref(null);
 const loginName = sessionStorage.getItem("userName");
@@ -424,7 +436,9 @@ const titleChangeName = ref("首页");
 const key = ref(1);
 const store = useStore();
 // const store = useStore();
+const peopleNumber = ref()
 const elementName = ref()
+const expireDate = ref(Number(sessionStorage.getItem('Arrears')))
 const unreadTotal = ref()
 const evaluationValue = ref()
 let tabIndex = 2
@@ -583,18 +597,59 @@ onMounted(() => {
     loginState.value = "退出登录";
   }
 
+  // let expireDate = 
+  // console.log(expireDate, 'expireDate');
+
+  // expireDate.value = moment(sessionStorage.getItem('expireDate')).diff(moment(), 'day')
+  // sessionStorage.setItem('Arrears', expireDate.value)
+
+  // // console.log(expireDate.value);
+  if (expireDate.value <= 30 && expireDate.value > 0) {
+
+    expireDateText.value = `您可以继续使用本平台${expireDate.value}天，到期后平台将自动关闭。请主动续费！`
+  } else if (expireDate.value == 0) {
+    expireDateText.value = `您还未登录，请登录后使用本平台！`
+  } else {
+    expireDateText.value = `您已欠费${expireDate.value * -1}天，请缴费后使用本平台！`
+  }
+  const webSocket = new WebSocket('ws://119.91.156.5:8080/gjsafe/ws/server');
+
+  webSocket.onopen = function () {
+    console.log('WebSocket open');
+    webSocket.send('Hello, WebSocket!');
+  };
+
+  webSocket.onmessage = function (event) {
+    console.log(`接收人数`, event.data.substr(event.data.indexOf(':') + 1));
+    peopleNumber.value = event.data.substr(event.data.indexOf(':') + 1)
+  };
+
+  webSocket.onclose = function (event) {
+    console.log(`WebSocket close: ${event.code} ${event.reason}`);
+  };
+
+  webSocket.onerror = function (event) {
+    console.error('WebSocket error', event);
+  };
   store.state.goEasy.im.on(GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, onConversationsUpdated);
 });
 watch(
   () => [store.state.menuID, store.state.menuName],
   (val) => {
-    if (sessionStorage.getItem("userName") == null) {
-      return ElMessage({
-        showClose: true,
-        message: "您未登录,请先登录",
-        type: "warning",
-      });
-    }
+    // if (sessionStorage.getItem("userName") == null) {
+    //   return ElMessage({
+    //     showClose: true,
+    //     message: "您未登录,请先登录",
+    //     type: "warning",
+    //   });
+    // }
+    // if (Number(sessionStorage.getItem("Arrears")) < 0) {
+    //   return ElMessage({
+    //     showClose: true,
+    //     message: "您已欠费,请续费后继续使用本平台",
+    //     type: "warning",
+    //   });
+    // }
     // console.log(val, "vuex");
     itemName.value = val[1];
     itemID.value = val[0];
@@ -608,7 +663,20 @@ watch(
   (val) => {
     // console.log(val, 'menus');
     // console.log(val, '我是val');
-
+    if (sessionStorage.getItem("userName") == null) {
+      return ElMessage({
+        showClose: true,
+        message: "您未登录,请先登录",
+        type: "warning",
+      });
+    }
+    if (Number(sessionStorage.getItem("Arrears")) < 0) {
+      return ElMessage({
+        showClose: true,
+        message: "您已欠费,请续费后继续使用本平台",
+        type: "warning",
+      });
+    }
     if (val.id === 20002) {
       let pathInfo = router.resolve({ path: "/statistics" });
       // sessionStorage.clear()
@@ -718,6 +786,13 @@ const titleChange = (item: any) => {
     return ElMessage({
       showClose: true,
       message: "您未登录,请先登录",
+      type: "warning",
+    });
+  }
+  if (Number(sessionStorage.getItem("Arrears")) < 0) {
+    return ElMessage({
+      showClose: true,
+      message: "您已欠费,请续费后继续使用本平台",
       type: "warning",
     });
   }
@@ -1223,7 +1298,13 @@ const menuClick = (name: string, index: any) => {
       type: "warning",
     });
   }
-
+  if (Number(sessionStorage.getItem("Arrears")) < 0) {
+    return ElMessage({
+      showClose: true,
+      message: "您已欠费,请续费后继续使用本平台",
+      type: "warning",
+    });
+  }
   itemName.value = name;
   itemID.value = index;
 };
@@ -1232,6 +1313,13 @@ const zixun = () => {
     return ElMessage({
       showClose: true,
       message: "您未登录,请先登录",
+      type: "warning",
+    });
+  }
+  if (Number(sessionStorage.getItem("Arrears")) < 0) {
+    return ElMessage({
+      showClose: true,
+      message: "您已欠费,请续费后继续使用本平台",
       type: "warning",
     });
   }
@@ -1255,7 +1343,8 @@ const out = () => {
 };
 const backstage = () => {
   let pathInfo = router.resolve({ path: "/backstage" });
-  // sessionStorage.clear()
+  sessionStorage.clear()
+
   window.open(pathInfo.href, "_blank");
 };
 defineComponent({
@@ -1403,6 +1492,7 @@ defineComponent({
   .menus {
     overflow-y: auto;
     height: calc(100vh - 274px);
+    // height: 640px;
     margin-top: -5px;
     background-image: url("../assets/bg.png");
     background-size: 100% 100%;
@@ -1556,6 +1646,7 @@ defineComponent({
 
     .info {
       padding: 10px 20px 0px 20px;
+      margin-bottom: 5px;
     }
 
     /deep/.el-button--primary {
@@ -1588,6 +1679,17 @@ defineComponent({
     }
   }
 
+  .tips {
+    background: #FFDEDE;
+    color: #FE3838FF;
+    font-size: 16px;
+    font-family: Source Han Sans CN;
+    font-weight: 900;
+    text-indent: 2em;
+
+    padding: 5px 0;
+  }
+
   .demo-tabs {
     // width: 98%;
     background: #ffffff;
@@ -1595,7 +1697,7 @@ defineComponent({
     border-radius: 4px;
     // padding: 10px;
     margin-bottom: 10px;
-    margin-top: 10px;
+    // margin-top: 10px;
     padding-top: 0;
     // padding-bottom: 20px;
     // height: calc(100vh - 180px);

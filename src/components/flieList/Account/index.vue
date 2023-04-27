@@ -171,10 +171,12 @@ watch(
       } else {
         fileInfoFun()
       }
+    } else {
+      fileInfoFun();
     }
 
 
-    // fileInfoFun();
+
   }
 );
 onMounted(() => {

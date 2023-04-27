@@ -11,13 +11,13 @@
       <p>安装位置:{{ content.installLocation }}</p>
       <el-button type="danger" @click="seeInfo">查看设备详情</el-button>
     </el-dialog>
-    <el-dialog v-model="expireDateVisible" title="到期提示" width="35%" :close-on-click-modal="false"
+    <!-- <el-dialog v-model="expireDateVisible" title="到期提示" width="35%" :close-on-click-modal="false"
       :close-on-press-escape="false">
-      <!-- <p></p> -->
+  
       <p>{{ expireDateText }}</p>
 
       <el-button type="danger" @click="expireDateVisible = false">确定</el-button>
-    </el-dialog>
+    </el-dialog> -->
   </div>
   <Ranqi ref="ranqi" />
   <Shipin ref="shipin" />
@@ -50,7 +50,7 @@ const audo: any = ref({})
 const expireDate: any = ref()
 const expireDateText: any = ref()
 const userID: any = ref(sessionStorage.getItem("userId"))
-const companyId: any = ref(sessionStorage.getItem("companyId"))
+// const companyId: any = ref(sessionStorage.getItem("companyId"))
 const store = useStore();
 const integratedMachine: any = ref()
 const yangan: any = ref(null);
@@ -164,14 +164,7 @@ const connect = () => {
 
 
 
-  expireDate.value = moment(sessionStorage.getItem('expireDate')).diff(moment(), 'day')
-  // console.log(expireDate.value);
-  if (expireDate.value <= 30 && expireDate.value > 0) {
-    expireDateVisible.value = true
-    expireDateText.value = `您可以继续使用本平台${expireDate.value}天，到期后平台将自动关闭。请主动续费！`
-  } else {
-    expireDateText.value = `您已欠费${expireDate.value * -1}天，请缴费后使用本平台！`
-  }
+
 
 
   if (userID.value == null) return
@@ -198,12 +191,17 @@ const connect = () => {
     },
   });
 
-  console.log(companyId.value, 'companyId.value');
+  // console.log(companyId.value, 'companyId.value');
 
-  if (companyId.value == null) return
+  if (sessionStorage.getItem("companyId") == null) return
+  expireDate.value = moment(sessionStorage.getItem('expireDate')).diff(moment(), 'day')
+  sessionStorage.setItem('Arrears', expireDate.value)
+
+
+
   goEasy.value.pubsub.subscribe({
 
-    channel: companyId.value, //替换为您自己的channel
+    channel: sessionStorage.getItem("companyId"), //替换为您自己的channel
 
     onMessage: function (message) {
 

@@ -27,9 +27,10 @@
       <el-table-column prop="name" label="证书持有人" />
       <el-table-column prop="create_date" label="发证时间" />
       <el-table-column prop="expire_date" label="证书到期时间" />
-      <el-table-column prop="name" label="操作">
+      <el-table-column prop="name" label="操作" width="250">
         <template #default="scope">
           <el-button type="primary" @click="see(scope.row)">查看</el-button>
+          <el-button type="primary" @click="see(scope.row)">复训</el-button>
           <el-button type="danger" @click="delZSFun(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -40,31 +41,31 @@
   <el-dialog v-model="dialogVisible" title="上传" width="40%" center>
     <el-form ref="formRef" :model="numberValidateForm" class="demo-ruleForm">
       <el-form-item label="姓名&#12288;&#12288;&#12288;&#12288;" prop="name" :rules="[
-        { required: true, message: '请输入姓名' },
+          { required: true, message: '请输入姓名' },
 
-      ]">
+        ]">
         <el-input v-model="numberValidateForm.name" type="text" autocomplete="off" />
       </el-form-item>
       <el-form-item label="身份证号码&#12288;" prop="cardId" :rules="[
-        { required: true, message: '请输入身份证号码' },
+          { required: true, message: '请输入身份证号码' },
 
-      ]">
+        ]">
         <el-input v-model="numberValidateForm.cardId" type="text" autocomplete="off" />
       </el-form-item>
       <el-form-item label="证书名称&#12288;&#12288;" prop="license_name" :rules="[
-        { required: true, message: '请输入证书名称' },
+          { required: true, message: '请输入证书名称' },
 
-      ]">
+        ]">
         <el-input v-model="numberValidateForm.license_name" type="text" autocomplete="off" />
       </el-form-item>
       <el-form-item label="证书类型&#12288;&#12288;" prop="type" :rules="[
-        {
-          required: true,
-          message: '请选择类型',
-          trigger: 'change',
-        },
+          {
+            required: true,
+            message: '请选择类型',
+            trigger: 'change',
+          },
 
-      ]">
+        ]">
 
         <!-- <el-select v-model="numberValidateForm.type" placeholder="请选择">
           <el-option :label="item.name" :value="item.id" v-for="item, index in typeList " :key="index" />
@@ -74,55 +75,55 @@
           @change="cascaderChange" />
       </el-form-item>
       <el-form-item label="证书下发时间" prop="create_date" :rules="[
-        {
-          type: 'date',
-          required: true,
-          message: '请选择下发时间',
-          trigger: 'change',
-        },
+          {
+            type: 'date',
+            required: true,
+            message: '请选择下发时间',
+            trigger: 'change',
+          },
 
-      ]">
+        ]">
         <el-date-picker value-format="YYYY/MM/DD HH:mm:ss" v-model="numberValidateForm.create_date" type="datetime"
           style="width: 100%" />
       </el-form-item>
       <el-form-item label="证书到期时间" prop="date" :rules="[
-        {
-          type: 'date',
-          required: true,
-          message: '请选择到期时间',
-          trigger: 'change',
-        },
+          {
+            type: 'date',
+            required: true,
+            message: '请选择到期时间',
+            trigger: 'change',
+          },
 
-      ]">
+        ]">
         <el-date-picker value-format="YYYY/MM/DD HH:mm:ss" v-model="numberValidateForm.date" type="datetime"
           style="width: 100%" />
       </el-form-item>
       <el-form-item label="提醒到期手机" prop="phone" :rules="[
-        {
+          {
 
-          required: true,
-          message: '请输入提醒到期手机号码',
+            required: true,
+            message: '请输入提醒到期手机号码',
 
-        },
+          },
 
-      ]">
+        ]">
         <el-input v-model="numberValidateForm.phone" type="text" autocomplete="off" />
       </el-form-item>
       <el-form-item label="提醒周期(年)" :rules="[
-        {
+          {
 
-          required: true,
-          message: '请输入提醒周期(年)',
+            required: true,
+            message: '请输入提醒周期(年)',
 
-        },
+          },
 
-      ]">
+        ]">
         <el-input-number v-model="numberValidateForm.cycle" :precision="0" :min="1" :max="10" />
       </el-form-item>
       <el-form-item label="上传身份证&#12288;" prop="file1" :rules="[
-        {
-          required: true, trigger: 'change', message: '请上传身份证正面',
-        }]">
+          {
+            required: true, trigger: 'change', message: '请上传身份证正面',
+          }]">
         <el-upload ref="uploadRef" class="upload-demo" :auto-upload="false" :on-change="handleChange"
           :on-remove="handleChange" list-type="picture" :limit="1">
           <template #trigger>
@@ -135,9 +136,9 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="上传证书&#12288;&#12288;" prop="file2" :rules="[
-        {
-          required: true, trigger: 'change', message: '请上传证书',
-        }]">
+          {
+            required: true, trigger: 'change', message: '请上传证书',
+          }]">
         <el-upload ref="uploadRef" class="upload-demo" :auto-upload="false" :on-change="handleChange2"
           :on-remove="handleChange2" list-type="picture" :limit="1">
           <template #trigger>
@@ -163,40 +164,40 @@
   <el-dialog v-model="ziziVisible" title="上传" width="40%" center>
     <el-form :model="numberValidateForm" ref="formRef">
       <el-form-item label="证书/报告名称" prop="zizi" :rules="[
-        { required: true, message: '请输入证书/报告名称' },
+          { required: true, message: '请输入证书/报告名称' },
 
-      ]">
+        ]">
         <el-input v-model="numberValidateForm.zizi" type="text" autocomplete="off" />
       </el-form-item>
       <el-form-item label="报告下发时间" prop="create_date2" :rules="[
-        {
-          type: 'date',
-          required: true,
-          message: '请选择下发时间',
-          trigger: 'change',
-        },
+          {
+            type: 'date',
+            required: true,
+            message: '请选择下发时间',
+            trigger: 'change',
+          },
 
-      ]">
+        ]">
         <el-date-picker value-format="YYYY/MM/DD HH:mm:ss" v-model="numberValidateForm.create_date2" type="datetime"
           style="width: 100%" />
       </el-form-item>
       <el-form-item label="报告到期时间" prop="date2" :rules="[
-        {
-          type: 'date',
-          required: true,
-          message: '请选择报告到期时间',
-          trigger: 'change',
-        },
+          {
+            type: 'date',
+            required: true,
+            message: '请选择报告到期时间',
+            trigger: 'change',
+          },
 
-      ]">
+        ]">
         <el-date-picker value-format="YYYY/MM/DD HH:mm:ss" v-model="numberValidateForm.date2" type="datetime"
           style="width: 100%" />
 
       </el-form-item>
       <el-form-item label="证书/报告上传" prop="file3" :rules="[
-        {
-          required: true, trigger: 'change', message: '请上传证书/报告',
-        }]">
+          {
+            required: true, trigger: 'change', message: '请上传证书/报告',
+          }]">
 
         <el-upload ref="uploadRef" class="upload-demo" :auto-upload="false"
           :on-change="(uploadFile, uploadFiles) => handleChange3(uploadFile, uploadFiles)"
